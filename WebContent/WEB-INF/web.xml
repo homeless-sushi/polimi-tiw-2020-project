@@ -3,6 +3,14 @@
 	<!-- APP INFO -->
 	<display-name>polimi-tiw-2020-project</display-name>
 	<description>project for TIW 2020-2021</description>
+	
+	<!-- CONTEXT RESOURCES -->
+	<resource-ref>
+		<description>TIW primary DB</description>
+		<res-ref-name>jdbc/polimiDB</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
 
 	<!-- WELCOME FILE LIST-->
 	<welcome-file-list>

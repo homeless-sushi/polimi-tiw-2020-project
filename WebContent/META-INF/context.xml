@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context privileged="true" reloadable="true">
+	<Resource name="jdbc/polimiDB"
+		url="jdbc:mysql://localhost:3306/tiw-project"
+		username="app-polimi"
+		password="HieronymusBosch"
+		maxIdle="3"
+		maxTotal="10"
+		maxWaitMillis="10000"
+		driverClassName="com.mysql.cj.jdbc.Driver"
+		type="javax.sql.DataSource"
+		auth="Container" />
+</Context>
