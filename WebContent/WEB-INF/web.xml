@@ -3,4 +3,9 @@
 	<!-- APP INFO -->
 	<display-name>polimi-tiw-2020-project</display-name>
 	<description>project for TIW 2020-2021</description>
+
+	<!-- WELCOME FILE LIST-->
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
 </web-app>
