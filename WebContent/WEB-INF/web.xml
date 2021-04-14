@@ -21,4 +21,24 @@
 	<listener>
 		<listener-class>it.polimi.poliesami.controller.AppInit</listener-class>
 	</listener>
+	
+	<!-- FILTERS -->
+	<filter>
+		<filter-name>LoginInsideFilter</filter-name>
+		<filter-class>it.polimi.poliesami.controller.LoginInsideFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>LoginInsideFilter</filter-name>
+		<url-pattern>/inside/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- SERVLETS -->
+	<servlet>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>it.polimi.poliesami.controller.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/access/LoginService</url-pattern>
+	</servlet-mapping>
 </web-app>
