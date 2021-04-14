@@ -11,6 +11,11 @@ import javax.servlet.annotation.*;
 
 import javax.sql.DataSource;
 
+import com.auth0.jwt.algorithms.Algorithm;
+
+import it.polimi.db.utils.Authenticator;
+import it.polimi.poliesami.utils.AppAuthenticator;
+
 @WebListener
 public class AppInit implements ServletContextListener {
 	@Override
@@ -25,5 +30,13 @@ public class AppInit implements ServletContextListener {
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
+		
+		/* ********** Authenticators ********** */
+		Authenticator userAuthenticator = new Authenticator();
+		servletContext.setAttribute("userAuthenticator", userAuthenticator);
+		
+		AppAuthenticator clientAuthenticator = new AppAuthenticator(
+				Algorithm.HMAC256("\"The Garden Of Earthly Delights\" By Hieronymus Bosch"));
+		servletContext.setAttribute("clientAuthenticator", clientAuthenticator);
 	}
 }
