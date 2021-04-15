@@ -31,6 +31,14 @@
 		<filter-name>LoginInsideFilter</filter-name>
 		<url-pattern>/inside/*</url-pattern>
 	</filter-mapping>
+	<filter>
+		<filter-name>LoginOutsideFilter</filter-name>
+		<filter-class>it.polimi.poliesami.controller.LoginOutsideFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>LoginOutsideFilter</filter-name>
+		<url-pattern>/access/*</url-pattern>
+	</filter-mapping>
 	
 	<!-- SERVLETS -->
 	<servlet>
