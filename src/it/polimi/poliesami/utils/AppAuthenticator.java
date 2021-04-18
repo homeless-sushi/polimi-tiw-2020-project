@@ -17,7 +17,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 public class AppAuthenticator {
 	private static final String PERSONCODE_ATTRNAME = "personCode";
-	private static final String AUTHTOKEN_ATTRNAME = "authToken";
+	private static final String AUTHTOKEN_COOKIENAME = "authToken";
 
 	private Algorithm signingAlg;
 	private JWTVerifier verifier; 
@@ -39,33 +39,34 @@ public class AppAuthenticator {
 	}
 	
 	public String getClientIdentity(HttpServletRequest request) {
-		
-		String personCode;
-		HttpSession session = request.getSession();
-
-		personCode = (String) session.getAttribute(PERSONCODE_ATTRNAME);
-		if(personCode != null) {
-			return personCode;
+		// Get current session identity
+		{
+			HttpSession session = request.getSession(false);
+			if(session != null) {
+				String personCode = (String) session.getAttribute(PERSONCODE_ATTRNAME);
+				if(personCode != null) {
+					return personCode;
+				}
+			}
 		}
 		
-		CookieMap cookies = new CookieMap(request.getCookies());
-		String jwtEncoded = cookies.get(AUTHTOKEN_ATTRNAME);
-		if(jwtEncoded == null) {
-			return null;
+		// Get and restore jwt session identity
+		{
+			String jwtEncoded = new CookieMap(request.getCookies()).get(AUTHTOKEN_COOKIENAME);
+			if(jwtEncoded != null) {
+				try {
+					DecodedJWT jwtDecoded = verifier.verify(jwtEncoded);
+					String personCode = jwtDecoded.getSubject();
+					request.getSession().setAttribute(PERSONCODE_ATTRNAME, personCode);
+					return personCode;
+				} catch (JWTVerificationException invalidToken) {
+					// TODO log invalid jwt
+				}
+			}
 		}
 		
-		DecodedJWT jwtDecoded = null;
-		
-		try {
-			this.verifier.verify(jwtEncoded);
-			jwtDecoded = JWT.decode(jwtEncoded);
-		} catch (JWTVerificationException invalidToken) {
-			return null;
-		}
-		
-		personCode = jwtDecoded.getSubject();
-		session.setAttribute(PERSONCODE_ATTRNAME, personCode);
-		return personCode;
+		// Not authenticated
+		return null;
 	}
 	
 	private void setJWTCookie(HttpServletRequest request, HttpServletResponse response, String personCode) {
@@ -81,7 +82,7 @@ public class AppAuthenticator {
 			.withIssuedAt(new Date())
 			.sign(this.signingAlg);
 		
-		Cookie jwtCookie = new Cookie(AUTHTOKEN_ATTRNAME, jwtEncoded);
+		Cookie jwtCookie = new Cookie(AUTHTOKEN_COOKIENAME, jwtEncoded);
 		jwtCookie.setMaxAge((int) ((tomorrow.getTimeInMillis() - System.currentTimeMillis()) / 1000));
 		jwtCookie.setPath(request.getContextPath());
 		
