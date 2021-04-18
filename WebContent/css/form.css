@@ -1,9 +1,20 @@
-ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+/* HEADER */
+
+header {
+	font-family: 'Roboto', sans-serif;
+	color: #FFFFFF;
+	background: #728FA5;
+	border-radius: 1em;
+	
+	padding-block: 60px;
+	margin-block-end: 40px;
 }
 
+header h1 {
+	text-align: center;
+}
+
+/* FORM */
 form {
 	margin: 0 auto;
 	width: 400px;
@@ -12,55 +23,54 @@ form {
 	border-radius: 1em;
 }
 
-div+div {
-	margin-top: 1em;
+form ul {
+	margin: 0em;
+	padding: 0;
+	list-style: none;
 }
 
-label span {
-	display: inline-block;
-	width: 120px;
-	text-align: right;
+form ul li {
+	margin-block: 0.5em;
 }
 
-input, textarea {
+form label {
+	font: 1em sans-serif;
+	position: relative;
+	margin-inline-end: 0.5em;
+}
+
+form input,
+form textarea {
 	font: 1em sans-serif;
 	width: 250px;
 	box-sizing: border-box;
 	border: 1px solid #999;
+	
 }
 
-input[type=checkbox], input[type=radio] {
+form input[type=checkbox], 
+form input[type=radio] {
 	width: auto;
 	border: none;
 }
 
-input:focus, textarea:focus {
+form input:focus, 
+form textarea:focus {
 	border-color: #000;
 }
 
-textarea {
-	vertical-align: top;
-	height: 5em;
-	resize: vertical;
-}
-
-fieldset {
-	width: 250px;
-	box-sizing: border-box;
-	margin-left: 136px;
-	border: 1px solid #999;
-}
-
-button {
+form button {
 	margin: 20px 0 0 124px;
 }
 
-label {
-  position: relative;
-}
-
-label em {
+form label em {
 	position: absolute;
 	right: 5px;
 	top: 20px;
+}
+
+form #error {
+	font: 0.8em sans-serif;
+	font-style: italic;
+	color: red;
 }

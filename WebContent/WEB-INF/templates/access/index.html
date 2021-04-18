@@ -1,23 +1,26 @@
 <!DOCTYPE html>
-<html>
+
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8">
 		<title>PoliEsaMI - Log In</title>
 		<link href="/polimi-tiw-2020-project/css/form.css" rel="stylesheet">
+		<link href="https://fonts.gstatic.com" rel="preconnect">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
 	</head>
 	<body>
 		<header>
-
+			<h1>PoliEsaMI</h1>
 		</header>
 		<form action="LoginService" method="post">
 			<ul>
 				<li>
 					<label for="person_code">Person Code:</label>
-					<input type="text" id="person_code" name="person_code">
+					<input type="text" id="person_code" name="person_code" autocomplete="username">
 				</li>
 				<li>
 					<label for="password">Password:</label>
-					<input type="text" id="password" name="password">
+					<input type="password" id="password" name="password" autocomplete="password">
 				</li>
 				<li>
 					<input type="checkbox" id="all_day" name="all_day">
@@ -27,10 +30,10 @@
 					<input type="submit" value="login"> 
 				</li>
 			</ul>
+			<p id="error" th:if="${#session.getAttribute(errorMsg)}" th:text="${#messages.msg(#session.getAttribute(errorMsg))}"></p>
 		</form>
-		<p></p>
 		<footer>
-
+			
 		</footer>
 	</body>	
 </html>
