@@ -1,9 +1,12 @@
 package it.polimi.poliesami.utils;
 
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,33 +73,24 @@ public class AppAuthenticator {
 	}
 	
 	private void setJWTCookie(HttpServletRequest request, HttpServletResponse response, String personCode) {
-				
-		Calendar tomorrow = this.getTomorrow();
+		Instant tomorrow = Instant.now()
+			.plus(1, ChronoUnit.DAYS)
+			.truncatedTo(ChronoUnit.DAYS);
 		
 		JWTCreator.Builder builder = JWT.create();
 		String jwtEncoded = builder
 			.withIssuer("it.polimi.poliesami")
 			.withSubject(personCode)
 			.withAudience("it.polimi.poliesami")
-			.withExpiresAt(tomorrow.getTime())
+			.withExpiresAt(Date.from(tomorrow))
 			.withIssuedAt(new Date())
 			.sign(this.signingAlg);
-		
-		Cookie jwtCookie = new Cookie(AUTHTOKEN_COOKIENAME, jwtEncoded);
-		jwtCookie.setMaxAge((int) ((tomorrow.getTimeInMillis() - System.currentTimeMillis()) / 1000));
-		jwtCookie.setPath(request.getContextPath());
-		
-		response.addCookie(jwtCookie);
-	}
-	
-	private Calendar getTomorrow() {
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.DAY_OF_MONTH, 1);
-		c.set(Calendar.HOUR_OF_DAY, 0);
-		c.set(Calendar.MINUTE, 0);
-		c.set(Calendar.SECOND, 0);
-		c.set(Calendar.MILLISECOND, 0);
-		
-		return c;
+
+		// Manually build Cookie header
+		response.addHeader("Set-Cookie",
+			AUTHTOKEN_COOKIENAME + "=" + jwtEncoded + "; " +
+			"Expires=" + ZonedDateTime.ofInstant(tomorrow, ZoneOffset.UTC).format(DateTimeFormatter.RFC_1123_DATE_TIME) + "; " +
+			"Path=" + request.getContextPath()
+		);
 	}
 }
