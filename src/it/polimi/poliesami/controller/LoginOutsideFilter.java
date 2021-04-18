@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import it.polimi.poliesami.utils.AppAuthenticator;
+import it.polimi.poliesami.utils.HttpUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletContext;
@@ -28,6 +29,7 @@ public class LoginOutsideFilter extends HttpFilter {
 		if(identity != null) {
 			System.out.println("Sei già loggato, besugo");
 			// TODO redirect to careers
+			HttpUtils.redirect(req, res, "/inside/");
 			return;
 		}
 
