@@ -14,6 +14,10 @@ import javax.servlet.annotation.*;
 
 import javax.sql.DataSource;
 
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+
 import com.auth0.jwt.algorithms.Algorithm;
 
 import it.polimi.db.dao.UserDAO;
@@ -51,5 +55,16 @@ public class AppInit implements ServletContextListener {
 		AppAuthenticator clientAuthenticator = new AppAuthenticator(
 				Algorithm.HMAC256("\"The Garden Of Earthly Delights\" By Hieronymus Bosch"));
 		servletContext.setAttribute("clientAuthenticator", clientAuthenticator);
+		
+		/* ********** Thymeleaf Template Engine ********** */
+		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
+
+		templateResolver.setTemplateMode(TemplateMode.HTML);
+		templateResolver.setPrefix("/WEB-INF/templates/");
+		templateResolver.setSuffix(".html");
+
+		TemplateEngine templateEngine = new TemplateEngine();
+		templateEngine.setTemplateResolver(templateResolver);
+		servletContext.setAttribute("templateEngine", templateEngine);
 	}
 }
