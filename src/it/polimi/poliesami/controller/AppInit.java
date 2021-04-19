@@ -1,5 +1,8 @@
 package it.polimi.poliesami.controller;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -20,6 +23,8 @@ import it.polimi.poliesami.utils.AppAuthenticator;
 
 @WebListener
 public class AppInit implements ServletContextListener {
+	private static final Logger logger = Logger.getLogger(AppInit.class.getName());
+
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		ServletContext servletContext = event.getServletContext();
@@ -30,7 +35,7 @@ public class AppInit implements ServletContextListener {
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 			polimiDB = (DataSource) envCtx.lookup("jdbc/polimiDB");
 		} catch (NamingException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 		
 		servletContext.setAttribute("polimiDB", polimiDB);

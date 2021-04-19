@@ -1,6 +1,8 @@
 package it.polimi.poliesami.controller;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -18,6 +20,7 @@ import it.polimi.poliesami.utils.HttpUtils;
 
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(LoginServlet.class.getName());
 	private String loginPage;
 
 	@Override
@@ -44,7 +47,7 @@ public class LoginServlet extends HttpServlet {
 		UserBean user = userDAO.getUserByPersonCode(personCode);
 
 		if(user == null) {
-			System.out.println("No such user exists");
+			logger.log(Level.FINER, "{0}: No such user {1}", new Object[]{request.getRemoteHost(), personCode});
 			// TODO session error
 			HttpUtils.redirect(request, response, loginPage);
 			return;
@@ -54,7 +57,7 @@ public class LoginServlet extends HttpServlet {
 		boolean success = userAuthenticator.verify(plainPsw.getBytes(), user.getHashedPassword());
 		
 		if(!success) {
-			System.out.println("User and password don't match");
+			logger.log(Level.FINER, "{0}: Wrong password for user {1}", new Object[]{request.getRemoteHost(), personCode});
 			// TODO session error
 			HttpUtils.redirect(request, response, loginPage);
 			return;
@@ -62,8 +65,9 @@ public class LoginServlet extends HttpServlet {
 		
 		AppAuthenticator clientAuthenticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
 		clientAuthenticator.setClientIdentity(request, response, personCode, allDayLogin);
+		logger.log(Level.FINER, "{0}: authenticated as user {1}", new Object[]{request.getRemoteHost(), personCode});
+
 		// TODO redirect to careers
-		
 		HttpUtils.redirect(request, response, "/inside/");
 	}
 }

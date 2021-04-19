@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -11,16 +13,18 @@ import it.polimi.db.business.UserBean;
 
 public class UserDAO {
 	private DataSource dataSrc;
-	private static final String DSRC_ERROR = "UserDAO: DataSource not present";
-	private static final String CONN_ERROR = "UserDAO: could not get connection";
+	private static final String DSRC_ERROR = "DataSource not present";
+	private static final Logger logger = Logger.getLogger(UserDAO.class.getName());
 	
 	public UserDAO(DataSource userDataSource) {
-		this.dataSrc = userDataSource;
+		dataSrc = userDataSource;
+		if(dataSrc == null)
+			logger.log(Level.SEVERE, DSRC_ERROR);
 	}
 	
 	public UserBean getUserByPersonCode(String personCode) {
 		if(dataSrc == null) {
-			System.out.println(DSRC_ERROR);
+			logger.log(Level.WARNING, DSRC_ERROR);
 			return null;
 		}
 		
@@ -43,15 +47,14 @@ public class UserDAO {
 				return user;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println(CONN_ERROR);
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 		return null;
 	}
 
 	public UserBean getUserByEmail(String email) {
 		if(dataSrc == null) {
-			System.out.println(DSRC_ERROR);
+			logger.log(Level.WARNING, DSRC_ERROR);
 			return null;
 		}
 		
@@ -74,15 +77,14 @@ public class UserDAO {
 				return user;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println(CONN_ERROR);
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 		return null;
 	}
 
 	public boolean addUser(String email, byte[] password, String name, String surname) {
 		if(dataSrc == null) {
-			System.out.println(DSRC_ERROR);
+			logger.log(Level.WARNING, DSRC_ERROR);
 			return false;
 		}
 		
@@ -99,8 +101,7 @@ public class UserDAO {
 			if(rows > 0)
 				return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println(CONN_ERROR);
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 		return false;
 	}

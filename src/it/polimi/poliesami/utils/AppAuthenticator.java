@@ -6,6 +6,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +23,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 public class AppAuthenticator {
 	private static final String PERSONCODE_ATTRNAME = "personCode";
 	private static final String AUTHTOKEN_COOKIENAME = "authToken";
+	private static final Logger logger = Logger.getLogger(AppAuthenticator.class.getName());
 
 	private Algorithm signingAlg;
 	private JWTVerifier verifier; 
@@ -39,6 +42,7 @@ public class AppAuthenticator {
 			setJWTCookie(request, response, personCode);
 		}
 		request.getSession().setAttribute(PERSONCODE_ATTRNAME, personCode);
+		logger.log(Level.FINE, "{0}: Set identity {1}", new Object[]{request.getRemoteHost(), personCode});
 	}
 	
 	public String getClientIdentity(HttpServletRequest request) {
@@ -48,6 +52,7 @@ public class AppAuthenticator {
 			if(session != null) {
 				String personCode = (String) session.getAttribute(PERSONCODE_ATTRNAME);
 				if(personCode != null) {
+					logger.log(Level.FINER, "{0}: Get session identity {1}", new Object[]{request.getRemoteHost(), personCode});
 					return personCode;
 				}
 			}
@@ -61,9 +66,10 @@ public class AppAuthenticator {
 					DecodedJWT jwtDecoded = verifier.verify(jwtEncoded);
 					String personCode = jwtDecoded.getSubject();
 					request.getSession().setAttribute(PERSONCODE_ATTRNAME, personCode);
+					logger.log(Level.FINER, "{0}: Get jwt identity {1}", new Object[]{request.getRemoteHost(), personCode});
 					return personCode;
 				} catch (JWTVerificationException invalidToken) {
-					// TODO log invalid jwt
+						logger.log(Level.FINER, "{0}: Invalid jwt", request.getRemoteHost());
 				}
 			}
 		}
@@ -92,5 +98,6 @@ public class AppAuthenticator {
 			"Expires=" + ZonedDateTime.ofInstant(tomorrow, ZoneOffset.UTC).format(DateTimeFormatter.RFC_1123_DATE_TIME) + "; " +
 			"Path=" + request.getContextPath()
 		);
+		logger.log(Level.FINE, "{0}: Set jwt identity {1}", new Object[]{request.getRemoteHost(), personCode});
 	}
 }
