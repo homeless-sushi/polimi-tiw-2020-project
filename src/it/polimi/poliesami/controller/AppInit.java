@@ -20,6 +20,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import com.auth0.jwt.algorithms.Algorithm;
 
+import it.polimi.db.dao.CareerDAO;
 import it.polimi.db.dao.UserDAO;
 import it.polimi.db.utils.Authenticator;
 
@@ -47,6 +48,9 @@ public class AppInit implements ServletContextListener {
 		/* ********** DAOs ********** */
 		UserDAO userDAO = new UserDAO(polimiDB);
 		servletContext.setAttribute("userDAO", userDAO);
+		
+		CareerDAO careerDAO = new CareerDAO(polimiDB);
+		servletContext.setAttribute("careerDAO", careerDAO);
 		
 		/* ********** Authenticators ********** */
 		Authenticator userAuthenticator = new Authenticator();
