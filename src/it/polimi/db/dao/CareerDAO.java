@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import it.polimi.db.business.CareerBean;
+import it.polimi.db.business.Role;
 
 public class CareerDAO {
 	private DataSource dataSrc;
@@ -45,8 +46,8 @@ public class CareerDAO {
 					while(result.next()) {
 						CareerBean career = new CareerBean();
 						career.setPersonCode(result.getString("person_code"));
-						career.setId(result.getString("id"));
-						career.setRole(result.getString("role"));
+						career.setId(result.getInt("id"));
+						career.setRole(Role.fromString(result.getString("role")));
 						career.setMajor(result.getString("major"));
 						careers.add(career);
 					}
@@ -57,5 +58,32 @@ public class CareerDAO {
 		}
 
 		return Collections.emptyList();
+	}
+
+	public boolean validCareer(String personCode, int career, Role role){
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return false;
+		}
+		
+		String query = "SELECT person_code, id, role "
+		             + "FROM user_career "
+		             + "WHERE person_code = ? "
+		             + "AND id = ? "
+		             + "AND role = ?";
+		
+		try (Connection connection = dataSrc.getConnection();
+		PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setString(1, personCode);
+			statement.setInt(2, career);
+			statement.setString(3, role.toString());
+			try (ResultSet result = statement.executeQuery()) {
+				return result.next(); 
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+		
+		return false;
 	}
 }
