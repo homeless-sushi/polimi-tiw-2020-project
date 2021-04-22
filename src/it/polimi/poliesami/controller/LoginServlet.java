@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import it.polimi.db.business.UserBean;
 import it.polimi.db.dao.UserDAO;
 import it.polimi.db.utils.Authenticator;
-
+import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.utils.AppAuthenticator;
 import it.polimi.poliesami.utils.HttpUtils;
 
@@ -64,7 +64,8 @@ public class LoginServlet extends HttpServlet {
 		}
 		
 		AppAuthenticator clientAuthenticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-		clientAuthenticator.setClientIdentity(request, response, personCode, allDayLogin);
+		IdentityBean identity = new IdentityBean(personCode, allDayLogin);
+		clientAuthenticator.setClientIdentity(request, response, identity);
 		logger.log(Level.FINER, "{0}: authenticated as user {1}", new Object[]{request.getRemoteHost(), personCode});
 
 		// TODO redirect to careers

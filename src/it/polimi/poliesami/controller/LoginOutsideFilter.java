@@ -10,6 +10,7 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.utils.AppAuthenticator;
 import it.polimi.poliesami.utils.HttpUtils;
 
@@ -27,7 +28,7 @@ public class LoginOutsideFilter extends HttpFilter {
 		ServletContext servletCtx = getServletContext();
 		
 		AppAuthenticator clientAuthenticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-		String identity = clientAuthenticator.getClientIdentity(req);
+		IdentityBean identity = clientAuthenticator.getClientIdentity(req);
 		
 		if(identity != null) {
 			logger.log(Level.FINER, "{0}: Already logged in", req.getRemoteHost());
