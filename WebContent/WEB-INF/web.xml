@@ -77,4 +77,23 @@
 		<param-name>loginPage</param-name>
 		<param-value>/login/</param-value>
 	</context-param>
+	
+	<servlet>
+		<servlet-name>CareersPage</servlet-name>
+		<servlet-class>it.polimi.poliesami.view.CareersPage</servlet-class>
+		
+		<init-param>
+			<param-name>templatePath</param-name>
+			<param-value>/inside/careers</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CareersPage</servlet-name>
+		<url-pattern>/inside/careers</url-pattern>
+	</servlet-mapping>
+	
+	<context-param>
+		<param-name>careersPage</param-name>
+		<param-value>/inside/careers</param-value>
+	</context-param>
 </web-app>

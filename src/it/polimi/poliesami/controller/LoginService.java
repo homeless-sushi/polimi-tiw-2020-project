@@ -22,12 +22,14 @@ public class LoginService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(LoginService.class.getName());
 	private String loginPage;
+	private String careersPage;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		ServletContext servletCtx = config.getServletContext();
 		loginPage = servletCtx.getInitParameter("loginPage");
+		careersPage = servletCtx.getInitParameter("careersPage");
 	}
 
 	@Override
@@ -69,6 +71,6 @@ public class LoginService extends HttpServlet {
 		logger.log(Level.FINER, "{0}: authenticated as user {1}", new Object[]{request.getRemoteHost(), personCode});
 
 		// TODO redirect to careers
-		HttpUtils.redirect(request, response, "/inside/");
+		HttpUtils.redirect(request, response, careersPage);
 	}
 }

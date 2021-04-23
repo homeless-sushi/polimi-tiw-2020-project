@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-
+import javax.servlet.FilterConfig;
+import javax.servlet.FilterChain;
 import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,12 +16,18 @@ import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.utils.AppAuthenticator;
 import it.polimi.poliesami.utils.HttpUtils;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletContext;
 
 public class LoginOutside extends HttpFilter {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(LoginOutside.class.getName());
+	private String careersPage;
+
+	@Override
+	public void init(FilterConfig config) throws ServletException {
+		super.init(config);
+		ServletContext servletCtx = config.getServletContext();
+		careersPage = servletCtx.getInitParameter("careersPage");
+	}
 
 	@Override
 	protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
@@ -32,8 +40,7 @@ public class LoginOutside extends HttpFilter {
 		
 		if(identity != null) {
 			logger.log(Level.FINER, "{0}: Already logged in", req.getRemoteHost());
-			// TODO redirect to careers
-			HttpUtils.redirect(req, res, "/inside/");
+			HttpUtils.redirect(req, res, careersPage);
 			return;
 		}
 
