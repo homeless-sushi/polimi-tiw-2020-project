@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -117,5 +118,24 @@ public class AppAuthenticator {
 			"Path=" + request.getContextPath()
 		);
 		logger.log(Level.FINE, "{0}: Set jwt identity {1}", new Object[]{request.getRemoteHost(), identity});
+	}
+
+	public void deleteClientIdentity(HttpServletRequest request, HttpServletResponse response) {
+		// Session logout
+		HttpSession session = request.getSession(false);
+		if(session != null) {
+			session.removeAttribute(IDBEAN_ATTRNAME);
+			logger.log(Level.FINE, "{0}: Delete session identity", request.getRemoteHost());
+		}
+
+		// jwt logout
+		String jwtEncoded = new CookieMap(request.getCookies()).get(AUTHTOKEN_COOKIENAME);
+		if(jwtEncoded != null) {
+			Cookie jwtCookie = new Cookie(AUTHTOKEN_COOKIENAME, "");
+			jwtCookie.setPath(request.getContextPath());
+			jwtCookie.setMaxAge(0);
+			response.addCookie(jwtCookie);
+			logger.log(Level.FINE, "{0}: Delete jwt identity", request.getRemoteHost());
+		}
 	}
 }
