@@ -57,6 +57,19 @@
 		<servlet-name>LogoutService</servlet-name>
 		<url-pattern>/logout</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>CareerService</servlet-name>
+		<servlet-class>it.polimi.poliesami.controller.CareerService</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CareerService</servlet-name>
+		<url-pattern>/inside/CareerService</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>careerService</param-name>
+		<param-value>/inside/CareerService</param-value>
+	</context-param>
 	
 	<!-- PAGES -->
 	<servlet>
