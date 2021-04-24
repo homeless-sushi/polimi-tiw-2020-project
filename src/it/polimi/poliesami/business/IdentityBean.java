@@ -30,4 +30,19 @@ public class IdentityBean implements Serializable {
 	public int getCareerId() { return this.careerId; }
 	public void setRole(Role role) { this.role = role; }
 	public Role getRole() { return this.role; }
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder(this.getClass().getSimpleName() + "(");
+		if (personCode == null) {
+			builder.append("null");
+		} else {
+			builder.append(personCode);
+			if(role != null) {
+				builder.append(", " + careerId + ", " + role);
+			}
+		}
+		builder.append(")");
+		return builder.toString();
+	}
 }
