@@ -56,6 +56,9 @@ public class AppInit implements ServletContextListener {
 
 		CourseDAO courseDAO = new CourseDAO(polimiDB);
 		servletContext.setAttribute("courseDAO", courseDAO);
+
+		ExamDAO examDAO = new ExamDAO(polimiDB);
+		servletContext.setAttribute("examDAO", examDAO);
 		
 		/* ********** Authenticators ********** */
 		Authenticator userAuthenticator = new Authenticator();
