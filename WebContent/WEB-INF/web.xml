@@ -151,5 +151,24 @@
 	<context-param>
 		<param-name>professorExamsPage</param-name>
 		<param-value>/inside/professor/exams</param-value>
+	</context-param>
+
+	<servlet>
+		<servlet-name>StudentExamsPage</servlet-name>
+		<servlet-class>it.polimi.poliesami.view.StudentExamsPage</servlet-class>
+		
+		<init-param>
+			<param-name>templatePath</param-name>
+			<param-value>/inside/student/exams</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StudentExamsPage</servlet-name>
+		<url-pattern>/inside/student/exams</url-pattern>
+	</servlet-mapping>
+	
+	<context-param>
+		<param-name>studentExamsPage</param-name>
+		<param-value>/inside/student/exams</param-value>
 	</context-param>	
 </web-app>
