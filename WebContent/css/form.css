@@ -21,6 +21,8 @@ form {
 	padding: 1em;
 	border: 1px solid #CCC;
 	border-radius: 1em;
+
+	margin-block-start: 40px;
 }
 
 form ul {
@@ -52,6 +54,10 @@ form input[type=checkbox],
 form input[type=radio] {
 	width: auto;
 	border: none;
+}
+
+form input[type=number]{
+	width: 125px;
 }
 
 form input:focus, 

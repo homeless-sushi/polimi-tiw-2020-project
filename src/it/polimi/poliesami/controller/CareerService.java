@@ -22,12 +22,14 @@ public class CareerService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(CareerService.class.getName());
 	private String careersPage;
+	private String professorExamsPage;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		ServletContext servletCtx = config.getServletContext();
 		careersPage = servletCtx.getInitParameter("careersPage");
+		professorExamsPage = servletCtx.getInitParameter("professorExamsPage");
 	}
 
 	@Override
@@ -65,7 +67,7 @@ public class CareerService extends HttpServlet {
 
 			switch (careerRole) {
 				case PROFESSOR:
-					HttpUtils.redirect(request, response, "/inside/professor/");
+					HttpUtils.redirect(request, response, professorExamsPage);
 					return;
 				case STUDENT:
 					HttpUtils.redirect(request, response, "/inside/student/");

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>PoliEsaMI - Exams</title>
+		<link href="/polimi-tiw-2020-project/css/table.css" rel="stylesheet">
+		<link href="/polimi-tiw-2020-project/css/form.css" rel="stylesheet">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<header>
+			<h1>PoliEsaMI</h1>
+		</header>
+		<div></div>
+		<form action="." method="GET">
+			<ul>
+				<li>
+					<label for="year">Year:</label>
+					<input type="number" id="year" name="year" autocomplete="off">
+				</li>
+				<li>
+					<input type="submit" value="Go to year"> 
+				</li>
+			</ul>
+		</form>
+		<table>
+			<thead>
+				<tr>
+					<th scope="col" th:text="#{exams.thCourseId}"></th>
+					<th scope="col" th:text="#{exams.thCourseName}"></th>
+					<th scope="col" th:text="#{exams.thExamId}"></th>
+					<th scope="col" th:text="#{exams.thExamDate}"></th>
+					<th scope="col" ></th>
+				</tr>
+			</thead>
+			<tbody>
+				<th:block th:each="courseExams,outerIStat : ${courseExamsList}">
+					<th:block th:each="exam,innerIStat : ${courseExams.getExams()}">
+						<tr>
+							<td th:if="${innerIStat.first}" th:rowspan="${courseExams.getExams().size}" th:text="${courseExams.getCourse().getId()}" 
+								th:class="${outerIStat.odd} ? 'odd' : 'even'"></td>
+							<td th:if="${innerIStat.first}" th:rowspan="${courseExams.getExams().size}" th:text="${courseExams.getCourse().getName()}"
+								th:class="${outerIStat.odd} ? 'odd' : 'even'"></td>
+							<td th:text="${exam.getId()}" th:class="${innerIStat.odd} ? 'odd' : 'even'"></td>
+							<td th:text="${exam.getDate()}" th:class="${innerIStat.odd} ? 'odd' : 'even'"></td>
+							<td><a th:href="@{/inside/professor/registrations(examId=${exam.getId()})}" th:text="#{exam.goToExamRegistrations}"></a></td>
+						</tr>
+					</th:block>
+				</th:block>
+			</tbody>
+		</table>
+		
+		<footer>
+
+		</footer>
+	</body>	
+</html>

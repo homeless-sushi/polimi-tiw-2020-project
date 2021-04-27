@@ -63,7 +63,7 @@
 		<filter-name>StudentFilter</filter-name>
 		<url-pattern>/inside/student/*</url-pattern>
 	</filter-mapping>
-	
+
 	<!-- SERVLETS -->
 	<servlet>
 		<servlet-name>LoginService</servlet-name>
@@ -133,4 +133,23 @@
 		<param-name>careersPage</param-name>
 		<param-value>/inside/careers</param-value>
 	</context-param>
+
+	<servlet>
+		<servlet-name>ProfessorExamsPage</servlet-name>
+		<servlet-class>it.polimi.poliesami.view.ProfessorExamsPage</servlet-class>
+		
+		<init-param>
+			<param-name>templatePath</param-name>
+			<param-value>/inside/professor/exams</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProfessorExamsPage</servlet-name>
+		<url-pattern>/inside/professor/exams</url-pattern>
+	</servlet-mapping>
+	
+	<context-param>
+		<param-name>professorExamsPage</param-name>
+		<param-value>/inside/professor/exams</param-value>
+	</context-param>	
 </web-app>
