@@ -1,4 +1,4 @@
-package it.polimi.poliesami.controller;
+package it.polimi.poliesami;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

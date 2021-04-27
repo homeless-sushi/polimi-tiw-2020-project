@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import it.polimi.poliesami.utils.AppAuthenticator;
 import it.polimi.poliesami.utils.HttpUtils;
 
-public class LogoutServlet extends HttpServlet {
+public class LogoutService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String loginPage;
 

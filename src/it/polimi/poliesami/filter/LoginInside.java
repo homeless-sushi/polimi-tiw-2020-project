@@ -1,4 +1,4 @@
-package it.polimi.poliesami.controller;
+package it.polimi.poliesami.filter;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -16,9 +16,9 @@ import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.utils.AppAuthenticator;
 import it.polimi.poliesami.utils.HttpUtils;
 
-public class LoginInsideFilter extends HttpFilter {
+public class LoginInside extends HttpFilter {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(LoginInsideFilter.class.getName());
+	private static final Logger logger = Logger.getLogger(LoginInside.class.getName());
 	private String loginPage;
 
 	@Override

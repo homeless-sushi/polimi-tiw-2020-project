@@ -18,9 +18,9 @@ import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.utils.AppAuthenticator;
 import it.polimi.poliesami.utils.HttpUtils;
 
-public class LoginServlet extends HttpServlet {
+public class LoginService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(LoginServlet.class.getName());
+	private static final Logger logger = Logger.getLogger(LoginService.class.getName());
 	private String loginPage;
 
 	@Override

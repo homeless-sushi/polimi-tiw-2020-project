@@ -1,4 +1,4 @@
-package it.polimi.poliesami.controller;
+package it.polimi.poliesami.filter;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -17,9 +17,9 @@ import it.polimi.poliesami.utils.HttpUtils;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletContext;
 
-public class LoginOutsideFilter extends HttpFilter {
+public class LoginOutside extends HttpFilter {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(LoginOutsideFilter.class.getName());
+	private static final Logger logger = Logger.getLogger(LoginOutside.class.getName());
 
 	@Override
 	protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)

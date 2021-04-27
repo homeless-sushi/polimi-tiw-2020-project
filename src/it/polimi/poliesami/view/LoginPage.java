@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-public class LoginPageServlet extends HttpServlet {
+public class LoginPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String ERROR_MSG = "LoginPageServlet__ERROR_MSG";
 
@@ -42,11 +42,11 @@ public class LoginPageServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
-		ctx.setVariable("errorMsg", LoginPageServlet.ERROR_MSG);
+		ctx.setVariable("errorMsg", LoginPage.ERROR_MSG);
 		
 		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine"); 
 		templateEngine.process(templatePath, ctx, response.getWriter());
 		
-		session.removeAttribute(LoginPageServlet.ERROR_MSG);
+		session.removeAttribute(LoginPage.ERROR_MSG);
 	}
 }

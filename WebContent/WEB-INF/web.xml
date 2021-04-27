@@ -19,13 +19,13 @@
 	
 	<!-- LISTENERS -->
 	<listener>
-		<listener-class>it.polimi.poliesami.controller.AppInit</listener-class>
+		<listener-class>it.polimi.poliesami.AppInit</listener-class>
 	</listener>
 	
 	<!-- FILTERS -->
 	<filter>
 		<filter-name>LoginInsideFilter</filter-name>
-		<filter-class>it.polimi.poliesami.controller.LoginInsideFilter</filter-class>
+		<filter-class>it.polimi.poliesami.filter.LoginInside</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>LoginInsideFilter</filter-name>
@@ -33,48 +33,48 @@
 	</filter-mapping>
 	<filter>
 		<filter-name>LoginOutsideFilter</filter-name>
-		<filter-class>it.polimi.poliesami.controller.LoginOutsideFilter</filter-class>
+		<filter-class>it.polimi.poliesami.filter.LoginOutside</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>LoginOutsideFilter</filter-name>
-		<url-pattern>/access/*</url-pattern>
+		<url-pattern>/login/*</url-pattern>
 	</filter-mapping>
 	
 	<!-- SERVLETS -->
 	<servlet>
-		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>it.polimi.poliesami.controller.LoginServlet</servlet-class>
+		<servlet-name>LoginService</servlet-name>
+		<servlet-class>it.polimi.poliesami.controller.LoginService</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>LoginServlet</servlet-name>
-		<url-pattern>/access/LoginService</url-pattern>
+		<servlet-name>LoginService</servlet-name>
+		<url-pattern>/login/LoginService</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>LogoutServlet</servlet-name>
-		<servlet-class>it.polimi.poliesami.controller.LogoutServlet</servlet-class>
+		<servlet-name>LogoutService</servlet-name>
+		<servlet-class>it.polimi.poliesami.controller.LogoutService</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>LogoutServlet</servlet-name>
+		<servlet-name>LogoutService</servlet-name>
 		<url-pattern>/logout</url-pattern>
 	</servlet-mapping>
 	
 	<!-- PAGES -->
 	<servlet>
-		<servlet-name>LoginPageServlet</servlet-name>
-		<servlet-class>it.polimi.poliesami.view.LoginPageServlet</servlet-class>
+		<servlet-name>LoginPage</servlet-name>
+		<servlet-class>it.polimi.poliesami.view.LoginPage</servlet-class>
 		
 		<init-param>
 			<param-name>templatePath</param-name>
-			<param-value>/access/index</param-value>
+			<param-value>/login/index</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>LoginPageServlet</servlet-name>
-		<url-pattern>/access/</url-pattern>
+		<servlet-name>LoginPage</servlet-name>
+		<url-pattern>/login/</url-pattern>
 	</servlet-mapping>
 
 	<context-param>
 		<param-name>loginPage</param-name>
-		<param-value>/access/</param-value>
+		<param-value>/login/</param-value>
 	</context-param>
 </web-app>
