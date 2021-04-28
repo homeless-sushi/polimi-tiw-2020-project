@@ -39,6 +39,30 @@
 		<filter-name>LoginOutsideFilter</filter-name>
 		<url-pattern>/login/*</url-pattern>
 	</filter-mapping>
+	<filter>
+		<filter-name>ProfessorFilter</filter-name>
+		<filter-class>it.polimi.poliesami.filter.Role</filter-class>
+		<init-param>
+			<param-name>acceptRole</param-name>
+			<param-value>professor</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>ProfessorFilter</filter-name>
+		<url-pattern>/inside/professor/*</url-pattern>
+	</filter-mapping>
+	<filter>
+		<filter-name>StudentFilter</filter-name>
+		<filter-class>it.polimi.poliesami.filter.Role</filter-class>
+		<init-param>
+			<param-name>acceptRole</param-name>
+			<param-value>student</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>StudentFilter</filter-name>
+		<url-pattern>/inside/student/*</url-pattern>
+	</filter-mapping>
 	
 	<!-- SERVLETS -->
 	<servlet>
