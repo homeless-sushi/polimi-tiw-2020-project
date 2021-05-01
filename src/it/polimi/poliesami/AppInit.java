@@ -23,6 +23,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import it.polimi.db.dao.CareerDAO;
 import it.polimi.db.dao.CourseDAO;
 import it.polimi.db.dao.ExamDAO;
+import it.polimi.db.dao.ExamRegistrationDAO;
 import it.polimi.db.dao.UserDAO;
 import it.polimi.db.utils.Authenticator;
 
@@ -59,6 +60,9 @@ public class AppInit implements ServletContextListener {
 
 		ExamDAO examDAO = new ExamDAO(polimiDB);
 		servletContext.setAttribute("examDAO", examDAO);
+
+		ExamRegistrationDAO examRegistrationDAO = new ExamRegistrationDAO(polimiDB);
+ 		servletContext.setAttribute("examRegistrationDAO", examRegistrationDAO);
 		
 		/* ********** Authenticators ********** */
 		Authenticator userAuthenticator = new Authenticator();
