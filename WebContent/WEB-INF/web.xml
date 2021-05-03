@@ -102,6 +102,19 @@
 		<param-name>careerService</param-name>
 		<param-value>/inside/CareerService</param-value>
 	</context-param>
+
+	<servlet>
+		<servlet-name>StudExamIsRegService</servlet-name>
+		<servlet-class>it.polimi.poliesami.controller.StudExamIsRegService</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StudExamIsRegService</servlet-name>
+		<url-pattern>/inside/student/examRegistration/IsRegisteredService</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>studExamIsRegService</param-name>
+		<param-value>/inside/student/examRegistration/IsRegisteredService</param-value>
+	</context-param>
 	
 	<!-- PAGES -->
 	<servlet>

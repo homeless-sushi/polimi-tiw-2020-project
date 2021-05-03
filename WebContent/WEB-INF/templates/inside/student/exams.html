@@ -45,7 +45,7 @@
 								th:class="${outerIStat.odd} ? 'odd' : 'even'"></td>
 							<td th:text="${exam.getId()}" th:class="${innerIStat.odd} ? 'odd' : 'even'"></td>
 							<td th:text="${exam.getDate()}" th:class="${innerIStat.odd} ? 'odd' : 'even'"></td>
-							<td><a th:href="@{/inside/student/registration(examId=${exam.getId()})}" th:text="#{exam.goToExamRegistration}"></a></td>
+							<td><a th:href="@{/inside/student/examRegistration/IsRegisteredService(examId=${exam.getId()})}" th:text="#{exam.goToExamRegistration}"></a></td>
 						</tr>
 					</th:block>
 				</th:block>
