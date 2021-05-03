@@ -129,6 +129,20 @@
 		<param-value>/inside/student/examRegistration/RegistrationService</param-value>
 	</context-param>
 	
+	<servlet>
+		<servlet-name>StudExamRejectService</servlet-name>
+		<servlet-class>it.polimi.poliesami.controller.StudExamRejectService</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StudExamRejectService</servlet-name>
+		<url-pattern>/inside/student/examRegistration/RejectService</url-pattern>
+	</servlet-mapping>
+
+	<context-param>
+		<param-name>studExamRejectService</param-name>
+		<param-value>/inside/student/examRegistration/RejectService</param-value>
+	</context-param>
+
 	<!-- PAGES -->
 	<servlet>
 		<servlet-name>LoginPage</servlet-name>
