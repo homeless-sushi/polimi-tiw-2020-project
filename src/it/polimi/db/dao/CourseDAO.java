@@ -111,6 +111,45 @@ public class CourseDAO {
 		return Collections.emptyList();
 	}
 
+	public CourseBean getCourseFromExam(int examId){
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return null;
+		}
+		
+		String query = "SELECT course.id, course.name, course.semester, course.cfu, "
+		             + "course_details.year, course_details.professor_id " 
+		             + "FROM course "
+		             + "JOIN course_details "
+		             + "ON course.id = course_details.course_id "
+		             + "WHERE (course_details.course_id, course_details.year) IN "
+		             + "(SELECT exam.course_id, exam.year "
+		             + "FROM exam "
+		             + "WHERE exam.id = ?)";
+			
+		CourseBean course = new CourseBean();
+		
+		try (Connection connection = dataSrc.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(query)) {
+				statement.setInt(1, examId);
+				try (ResultSet result = statement.executeQuery()) {
+					while(result.next()) {
+						course.setId(result.getInt("course.id"));
+						course.setName(result.getString("course.name"));
+						course.setCfu(result.getInt("course.cfu"));
+						course.setSemester(result.getString("course.semester"));
+						course.setYear(result.getInt("course_details.year"));
+						course.setProfessorId(result.getInt("course_details.professor_id"));
+					}
+					return course;
+				}
+			} catch (SQLException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+
+		return null;
+	}
+
 	public int getAcademicYear(Date date){
 		//the academic year begins on august first
 		int beginDay = 1;

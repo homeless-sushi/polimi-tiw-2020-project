@@ -24,6 +24,37 @@ public class ExamDAO {
 		if(dataSrc == null)
 			logger.log(Level.SEVERE, DSRC_ERROR);
 	}
+	
+	public ExamBean getExam(int examId){
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return null;
+		}
+		
+		String query = "SELECT * "
+		             + "FROM exam "
+		             + "WHERE id = ? ";
+		
+		ExamBean exam = new ExamBean();
+		
+		try (Connection connection = dataSrc.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(query)) {
+				statement.setInt(1, examId);
+				try (ResultSet result = statement.executeQuery()) {
+					if(result.next()){
+						exam.setId(result.getInt("id"));
+						exam.setCourseId(result.getInt("course_id"));
+						exam.setYear(result.getInt("year"));
+						exam.setDate(result.getDate("date"));
+					}
+					return exam;
+				}
+			} catch (SQLException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+
+		return null; 
+	}
 
 	public List<ExamBean> getCourseExams(int courseId, int year){
 		if(dataSrc == null) {

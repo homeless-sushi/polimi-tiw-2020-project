@@ -21,11 +21,13 @@ public class StudExamIsRegService extends HttpServlet{
 	private static final Logger logger = Logger.getLogger(StudExamIsRegService.class.getName());
 
 	private String studExamNotRegPage;
+	private String studExamRegPage;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		ServletContext servletCtx = config.getServletContext();
+		studExamRegPage = servletCtx.getInitParameter("studExamRegPage");
 		studExamNotRegPage = servletCtx.getInitParameter("studExamNotRegPage");
 	}
 
@@ -49,8 +51,8 @@ public class StudExamIsRegService extends HttpServlet{
 
 		Map<String,Object> params = Map.of("examId", examId);
 		if(examRegistrationDAO.isStudentRegistered(identity.getCareerId(), examId)) {
-			HttpUtils.redirectWithParams(request, response, "/inside/student/examRegistration/registered", params);
-		} else {
+			HttpUtils.redirectWithParams(request, response, studExamRegPage, params);
+		}else{
 			HttpUtils.redirectWithParams(request, response, studExamNotRegPage, params);
 		}
 	}

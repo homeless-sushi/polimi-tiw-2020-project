@@ -221,6 +221,24 @@
 	</context-param>
 
 	<servlet>
+		<servlet-name>StudExamRegPage</servlet-name>
+		<servlet-class>it.polimi.poliesami.view.StudExamRegPage</servlet-class>
+		
+		<init-param>
+			<param-name>templatePath</param-name>
+			<param-value>/inside/student/examRegistration/registered</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StudExamRegPage</servlet-name>
+		<url-pattern>/inside/student/examRegistration/registered</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>studExamRegPage</param-name>
+		<param-value>/inside/student/examRegistration/registered</param-value>
+	</context-param>
+
+	<servlet>
 		<servlet-name>StudExamNotRegPage</servlet-name>
 		<servlet-class>it.polimi.poliesami.view.StudExamNotRegPage</servlet-class>
 		
