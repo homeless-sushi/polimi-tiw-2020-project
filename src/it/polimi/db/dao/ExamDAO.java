@@ -60,4 +60,35 @@ public class ExamDAO {
 
 		return Collections.emptyList(); 
 	}
+
+	public boolean isExamCourseAttendee(int studentId, int examId) {
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return false;
+		}
+
+		String query = "SELECT * "
+		             + "FROM attend "
+		             + "WHERE student_id = ? "
+		             + "AND (course_id, year) = "
+		             + "(SELECT course_id, year "
+		             + "FROM exam "
+		             + "WHERE id = ?)";
+
+		try (Connection connection = dataSrc.getConnection();
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setInt(1, studentId);
+			statement.setInt(2, examId);
+			statement.executeQuery();
+			try (ResultSet result = statement.executeQuery()) {
+				if(result.next()) {
+					return true;
+				}
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+		
+		return false;
+	}
 }

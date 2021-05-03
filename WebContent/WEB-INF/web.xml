@@ -63,6 +63,14 @@
 		<filter-name>StudentFilter</filter-name>
 		<url-pattern>/inside/student/*</url-pattern>
 	</filter-mapping>
+	<filter>
+		<filter-name>StudentExamFilter</filter-name>
+		<filter-class>it.polimi.poliesami.filter.StudentExam</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>StudentExamFilter</filter-name>
+		<url-pattern>/inside/student/examRegistration/*</url-pattern>
+	</filter-mapping>
 
 	<!-- SERVLETS -->
 	<servlet>
