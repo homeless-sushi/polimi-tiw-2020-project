@@ -204,5 +204,24 @@
 	<context-param>
 		<param-name>studentExamsPage</param-name>
 		<param-value>/inside/student/exams</param-value>
-	</context-param>	
+	</context-param>
+
+	<servlet>
+		<servlet-name>StudExamNotRegPage</servlet-name>
+		<servlet-class>it.polimi.poliesami.view.StudExamNotRegPage</servlet-class>
+		
+		<init-param>
+			<param-name>templatePath</param-name>
+			<param-value>/inside/student/examRegistration/notRegistered</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StudExamNotRegPage</servlet-name>
+		<url-pattern>/inside/student/examRegistration/notRegistered</url-pattern>
+	</servlet-mapping>
+	
+	<context-param>
+		<param-name>studExamNotRegPage</param-name>
+		<param-value>/inside/student/examRegistration/notRegistered</param-value>
+	</context-param>
 </web-app>

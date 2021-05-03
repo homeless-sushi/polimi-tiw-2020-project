@@ -19,10 +19,14 @@ import it.polimi.poliesami.utils.HttpUtils;
 public class StudExamIsRegService extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(StudExamIsRegService.class.getName());
+
+	private String studExamNotRegPage;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		ServletContext servletCtx = config.getServletContext();
+		studExamNotRegPage = servletCtx.getInitParameter("studExamNotRegPage");
 	}
 
 	@Override
@@ -47,7 +51,7 @@ public class StudExamIsRegService extends HttpServlet{
 		if(examRegistrationDAO.isStudentRegistered(identity.getCareerId(), examId)) {
 			HttpUtils.redirectWithParams(request, response, "/inside/student/examRegistration/registered", params);
 		} else {
-			HttpUtils.redirectWithParams(request, response, "/inside/student/examRegistration/notRegistered", params);
+			HttpUtils.redirectWithParams(request, response, studExamNotRegPage, params);
 		}
 	}
 }

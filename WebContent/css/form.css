@@ -75,6 +75,10 @@ form label em {
 	top: 20px;
 }
 
+form p {
+	font: 1em sans-serif;
+}
+
 form #error {
 	font: 0.8em sans-serif;
 	font-style: italic;

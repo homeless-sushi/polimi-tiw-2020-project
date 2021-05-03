@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>PoliEsaMI - Not Registered</title>
+		<link href="/polimi-tiw-2020-project/css/form.css" rel="stylesheet">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<header>
+			<h1>PoliEsaMI</h1>
+		</header>
+		<div></div>
+		<form th:action="@{${studExamRegService}}" method="POST">
+			<p th:text="#{notRegistered.youAreNotRegistered}"></p>
+			<input type="hidden" name="examId" th:value="${examId}">
+			<input type="hidden" name="action" th:value="${action}">
+			<ul>
+				<li>
+					<input type="submit" th:value="#{notRegistered.clickToRegister}"> 
+				</li>
+			</ul>
+		</form>
+		<footer>
+
+		</footer>
+	</body>	
+</html>
