@@ -1,0 +1,17 @@
+id,name,cfu,semester
+1,"Analisi Matematica 1",10,1
+2,"Geometria e Algebra Lineare",8,1
+3,"Fisica",12,2
+4,"Elettrotecnica",10,2
+5,"Analisi Matematica 2",10,1
+6,"Architettura dei Calcolatori e Sistemi Operativi",10,1
+7,"Probabilità e Statistica",10,2
+8,"Fondamenti di Automatica",10,2
+9,"DataBase 1",5,1
+10,"Elettronica",10,1
+11,"Meccanica",5,2
+12,"Fisica Tecnica",5,2
+13,"DataBase 2",5,1
+14,"Formal Languages and Compilers",5,1
+15,"Computer Graphics",5,2
+16,"Tecnologie Informatiche per il Web",5,2
