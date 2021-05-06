@@ -26,11 +26,15 @@ public class StudentExamsPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private String templatePath;
+	private String studExamRegPage;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		templatePath = getInitParameter("templatePath");
+
+		ServletContext servletCtx = config.getServletContext();
+		studExamRegPage = servletCtx.getInitParameter("studExamRegPage");		
 	}
 
 	@Override
@@ -39,9 +43,7 @@ public class StudentExamsPage extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		IdentityBean identity = (IdentityBean) session.getAttribute("identity");
-		
 		CourseDAO courseDAO = (CourseDAO) servletCtx.getAttribute("courseDAO");
-		
 		String yearString = request.getParameter("year");
 		int year;
 		try {
@@ -49,9 +51,7 @@ public class StudentExamsPage extends HttpServlet {
 		} catch (NumberFormatException e) {
 			year = courseDAO.getAcademicYear();
 		}
-
 		List<CourseBean> courses = courseDAO.getStudentCourses(identity.getCareerId(), year);
-
 		List<CourseExamsBean> courseExamsList = new ArrayList<>();
 		ExamDAO examDAO = (ExamDAO)	servletCtx.getAttribute("examDAO");
 		for(CourseBean course : courses){
@@ -61,6 +61,7 @@ public class StudentExamsPage extends HttpServlet {
 		}
 		
 		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
+		ctx.setVariable("studExamRegPage", studExamRegPage);
 		ctx.setVariable("courseExamsList", courseExamsList);
 		
 		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");

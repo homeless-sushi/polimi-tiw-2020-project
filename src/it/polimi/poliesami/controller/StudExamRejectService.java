@@ -21,26 +21,19 @@ public class StudExamRejectService extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(StudExamRejectService.class.getName());
 
-	private String studExamIsRegService;
+	private String studExamRegPage;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		ServletContext servletCtx = config.getServletContext();
-		studExamIsRegService = servletCtx.getInitParameter("studExamIsRegService");
+		studExamRegPage = servletCtx.getInitParameter("studExamRegPage");
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String examIdString = request.getParameter("examId");
-		
-		int examId;
-		try {
-			examId = Integer.parseInt(examIdString);
-		} catch (NumberFormatException e) {
-			// TODO handle invalid exam Id
-			examId = 0;
-		}
+		int examId = Integer.parseInt(examIdString);
 		
 		HttpSession session = request.getSession();
 		IdentityBean identity = (IdentityBean) session.getAttribute("identity");
@@ -53,7 +46,7 @@ public class StudExamRejectService extends HttpServlet{
 		logger.log(Level.FINER, "{0}: Rejected evaluation of exam {1}", new Object[]{request.getRemoteHost(), examIdString});
 
 		Map<String,Object> params = Map.of("examId",examId);
-		HttpUtils.redirectWithParams(request, response, studExamIsRegService, params);
+		HttpUtils.redirectWithParams(request, response, studExamRegPage, params);
 	}
 }
 

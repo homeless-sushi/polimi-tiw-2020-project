@@ -1,41 +1,9 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<meta charset="UTF-8">
-		<title>PoliEsaMI - Registered</title>
-		<link href="/polimi-tiw-2020-project/css/table.css" rel="stylesheet">
-		<link rel="preconnect" href="https://fonts.gstatic.com">
-		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
-	</head>
 	<body>
-		<header>
-			<h1>PoliEsaMI</h1>
-		</header>
-		<div></div>
-		<div id="examInfo">
-			<table>
-				<thead>
-					<tr>
-						<th scope="col" th:text="#{examInfo.thCourseId}"></th>
-						<th scope="col" th:text="#{examInfo.thCourseName}"></th>
-						<th scope="col" th:text="#{examInfo.thExamId}"></th>
-						<th scope="col" th:text="#{examInfo.thExamDate}"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td th:text="${course.getId()}"></td>
-						<td th:text="${course.getName()}"></td>
-						<td th:text="${exam.getId()}"></td>
-						<td th:text="${exam.getDate()}"></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div id="evaluationInfo">
-		<table th:if="${examRegistration.getStatus().toString() != NINS
-				&& examRegistration.getStatus().toString() != INS}">
+		<table th:fragment="registered" th:if="${examRegistration.getStatus().toString() != NINS
+				&& examRegistration.getStatus().toString() != INS}" >
 			<thead>
 				<tr>
 					<th scope="col" th:text="#{evaluationInfo.thStatus}"></th>
@@ -58,21 +26,17 @@
 				</tr>
 			</tbody>
 		</table>
-			<p th:if="${examRegistration.getStatus().toString() == NINS
-				|| examRegistration.getStatus().toString() == INS}" th:text="#{evaluationInfo.notAvailable}"></p>
-		</div>
+		<p th:fragment="registered" th:if="${!(examRegistration.getStatus().toString() != NINS
+				&& examRegistration.getStatus().toString() != INS)}" th:text="#{evaluationInfo.notAvailable}"></p>
 		<!--<form th:action="@{${studExamRegService}}" method="POST">
 			<p th:text="#{registered.youAreRegistered}"></p>
 			<input type="hidden" name="examId" th:value="${param.examId}">
-			<input type="hidden" name="action" value="${action}">
+			<input type="hidden" name="action" value="${DEREGISTER}">
 			<ul>
 				<li>
 					<input type="submit" th:value="#{registered.clickToDeregister}">
 				</li>
 			</ul>
 		</form>-->
-		<footer>
-
-		</footer>
-	</body>	
+	</body>
 </html>

@@ -20,7 +20,7 @@ import it.polimi.poliesami.utils.HttpUtils;
 public class StudExamRegService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(StudExamRegService.class.getName());
-	private String examRegistrationPage;
+	private String studExamRegPage;
 	private String studentExamsPage;
 	
 	public enum ACTION {
@@ -48,9 +48,8 @@ public class StudExamRegService extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		ServletContext servletCtx = config.getServletContext();
-		examRegistrationPage = servletCtx.getInitParameter("examRegistrationPage");
+		studExamRegPage = servletCtx.getInitParameter("studExamRegPage");
 		studentExamsPage = servletCtx.getInitParameter("studentExamsPage");
-		
 	}
 	
 	@Override
@@ -95,9 +94,9 @@ public class StudExamRegService extends HttpServlet {
 				break fail;
 			}
 			Map<String,Object> params = Map.of("examId", examId);
-			HttpUtils.redirectWithParams(request, response, examRegistrationPage, params);
+			HttpUtils.redirectWithParams(request, response, studExamRegPage, params);
+			return;
 		}
-
 		logger.log(Level.FINER, "{0}: Couldn''t {1} to/from exam {2}", new Object[]{request.getRemoteHost(), actionString, examIdString});
 		HttpUtils.redirect(request, response, studentExamsPage);
 	}

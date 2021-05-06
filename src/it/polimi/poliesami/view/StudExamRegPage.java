@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -22,12 +23,12 @@ import it.polimi.db.dao.ExamDAO;
 import it.polimi.db.dao.ExamRegistrationDAO;
 import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.controller.StudExamRegService;
-import it.polimi.poliesami.utils.AppAuthenticator;
 
 public class StudExamRegPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private String templatePath;
+	private String fragmentsPath;
 	private String studExamRegService;
 	private String studExamRejectService;
 	
@@ -35,6 +36,7 @@ public class StudExamRegPage extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		templatePath = getInitParameter("templatePath");
+		fragmentsPath = getInitParameter("fragmentsPath");
 
 		ServletContext servletCtx = config.getServletContext();
 		studExamRegService = servletCtx.getInitParameter("studExamRegService");
@@ -44,42 +46,42 @@ public class StudExamRegPage extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String examIdString = request.getParameter("examId");
-			
-		int examId;
-		try {
-			examId = Integer.parseInt(examIdString);
-		} catch (NumberFormatException e) {
-			// TODO handle invalid exam Id
-			examId = 0;
-		}
+		final String examIdString = request.getParameter("examId");
+		final int examId = Integer.parseInt(examIdString);
 
-		ServletContext servletCtx = getServletContext();
+		final ServletContext servletCtx = getServletContext();
 		
-		AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-		IdentityBean identity = clientAutheticator.getClientIdentity(request);
-
-		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
+		final HttpSession session = request.getSession();
+		final IdentityBean identity = (IdentityBean) session.getAttribute("identity");
+		final ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
+		final boolean isRegistered = examRegistrationDAO.isStudentRegistered(identity.getCareerId(), examId);
+		
+		final WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
+		ctx.setVariable("fragmentsPath", fragmentsPath);
 		ctx.setVariable("studExamRegService", studExamRegService);
+
+		final ExamDAO examDAO = (ExamDAO) servletCtx.getAttribute("examDAO");
+		final ExamBean exam = examDAO.getExam(examId);
+		ctx.setVariable("exam", exam);
+		final CourseDAO courseDAO = (CourseDAO) servletCtx.getAttribute("courseDAO");
+		final CourseBean course = courseDAO.getCourseFromExam(examId);
+		ctx.setVariable("course", course);
+
+		ctx.setVariable("isRegistered", isRegistered);
+		if(isRegistered){
 		ctx.setVariable("studExamRejectService", studExamRejectService);
-		ctx.setVariable("action", StudExamRegService.ACTION.DEREGISTER.toString());
+		ctx.setVariable("DEREGISTER", StudExamRegService.ACTION.DEREGISTER.toString());
 		ctx.setVariable("NINS", ExamStatus.NINS.toString());
 		ctx.setVariable("INS", ExamStatus.INS.toString());
 		ctx.setVariable("VERB", ExamStatus.VERB.toString());
 		ctx.setVariable("PASS", ExamResult.PASS.toString());
-
-		ExamDAO examDAO = (ExamDAO) servletCtx.getAttribute("examDAO");
-		ExamBean exam = examDAO.getExam(examId);
-		ctx.setVariable("exam", exam);
-
-		CourseDAO courseDAO = (CourseDAO) servletCtx.getAttribute("courseDAO");
-		CourseBean course = courseDAO.getCourseFromExam(examId);
-		ctx.setVariable("course", course);
-
-		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
-		ExamRegistrationBean examRegistration = examRegistrationDAO.getStudentExamRegistration(identity.getCareerId(), examId);
+		final ExamRegistrationBean examRegistration = examRegistrationDAO.getStudentExamRegistration(identity.getCareerId(), examId);
 		ctx.setVariable("examRegistration", examRegistration);
-		
+		}else{
+		ctx.setVariable("REGISTER", StudExamRegService.ACTION.REGISTER.toString());
+		ctx.setVariable("examId", examId);
+		}
+
 		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");
 		templateEngine.process(templatePath, ctx, response.getWriter());
 	}

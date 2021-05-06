@@ -109,19 +109,6 @@
 	</context-param>
 
 	<servlet>
-		<servlet-name>StudExamIsRegService</servlet-name>
-		<servlet-class>it.polimi.poliesami.controller.StudExamIsRegService</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>StudExamIsRegService</servlet-name>
-		<url-pattern>/inside/student/examRegistration/IsRegisteredService</url-pattern>
-	</servlet-mapping>
-	<context-param>
-		<param-name>studExamIsRegService</param-name>
-		<param-value>/inside/student/examRegistration/IsRegisteredService</param-value>
-	</context-param>
-
-	<servlet>
 		<servlet-name>StudExamRegService</servlet-name>
 		<servlet-class>it.polimi.poliesami.controller.StudExamRegService</servlet-class>
 	</servlet>
@@ -221,33 +208,19 @@
 		<servlet-class>it.polimi.poliesami.view.StudExamRegPage</servlet-class>
 		<init-param>
 			<param-name>templatePath</param-name>
-			<param-value>/inside/student/examRegistration/registered</param-value>
+			<param-value>/inside/student/examRegistration/index</param-value>
+		</init-param>
+		<init-param>
+			<param-name>fragmentsPath</param-name>
+			<param-value>/inside/student/examRegistration/</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>StudExamRegPage</servlet-name>
-		<url-pattern>/inside/student/examRegistration/registered</url-pattern>
+		<url-pattern>/inside/student/examRegistration</url-pattern>
 	</servlet-mapping>
 	<context-param>
 		<param-name>studExamRegPage</param-name>
-		<param-value>/inside/student/examRegistration/registered</param-value>
-	</context-param>
-
-	<servlet>
-		<servlet-name>StudExamNotRegPage</servlet-name>
-		<servlet-class>it.polimi.poliesami.view.StudExamNotRegPage</servlet-class>
-		
-		<init-param>
-			<param-name>templatePath</param-name>
-			<param-value>/inside/student/examRegistration/notRegistered</param-value>
-		</init-param>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>StudExamNotRegPage</servlet-name>
-		<url-pattern>/inside/student/examRegistration/notRegistered</url-pattern>
-	</servlet-mapping>
-	<context-param>
-		<param-name>studExamNotRegPage</param-name>
-		<param-value>/inside/student/examRegistration/notRegistered</param-value>
+		<param-value>/inside/student/examRegistration</param-value>
 	</context-param>
 </web-app>
