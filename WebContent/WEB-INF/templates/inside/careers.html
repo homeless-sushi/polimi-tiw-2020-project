@@ -23,12 +23,12 @@
 			</thead>
 			<tbody>
 				<tr th:each="career,iterStat : ${careers}" th:class="${iterStat.odd} ? 'odd' : 'even'">
-			        <td th:text="${career.id}"></td>
-			        <td th:text="(${career.role.toString()} == 'professor') ? #{careers.professor} : #{careers.student}"
-			            th:colspan="(${career.role.toString()} == 'professor') ? 2 : 1"></td>
-			        <td th:if="${career.role.toString()} == 'student'" th:text="${career.major}"></td>
-			        <td><a th:href="@{${careerService}(careerId=${career.id},role=${career.role.toString()})}" th:text="#{careers.goToCareer}"></a></td>
-    			</tr>
+					<td th:text="${career.id}"></td>
+					<td th:text="(${career.role.toString()} == 'professor') ? #{careers.professor} : #{careers.student}"
+						th:colspan="(${career.role.toString()} == 'professor') ? 2 : 1"></td>
+					<td th:if="${career.role.toString()} == 'student'" th:text="${career.major}"></td>
+					<td><a th:href="@{${careerService}(careerId=${career.id},role=${career.role.toString()})}" th:text="#{careers.goToCareer}"></a></td>
+				</tr>
 			</tbody>
 		</table>
 		

@@ -27,7 +27,7 @@ public class StudExamRegService extends HttpServlet {
 		REGISTER("register"),
 		DEREGISTER("deregister");
 
-		private String string; 
+		private String string;
 
 		private ACTION(String action){ this.string = action; }
 

@@ -38,22 +38,22 @@ public class ExamDAO {
 		ExamBean exam = new ExamBean();
 		
 		try (Connection connection = dataSrc.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(query)) {
-				statement.setInt(1, examId);
-				try (ResultSet result = statement.executeQuery()) {
-					if(result.next()){
-						exam.setId(result.getInt("id"));
-						exam.setCourseId(result.getInt("course_id"));
-						exam.setYear(result.getInt("year"));
-						exam.setDate(result.getDate("date"));
-					}
-					return exam;
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setInt(1, examId);
+			try (ResultSet result = statement.executeQuery()) {
+				if(result.next()){
+					exam.setId(result.getInt("id"));
+					exam.setCourseId(result.getInt("course_id"));
+					exam.setYear(result.getInt("year"));
+					exam.setDate(result.getDate("date"));
 				}
-			} catch (SQLException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
+				return exam;
 			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 
-		return null; 
+		return null;
 	}
 
 	public List<ExamBean> getCourseExams(int courseId, int year){
@@ -71,25 +71,25 @@ public class ExamDAO {
 		List<ExamBean> exams = new ArrayList<>();
 		
 		try (Connection connection = dataSrc.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(query)) {
-				statement.setInt(1, courseId);
-				statement.setInt(2, year);
-				try (ResultSet result = statement.executeQuery()) {
-					while(result.next()) {
-						ExamBean exam = new ExamBean();
-						exam.setId(result.getInt("id"));
-						exam.setCourseId(result.getInt("course_id"));
-						exam.setYear(result.getInt("year"));
-						exam.setDate(result.getDate("date"));
-						exams.add(exam);
-					}
-					return exams;
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setInt(1, courseId);
+			statement.setInt(2, year);
+			try (ResultSet result = statement.executeQuery()) {
+				while(result.next()) {
+					ExamBean exam = new ExamBean();
+					exam.setId(result.getInt("id"));
+					exam.setCourseId(result.getInt("course_id"));
+					exam.setYear(result.getInt("year"));
+					exam.setDate(result.getDate("date"));
+					exams.add(exam);
 				}
-			} catch (SQLException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
+				return exams;
 			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 
-		return Collections.emptyList(); 
+		return Collections.emptyList();
 	}
 
 	public boolean isExamCourseAttendee(int studentId, int examId) {

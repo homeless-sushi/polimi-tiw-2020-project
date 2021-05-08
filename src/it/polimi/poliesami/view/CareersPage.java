@@ -47,7 +47,7 @@ public class CareersPage extends HttpServlet {
 		ctx.setVariable("careers", careers);
 		ctx.setVariable("careerService", careerService);
 		
-		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine"); 
+		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");
 		templateEngine.process(templatePath, ctx, response.getWriter());
 	}
 

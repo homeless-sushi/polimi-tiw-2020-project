@@ -31,7 +31,7 @@ public class AppAuthenticator {
 	private static final Logger logger = Logger.getLogger(AppAuthenticator.class.getName());
 
 	private Algorithm signingAlg;
-	private JWTVerifier verifier; 
+	private JWTVerifier verifier;
 	
 	public AppAuthenticator(Algorithm signingAlg) {
 		this.signingAlg = signingAlg;
@@ -40,7 +40,7 @@ public class AppAuthenticator {
 			.build();
 	}
 	
-	public void setClientIdentity(HttpServletRequest request, HttpServletResponse response, IdentityBean identity){ 
+	public void setClientIdentity(HttpServletRequest request, HttpServletResponse response, IdentityBean identity){
 		if(identity.isAllDay()) {
 			setJWTCookie(request, response, identity);
 		}

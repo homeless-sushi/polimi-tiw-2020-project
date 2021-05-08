@@ -41,7 +41,7 @@ public class StudExamNotRegPage extends HttpServlet {
 		ctx.setVariable("action", StudExamRegService.ACTION.REGISTER.toString());
 		ctx.setVariable("examId", examIdString);
 		
-		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine"); 
+		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");
 		templateEngine.process(templatePath, ctx, response.getWriter());
 	}
 }

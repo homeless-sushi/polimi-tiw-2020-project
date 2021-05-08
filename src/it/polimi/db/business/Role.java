@@ -2,13 +2,13 @@ package it.polimi.db.business;
 
 public enum Role {
 
-	PROFESSOR ("professor"), 
+	PROFESSOR ("professor"),
 	STUDENT ("student");
 
 	private String role;
 
-	private Role(String role){ 
-		this.role = role; 
+	private Role(String role){
+		this.role = role;
 	}
 
 	@Override

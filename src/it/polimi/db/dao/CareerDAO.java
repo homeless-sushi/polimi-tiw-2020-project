@@ -40,19 +40,19 @@ public class CareerDAO {
 		List<CareerBean> careers = new ArrayList<>();
 		
 		try (Connection connection = dataSrc.getConnection();
-		     PreparedStatement statement = connection.prepareStatement(query)) {
-				statement.setString(1, personCode);
-				try (ResultSet result = statement.executeQuery()) {
-					while(result.next()) {
-						CareerBean career = new CareerBean();
-						career.setPersonCode(result.getString("person_code"));
-						career.setId(result.getInt("id"));
-						career.setRole(Role.fromString(result.getString("role")));
-						career.setMajor(result.getString("major"));
-						careers.add(career);
-					}
-					return careers;
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setString(1, personCode);
+			try (ResultSet result = statement.executeQuery()) {
+				while(result.next()) {
+					CareerBean career = new CareerBean();
+					career.setPersonCode(result.getString("person_code"));
+					career.setId(result.getInt("id"));
+					career.setRole(Role.fromString(result.getString("role")));
+					career.setMajor(result.getString("major"));
+					careers.add(career);
 				}
+				return careers;
+			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -73,12 +73,12 @@ public class CareerDAO {
 		             + "AND role = ?";
 		
 		try (Connection connection = dataSrc.getConnection();
-		PreparedStatement statement = connection.prepareStatement(query)) {
+			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setString(1, personCode);
 			statement.setInt(2, career);
 			statement.setString(3, role.toString());
 			try (ResultSet result = statement.executeQuery()) {
-				return result.next(); 
+				return result.next();
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

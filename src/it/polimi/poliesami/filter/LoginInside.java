@@ -31,11 +31,11 @@ public class LoginInside extends HttpFilter {
 	@Override
 	public void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
 		throws IOException, ServletException {
+		
 		ServletContext servletCtx = getServletContext();
 		
 		AppAuthenticator clientAuthenticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
 		IdentityBean identity = clientAuthenticator.getClientIdentity(req);
-		
 		
 		if(identity == null) {
 			logger.log(Level.FINER, "{0}: Not logged in", req.getRemoteHost());

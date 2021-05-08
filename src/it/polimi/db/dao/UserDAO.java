@@ -33,7 +33,7 @@ public class UserDAO {
 		             + "WHERE person_code = ?";
 
 		try (Connection connection = dataSrc.getConnection();
-		     PreparedStatement statement = connection.prepareStatement(query)) {
+			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setString(1, personCode);
 			try (ResultSet result = statement.executeQuery()) {
 				if(!result.next())
@@ -63,7 +63,7 @@ public class UserDAO {
 		             + "WHERE email = ?";
 
 		try (Connection connection = dataSrc.getConnection();
-		     PreparedStatement statement = connection.prepareStatement(query)) {
+			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setString(1, email);
 			try (ResultSet result = statement.executeQuery()) {
 				if(!result.next())
@@ -92,7 +92,7 @@ public class UserDAO {
 		             + "VALUES (?, ?, ?, ?)";
 
 		try (Connection connection = dataSrc.getConnection();
-		     PreparedStatement statement = connection.prepareStatement(query)) {
+			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setString(1, email);
 			statement.setBytes(2, password);
 			statement.setString(3, name);

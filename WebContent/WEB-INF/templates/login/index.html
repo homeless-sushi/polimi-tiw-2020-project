@@ -27,7 +27,7 @@
 					<label for="all_day">Keep me logged in for the whole day</label>
 				</li>
 				<li>
-					<input type="submit" value="login"> 
+					<input type="submit" value="login">
 				</li>
 			</ul>
 			<p id="error" th:if="${#session.getAttribute(errorMsg)}" th:text="${#messages.msg(#session.getAttribute(errorMsg))}"></p>

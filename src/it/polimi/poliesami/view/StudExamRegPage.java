@@ -80,7 +80,7 @@ public class StudExamRegPage extends HttpServlet {
 		ExamRegistrationBean examRegistration = examRegistrationDAO.getStudentExamRegistration(identity.getCareerId(), examId);
 		ctx.setVariable("examRegistration", examRegistration);
 		
-		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine"); 
+		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");
 		templateEngine.process(templatePath, ctx, response.getWriter());
 	}
 }

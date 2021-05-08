@@ -41,30 +41,30 @@ public class ExamRegistrationDAO {
 		List<ExamRegistrationBean> registrations = new ArrayList<>();
 
 		try (Connection connection = dataSrc.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(query)) {
-				statement.setInt(1, examId);
-				try (ResultSet result = statement.executeQuery()) {
-					while(result.next()) {
-						ExamRegistrationBean registration = new ExamRegistrationBean();
-						registration.setExamId(result.getInt("exam_id"));
-						registration.setStudentid(result.getInt("student_id"));
-						registration.setStatus(ExamStatus.fromString(result.getString("status")));
-						registration.setResult(ExamResult.fromString(result.getString("result")));
-						registration.setGrade(result.getInt("grade"));
-						registration.setLaude(result.getInt("laude") > 0);
-						registration.setResultRepresentation(result.getString("repr"));
-						int record_id = result.getInt("record_id");
-						if (record_id != 0)
-							registration.setRecordId(record_id);
-						registrations.add(registration);
-					}
-					return registrations;
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setInt(1, examId);
+			try (ResultSet result = statement.executeQuery()) {
+				while(result.next()) {
+					ExamRegistrationBean registration = new ExamRegistrationBean();
+					registration.setExamId(result.getInt("exam_id"));
+					registration.setStudentid(result.getInt("student_id"));
+					registration.setStatus(ExamStatus.fromString(result.getString("status")));
+					registration.setResult(ExamResult.fromString(result.getString("result")));
+					registration.setGrade(result.getInt("grade"));
+					registration.setLaude(result.getInt("laude") > 0);
+					registration.setResultRepresentation(result.getString("repr"));
+					int record_id = result.getInt("record_id");
+					if (record_id != 0)
+						registration.setRecordId(record_id);
+					registrations.add(registration);
 				}
-			} catch (SQLException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
+				return registrations;
 			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 
-		return Collections.emptyList(); 
+		return Collections.emptyList();
 	}
 
 	public boolean isStudentRegistered(int studentId, int examId) {
@@ -79,17 +79,17 @@ public class ExamRegistrationDAO {
 		             + "AND student_id = ?";
 
 		try (Connection connection = dataSrc.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(query)) {
-				statement.setInt(1, examId);
-				statement.setInt(2, studentId);
-				try (ResultSet result = statement.executeQuery()) {
-					return result.next();
-				}
-			} catch (SQLException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setInt(1, examId);
+			statement.setInt(2, studentId);
+			try (ResultSet result = statement.executeQuery()) {
+				return result.next();
 			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 
-		return false; 
+		return false;
 	}
 
 	public ExamRegistrationBean getStudentExamRegistration(int studentId, int examId) {
@@ -100,35 +100,35 @@ public class ExamRegistrationDAO {
 
 		String query = "SELECT * "
 		             + "FROM exam_registration "
-		             + "WHERE exam_id = ? " 
+		             + "WHERE exam_id = ? "
 		             + "AND student_id = ?";
 
 		ExamRegistrationBean registration = new ExamRegistrationBean();
 
 		try (Connection connection = dataSrc.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(query)) {
-				statement.setInt(1, examId);
-				statement.setInt(2, studentId);
-				try (ResultSet result = statement.executeQuery()) {
-					if(result.next()) {
-						registration.setExamId(result.getInt("exam_id"));
-						registration.setStudentid(result.getInt("student_id"));
-						registration.setStatus(ExamStatus.fromString(result.getString("status")));
-						registration.setResult(ExamResult.fromString(result.getString("result")));
-						registration.setGrade(result.getInt("grade"));
-						registration.setLaude(result.getInt("laude") > 0);
-						registration.setResultRepresentation(result.getString("repr"));
-						int record_id = result.getInt("record_id");
-						if (record_id != 0)
-							registration.setRecordId(record_id);
-						return registration;
-					}
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setInt(1, examId);
+			statement.setInt(2, studentId);
+			try (ResultSet result = statement.executeQuery()) {
+				if(result.next()) {
+					registration.setExamId(result.getInt("exam_id"));
+					registration.setStudentid(result.getInt("student_id"));
+					registration.setStatus(ExamStatus.fromString(result.getString("status")));
+					registration.setResult(ExamResult.fromString(result.getString("result")));
+					registration.setGrade(result.getInt("grade"));
+					registration.setLaude(result.getInt("laude") > 0);
+					registration.setResultRepresentation(result.getString("repr"));
+					int record_id = result.getInt("record_id");
+					if (record_id != 0)
+						registration.setRecordId(record_id);
+					return registration;
 				}
-			} catch (SQLException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 
-		return null; 
+		return null;
 	}
 
 	public boolean registerToExam(int studentId, int examId){
@@ -189,7 +189,7 @@ public class ExamRegistrationDAO {
 		String query = "UPDATE exam_registration "
 		             + "SET status = ?, "
 		             + "result = ? "
-		             + "WHERE exam_id = ? " 
+		             + "WHERE exam_id = ? "
 		             + "AND student_id = ?";
 
 		try (Connection connection = dataSrc.getConnection();

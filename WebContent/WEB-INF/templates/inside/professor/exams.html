@@ -21,7 +21,7 @@
 					<input type="number" id="year" name="year" autocomplete="off">
 				</li>
 				<li>
-					<input type="submit" value="Go to year"> 
+					<input type="submit" value="Go to year">
 				</li>
 			</ul>
 		</form>
@@ -39,7 +39,7 @@
 				<th:block th:each="courseExams,outerIStat : ${courseExamsList}">
 					<th:block th:each="exam,innerIStat : ${courseExams.getExams()}">
 						<tr>
-							<td th:if="${innerIStat.first}" th:rowspan="${courseExams.getExams().size}" th:text="${courseExams.getCourse().getId()}" 
+							<td th:if="${innerIStat.first}" th:rowspan="${courseExams.getExams().size}" th:text="${courseExams.getCourse().getId()}"
 								th:class="${outerIStat.odd} ? 'odd' : 'even'"></td>
 							<td th:if="${innerIStat.first}" th:rowspan="${courseExams.getExams().size}" th:text="${courseExams.getCourse().getName()}"
 								th:class="${outerIStat.odd} ? 'odd' : 'even'"></td>

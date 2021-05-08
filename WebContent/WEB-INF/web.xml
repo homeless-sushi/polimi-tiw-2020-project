@@ -31,6 +31,7 @@
 		<filter-name>LoginInsideFilter</filter-name>
 		<url-pattern>/inside/*</url-pattern>
 	</filter-mapping>
+
 	<filter>
 		<filter-name>LoginOutsideFilter</filter-name>
 		<filter-class>it.polimi.poliesami.filter.LoginOutside</filter-class>
@@ -39,6 +40,7 @@
 		<filter-name>LoginOutsideFilter</filter-name>
 		<url-pattern>/login/*</url-pattern>
 	</filter-mapping>
+
 	<filter>
 		<filter-name>ProfessorFilter</filter-name>
 		<filter-class>it.polimi.poliesami.filter.Role</filter-class>
@@ -51,6 +53,7 @@
 		<filter-name>ProfessorFilter</filter-name>
 		<url-pattern>/inside/professor/*</url-pattern>
 	</filter-mapping>
+
 	<filter>
 		<filter-name>StudentFilter</filter-name>
 		<filter-class>it.polimi.poliesami.filter.Role</filter-class>
@@ -63,6 +66,7 @@
 		<filter-name>StudentFilter</filter-name>
 		<url-pattern>/inside/student/*</url-pattern>
 	</filter-mapping>
+
 	<filter>
 		<filter-name>StudentExamFilter</filter-name>
 		<filter-class>it.polimi.poliesami.filter.StudentExam</filter-class>
@@ -81,6 +85,7 @@
 		<servlet-name>LoginService</servlet-name>
 		<url-pattern>/login/LoginService</url-pattern>
 	</servlet-mapping>
+
 	<servlet>
 		<servlet-name>LogoutService</servlet-name>
 		<servlet-class>it.polimi.poliesami.controller.LogoutService</servlet-class>
@@ -137,7 +142,6 @@
 		<servlet-name>StudExamRejectService</servlet-name>
 		<url-pattern>/inside/student/examRegistration/RejectService</url-pattern>
 	</servlet-mapping>
-
 	<context-param>
 		<param-name>studExamRejectService</param-name>
 		<param-value>/inside/student/examRegistration/RejectService</param-value>
@@ -147,7 +151,6 @@
 	<servlet>
 		<servlet-name>LoginPage</servlet-name>
 		<servlet-class>it.polimi.poliesami.view.LoginPage</servlet-class>
-		
 		<init-param>
 			<param-name>templatePath</param-name>
 			<param-value>/login/index</param-value>
@@ -157,7 +160,6 @@
 		<servlet-name>LoginPage</servlet-name>
 		<url-pattern>/login/</url-pattern>
 	</servlet-mapping>
-
 	<context-param>
 		<param-name>loginPage</param-name>
 		<param-value>/login/</param-value>
@@ -166,7 +168,6 @@
 	<servlet>
 		<servlet-name>CareersPage</servlet-name>
 		<servlet-class>it.polimi.poliesami.view.CareersPage</servlet-class>
-		
 		<init-param>
 			<param-name>templatePath</param-name>
 			<param-value>/inside/careers</param-value>
@@ -176,7 +177,6 @@
 		<servlet-name>CareersPage</servlet-name>
 		<url-pattern>/inside/careers</url-pattern>
 	</servlet-mapping>
-	
 	<context-param>
 		<param-name>careersPage</param-name>
 		<param-value>/inside/careers</param-value>
@@ -185,7 +185,6 @@
 	<servlet>
 		<servlet-name>ProfessorExamsPage</servlet-name>
 		<servlet-class>it.polimi.poliesami.view.ProfessorExamsPage</servlet-class>
-		
 		<init-param>
 			<param-name>templatePath</param-name>
 			<param-value>/inside/professor/exams</param-value>
@@ -195,7 +194,6 @@
 		<servlet-name>ProfessorExamsPage</servlet-name>
 		<url-pattern>/inside/professor/exams</url-pattern>
 	</servlet-mapping>
-	
 	<context-param>
 		<param-name>professorExamsPage</param-name>
 		<param-value>/inside/professor/exams</param-value>
@@ -204,7 +202,6 @@
 	<servlet>
 		<servlet-name>StudentExamsPage</servlet-name>
 		<servlet-class>it.polimi.poliesami.view.StudentExamsPage</servlet-class>
-		
 		<init-param>
 			<param-name>templatePath</param-name>
 			<param-value>/inside/student/exams</param-value>
@@ -214,7 +211,6 @@
 		<servlet-name>StudentExamsPage</servlet-name>
 		<url-pattern>/inside/student/exams</url-pattern>
 	</servlet-mapping>
-	
 	<context-param>
 		<param-name>studentExamsPage</param-name>
 		<param-value>/inside/student/exams</param-value>
@@ -223,7 +219,6 @@
 	<servlet>
 		<servlet-name>StudExamRegPage</servlet-name>
 		<servlet-class>it.polimi.poliesami.view.StudExamRegPage</servlet-class>
-		
 		<init-param>
 			<param-name>templatePath</param-name>
 			<param-value>/inside/student/examRegistration/registered</param-value>
@@ -251,7 +246,6 @@
 		<servlet-name>StudExamNotRegPage</servlet-name>
 		<url-pattern>/inside/student/examRegistration/notRegistered</url-pattern>
 	</servlet-mapping>
-	
 	<context-param>
 		<param-name>studExamNotRegPage</param-name>
 		<param-value>/inside/student/examRegistration/notRegistered</param-value>

@@ -63,7 +63,7 @@ public class StudentExamsPage extends HttpServlet {
 		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
 		ctx.setVariable("courseExamsList", courseExamsList);
 		
-		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine"); 
+		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");
 		templateEngine.process(templatePath, ctx, response.getWriter());
 	}
 }
