@@ -137,7 +137,7 @@ public class ExamRegistrationDAO {
 			return false;
 		}
 
-		String query = "INSERT INTO exam_registration "
+		String query = "INSERT INTO exam_unrecorded "
 		             + "(exam_id, student_id, status) "
 		             + "VALUES (?, ?, ?)";
 
@@ -162,7 +162,7 @@ public class ExamRegistrationDAO {
 			return false;
 		}
 
-		String query = "DELETE FROM exam_registration "
+		String query = "DELETE FROM exam_unrecorded "
 		             + "WHERE exam_id = ? "
 		             + "AND student_id = ?";
 
@@ -186,7 +186,7 @@ public class ExamRegistrationDAO {
 			return false;
 		}
 		
-		String query = "UPDATE exam_registration "
+		String query = "UPDATE exam_unrecorded "
 		             + "SET status = ?, "
 		             + "result = ? "
 		             + "WHERE exam_id = ? "
