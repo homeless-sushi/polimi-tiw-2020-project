@@ -36,6 +36,9 @@ public class AppInit implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		ServletContext servletContext = event.getServletContext();
+
+		servletContext.setRequestCharacterEncoding("UTF-8");
+		servletContext.setResponseCharacterEncoding("UTF-8");
 		
 		DataSource polimiDB = null;
 		try {
@@ -76,6 +79,7 @@ public class AppInit implements ServletContextListener {
 		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
 
 		templateResolver.setTemplateMode(TemplateMode.HTML);
+		templateResolver.setCharacterEncoding("UTF-8");
 		templateResolver.setPrefix("/WEB-INF/templates/");
 		templateResolver.setSuffix(".html");
 
