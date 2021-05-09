@@ -13,9 +13,14 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import org.javatuples.Triplet;
+
+import it.polimi.db.business.CareerBean;
 import it.polimi.db.business.ExamRegistrationBean;
 import it.polimi.db.business.ExamResult;
 import it.polimi.db.business.ExamStatus;
+import it.polimi.db.business.Role;
+import it.polimi.db.business.UserBean;
 
 public class ExamRegistrationDAO {
 	private DataSource dataSrc;
@@ -45,6 +50,68 @@ public class ExamRegistrationDAO {
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
+
+		return Collections.emptyList();
+	}
+	
+	public List<Triplet<UserBean, CareerBean, ExamRegistrationBean>> getStudentCareerExamRegistrations(int examId, String orderBy, boolean descending){
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return Collections.emptyList();
+		}
+
+		String order = (descending) ? "DESC" : "ASC" ;
+
+		String query = "SELECT * "
+		             + "FROM exam_registration "
+		             + "JOIN user_career "
+		             + "ON exam_registration.student_id = user_career.id "
+		             + "JOIN user "
+		             + "ON user_career.person_code = user.person_code "
+		             + "WHERE user_career.role = 'student' "
+		             + "AND exam_registration.exam_id = ? "
+		             + "ORDER BY " + orderBy + " " + order;
+
+		List<Triplet<UserBean, CareerBean, ExamRegistrationBean>> studentCareerExamRegistrations = new ArrayList<>();
+
+		try (Connection connection = dataSrc.getConnection();
+			PreparedStatement statement = connection.prepareStatement(query)) {
+				statement.setInt(1, examId);
+				try (ResultSet result = statement.executeQuery()) {
+					while(result.next()) {
+						UserBean user = new UserBean();
+						CareerBean career = new CareerBean();
+						ExamRegistrationBean registration = new ExamRegistrationBean();
+
+						user.setPersonCode(result.getString("user.person_code"));
+						user.setEmail(result.getString("user.email"));
+						user.setHashedPassword(result.getBytes("user.password"));
+						user.setName(result.getString("user.name"));
+						user.setSurname(result.getString("user.surname"));
+
+						career.setPersonCode(result.getString("user_career.person_code"));
+						career.setId(result.getInt("user_career.id"));
+						career.setRole(Role.fromString(result.getString("user_career.role")));
+						career.setMajor(result.getString("user_career.major"));
+
+						registration.setExamId(result.getInt("exam_registration.exam_id"));
+						registration.setStudentId(result.getInt("exam_registration.student_id"));
+						registration.setStatus(ExamStatus.valueOf(result.getString("exam_registration.status")));
+						registration.setResult(ExamResult.valueOf(result.getString("exam_registration.result")));
+						registration.setGrade(result.getInt("exam_registration.grade"));
+						registration.setLaude(result.getInt("exam_registration.laude") > 0);
+						registration.setResultRepresentation(result.getString("exam_registration.repr"));
+						if (result.getInt("exam_registration.record_id") != 0) {
+							registration.setRecordId(result.getInt("exam_registration.record_id"));
+						}
+						
+						studentCareerExamRegistrations.add(new Triplet<>(user, career, registration));
+					}
+					return studentCareerExamRegistrations;
+				}
+			} catch (SQLException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
 
 		return Collections.emptyList();
 	}

@@ -232,4 +232,21 @@
 		<param-name>studExamRegPage</param-name>
 		<param-value>/inside/student/examRegistration</param-value>
 	</context-param>
+
+	<servlet>
+		<servlet-name>ProfExamRegPage</servlet-name>
+		<servlet-class>it.polimi.poliesami.view.ProfExamRegPage</servlet-class>
+		<init-param>
+			<param-name>templatePath</param-name>
+			<param-value>/inside/professor/examRegistration/index</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProfExamRegPage</servlet-name>
+		<url-pattern>/inside/professor/examRegistration</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>profExamRegPage</param-name>
+		<param-value>/inside/professor/examRegistration</param-value>
+	</context-param>
 </web-app>
