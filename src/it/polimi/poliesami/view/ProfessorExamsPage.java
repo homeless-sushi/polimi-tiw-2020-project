@@ -61,6 +61,7 @@ public class ProfessorExamsPage extends HttpServlet {
 		}
 		
 		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
+		ctx.setVariable("year", year);
 		ctx.setVariable("courseExamsList", courseExamsList);
 		
 		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");

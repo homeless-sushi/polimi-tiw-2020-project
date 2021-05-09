@@ -1,55 +1,32 @@
-/* HEADER */
-
-header {
-	font-family: 'Roboto', sans-serif;
-	color: #FFFFFF;
-	background: #728FA5;
-	border-radius: 1em;
-	
-	padding-block: 60px;
-	margin-block-end: 40px;
-}
-
-header h1 {
-	text-align: center;
-}
-
 /* TABLE */
-html {
-	font-family: sans-serif;
-}
 
-table {
-	margin: 0 auto;
-	border-collapse: collapse;
-	border: 2px solid rgb(200,200,200);
+table.list {
+	border: 2px solid rgb(200, 200, 200);
 	letter-spacing: 1px;
-	font-size: 0.8rem;
-
-	margin-block-start: 40px;
+	font-size: 0.8em;
+	text-align: center;
+	margin: 0 auto;
 }
 
-td, th {
-	border: 1px solid rgb(190,190,190);
+table.list td, th {
+	border: 1px solid rgb(190, 190, 190);
 	padding: 10px 20px;
 }
 
-th {
-	background-color: rgb(235,235,235);
+table.list thead th {
+	background-color: rgb(220, 220, 220);
 }
 
-td {
-	text-align: center;
+table.list tr:nth-child(even) td,
+table.list .even {
+	background-color: rgb(235, 235, 235);
 }
 
-tr:nth-child(even) td {
-	background-color: rgb(250,250,250);
+table.list tr:nth-child(odd) td,
+table.list .odd {
+	background-color: rgb(245, 245, 245);
 }
 
-tr:nth-child(odd) td {
-	background-color: rgb(245,245,245);
-}
-
-caption {
-	padding: 10px;
+table.list tr:hover td:not(th:hover ~ *) {
+	background-color: rgb(225, 225, 225);
 }

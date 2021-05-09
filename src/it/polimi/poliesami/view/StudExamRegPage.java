@@ -28,21 +28,12 @@ public class StudExamRegPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private String templatePath;
-	private String fragmentsPath;
-	private String studExamRegService;
-	private String studExamRejectService;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		templatePath = getInitParameter("templatePath");
-		fragmentsPath = getInitParameter("fragmentsPath");
-
-		ServletContext servletCtx = config.getServletContext();
-		studExamRegService = servletCtx.getInitParameter("studExamRegService");
-		studExamRejectService = servletCtx.getInitParameter("studExamRejectService");
 	}
-
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -57,8 +48,6 @@ public class StudExamRegPage extends HttpServlet {
 		final boolean isRegistered = examRegistrationDAO.isStudentRegistered(identity.getCareerId(), examId);
 		
 		final WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
-		ctx.setVariable("fragmentsPath", fragmentsPath);
-		ctx.setVariable("studExamRegService", studExamRegService);
 
 		final ExamDAO examDAO = (ExamDAO) servletCtx.getAttribute("examDAO");
 		final ExamBean exam = examDAO.getExam(examId);
@@ -69,7 +58,6 @@ public class StudExamRegPage extends HttpServlet {
 
 		ctx.setVariable("isRegistered", isRegistered);
 		if(isRegistered){
-		ctx.setVariable("studExamRejectService", studExamRejectService);
 		ctx.setVariable("DEREGISTER", StudExamRegService.ACTION.DEREGISTER.toString());
 		ctx.setVariable("NINS", ExamStatus.NINS.toString());
 		ctx.setVariable("INS", ExamStatus.INS.toString());

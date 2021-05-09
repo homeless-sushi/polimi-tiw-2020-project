@@ -2,58 +2,102 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<meta charset="UTF-8">
-		<title>PoliEsaMI - Exams</title>
-		<link href="/polimi-tiw-2020-project/css/table.css" rel="stylesheet">
-		<link href="/polimi-tiw-2020-project/css/form.css" rel="stylesheet">
-		<link rel="preconnect" href="https://fonts.gstatic.com">
-		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+		<th:block th:replace="layout :: headtags(#{exams.title})">
+			<meta charset="UTF-8">
+			<title>PoliEsaMI - Exams</title>
+			<link href="../../../../css/base.css" rel="stylesheet">
+			<link href="../../../../css/table.css" rel="stylesheet">
+			<link href="../../../../css/form.css" rel="stylesheet">
+		</th:block>
 	</head>
 	<body>
-		<header>
-			<h1>PoliEsaMI</h1>
+		<header th:replace="layout :: header">
+			<div><h1>PoliEsaMI</h1></div>
 		</header>
-		<div></div>
-		<form action="." method="GET">
-			<ul>
-				<li>
-					<label for="year">Year:</label>
-					<input type="number" id="year" name="year" autocomplete="off">
-				</li>
-				<li>
-					<input type="submit" value="Go to year">
-				</li>
-			</ul>
-		</form>
-		<table>
-			<thead>
-				<tr>
-					<th scope="col" th:text="#{exams.thCourseId}"></th>
-					<th scope="col" th:text="#{exams.thCourseName}"></th>
-					<th scope="col" th:text="#{exams.thExamId}"></th>
-					<th scope="col" th:text="#{exams.thExamDate}"></th>
-					<th scope="col" ></th>
-				</tr>
-			</thead>
-			<tbody>
-				<th:block th:each="courseExams,outerIStat : ${courseExamsList}">
-					<th:block th:each="exam,innerIStat : ${courseExams.getExams()}">
+		<div id="content">
+			<section>
+				<form class="boxed" method="GET">
+					<div class="field">
+						<label for="year" th:text="|#{exams.year}:|">Academic year:</label>
+						<input type="number" id="year" name="year" autocomplete="off" th:value="${year}" value="2020">
+					</div>
+					<div class="field">
+						<input class="big-button" type="submit" th:value="#{exams.gotoYear}" value="Go to year">
+					</div>
+				</form>
+			</section>
+			<section>
+				<table class="list wide">
+					<thead>
 						<tr>
-							<td th:if="${innerIStat.first}" th:rowspan="${courseExams.getExams().size}" th:text="${courseExams.getCourse().getId()}"
-								th:class="${outerIStat.odd} ? 'odd' : 'even'"></td>
-							<td th:if="${innerIStat.first}" th:rowspan="${courseExams.getExams().size}" th:text="${courseExams.getCourse().getName()}"
-								th:class="${outerIStat.odd} ? 'odd' : 'even'"></td>
-							<td th:text="${exam.getId()}" th:class="${innerIStat.odd} ? 'odd' : 'even'"></td>
-							<td th:text="${exam.getDate()}" th:class="${innerIStat.odd} ? 'odd' : 'even'"></td>
-							<td><a th:href="@{/inside/professor/registrations(examId=${exam.getId()})}" th:text="#{exam.goToExamRegistrations}"></a></td>
+							<th scope="col" th:text="#{exams.thCourseId}">Course ID</th>
+							<th scope="col" th:text="#{exams.thCourseName}">Course Name</th>
+							<th scope="col" th:text="#{exams.thExamId}">Exam ID</th>
+							<th scope="col" th:text="#{exams.thExamDate}">Exam Date</th>
+							<th scope="col" th:text="#{exam.goToExamRegistrations}">See Registration</th>
 						</tr>
-					</th:block>
-				</th:block>
-			</tbody>
-		</table>
-		
-		<footer>
-
-		</footer>
+					</thead>
+					<tbody th:remove="all-but-first">
+						<th:block th:each="courseExams,outerIStat : ${courseExamsList}">
+							<tr th:each="exam,innerIStat : ${courseExams.getExams()}">
+								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${courseExams.getExams().size}" th:text="${courseExams.getCourse().getId()}">1</th>
+								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${courseExams.getExams().size}" th:text="${courseExams.getCourse().getName()}">DataBase 2</th>
+								<td th:text="${exam.getId()}">1</td>
+								<td th:text="${exam.getDate()}">02/02/2020</td>
+								<td><form method="GET">
+									<input type="hidden" name="examId" th:value="${exam.id}" value="1">
+									<input class="link-button symbol" type="submit" value="➡">
+								</form></td>
+							</tr>
+						</th:block>
+						<tr>
+							<th scope="rowgroup" class="even" rowspan="2">2</th>
+							<th scope="rowgroup" class="even" rowspan="2">Computer Graphics</th>
+							<td>2</td>
+							<td>03/02/2020</td>
+							<td><form method="GET">
+								<input type="hidden" name="examId" value="2">
+								<input class="link-button symbol" type="submit" value="➡">
+							</form></td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>10/02/2020</td>
+							<td><form method="GET">
+								<input type="hidden" name="examId" value="3">
+								<input class="link-button symbol" type="submit" value="➡">
+							</form></td>
+						</tr>
+						<tr>
+							<th scope="rowgroup" class="odd" rowspan="3">3</th>
+							<th scope="rowgroup" class="odd" rowspan="3">Tecnologie Informatiche per il web</th>
+							<td>4</td>
+							<td>15/02/2020</td>
+							<td><form method="GET">
+								<input type="hidden" name="examId" value="4">
+								<input class="link-button symbol" type="submit" value="➡">
+							</form></td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>04/02/2020</td>
+							<td><form method="GET">
+								<input type="hidden" name="examId" value="5">
+								<input class="link-button symbol" type="submit" value="➡">
+							</form></td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>09/02/2020</td>
+							<td><form method="GET">
+								<input type="hidden" name="examId" value="6">
+								<input class="link-button symbol" type="submit" value="➡">
+							</form></td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+		</div>
+		<footer th:replace="layout :: footer"></footer>
 	</body>	
 </html>

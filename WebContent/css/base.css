@@ -1,0 +1,71 @@
+/* FONTS */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+/* HEADER */
+
+body {
+	font-family: 'Roboto', sans-serif;
+	margin: 0;
+}
+
+header {
+	padding: 10px;
+	overflow: hidden;
+}
+
+header > div {
+	text-align: center;
+	color: #FFFFFF;
+	background: #728FA5;
+	border-radius: 1em;
+	padding: 60px 0;
+}
+
+/* COMMON */
+
+#content {
+	padding: 0 10px;
+	overflow: auto;
+}
+
+section {
+	margin: 40px auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+.wide {
+	width: 100%;
+	max-width: 800px;
+}
+
+.boxed {
+	padding: 0 1em;
+	border: 1px solid #CCC;
+	border-radius: 1em;
+}
+
+.link-button {
+	background: none;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	letter-spacing: inherit;
+}
+
+.error {
+	font-size: 0.8em;
+	font-style: italic;
+	color: red;
+}
+
+.symbol {
+	font-family: emoji;
+	font-size: 2em;
+}

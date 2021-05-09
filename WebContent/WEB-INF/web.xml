@@ -153,16 +153,16 @@
 		<servlet-class>it.polimi.poliesami.view.LoginPage</servlet-class>
 		<init-param>
 			<param-name>templatePath</param-name>
-			<param-value>/login/index</param-value>
+			<param-value>/login</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>LoginPage</servlet-name>
-		<url-pattern>/login/</url-pattern>
+		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
 	<context-param>
 		<param-name>loginPage</param-name>
-		<param-value>/login/</param-value>
+		<param-value>/login</param-value>
 	</context-param>
 	
 	<servlet>
@@ -221,11 +221,7 @@
 		<servlet-class>it.polimi.poliesami.view.StudExamRegPage</servlet-class>
 		<init-param>
 			<param-name>templatePath</param-name>
-			<param-value>/inside/student/examRegistration/index</param-value>
-		</init-param>
-		<init-param>
-			<param-name>fragmentsPath</param-name>
-			<param-value>/inside/student/examRegistration/</param-value>
+			<param-value>/inside/student/examRegistration</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

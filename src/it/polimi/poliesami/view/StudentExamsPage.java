@@ -26,15 +26,11 @@ public class StudentExamsPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private String templatePath;
-	private String studExamRegPage;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		templatePath = getInitParameter("templatePath");
-
-		ServletContext servletCtx = config.getServletContext();
-		studExamRegPage = servletCtx.getInitParameter("studExamRegPage");		
 	}
 
 	@Override
@@ -59,9 +55,9 @@ public class StudentExamsPage extends HttpServlet {
 			CourseExamsBean courseExams = new CourseExamsBean(course, exams);
 			courseExamsList.add(courseExams);
 		}
-		
+
 		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
-		ctx.setVariable("studExamRegPage", studExamRegPage);
+		ctx.setVariable("year", year);
 		ctx.setVariable("courseExamsList", courseExamsList);
 		
 		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");

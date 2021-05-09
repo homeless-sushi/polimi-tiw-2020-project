@@ -2,38 +2,67 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<meta charset="UTF-8">
-		<title>PoliEsaMI - Careers</title>
-		<link href="/polimi-tiw-2020-project/css/table.css" rel="stylesheet">
-		<link rel="preconnect" href="https://fonts.gstatic.com">
-		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+		<th:block th:replace="layout :: headtags(#{careers.title})">
+			<meta charset="UTF-8">
+			<title>PoliEsaMI - Careers</title>
+			<link href="../../../css/base.css" rel="stylesheet">
+			<link href="../../../css/table.css" rel="stylesheet">
+			<link href="../../../css/form.css" rel="stylesheet">
+		</th:block>
 	</head>
 	<body>
-		<header>
-			<h1>PoliEsaMI</h1>
+		<header th:replace="layout :: header">
+			<div><h1>PoliEsaMI</h1></div>
 		</header>
-		<div></div>
-		<table>
-			<thead>
-				<tr>
-					<th th:text="#{careers.thCareerID}"></th>
-					<th th:text="#{careers.thCareerDetails}"colspan="2"></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="career,iterStat : ${careers}" th:class="${iterStat.odd} ? 'odd' : 'even'">
-					<td th:text="${career.id}"></td>
-					<td th:text="(${career.role.toString()} == 'professor') ? #{careers.professor} : #{careers.student}"
-						th:colspan="(${career.role.toString()} == 'professor') ? 2 : 1"></td>
-					<td th:if="${career.role.toString()} == 'student'" th:text="${career.major}"></td>
-					<td><a th:href="@{${careerService}(careerId=${career.id},role=${career.role.toString()})}" th:text="#{careers.goToCareer}"></a></td>
-				</tr>
-			</tbody>
-		</table>
-		
-		<footer>
-
-		</footer>
-	</body>	
+		<div id="content">
+			<section>
+				<table class="list wide">
+					<thead>
+						<tr>
+							<th scope="col" th:text="#{careers.thCareerID}">Career ID</th>
+							<th scope="col" th:text="#{careers.thCareerDetails}" colspan="2">Career details</th>
+							<th scope="col" th:text="#{careers.goToCareer}">Go to career</th>
+						</tr>
+					</thead>
+					<tbody th:remove="all-but-first">
+						<tr th:each="career,iterStat : ${careers}">
+							<td th:text="${career.id}">1</td>
+							<th:block th:switch="${career.role.toString()}">
+								<td style="display: none;" th:attr="style=''" th:case="'professor'" th:text="#{careers.professor}" colspan="2"></td>
+								<th:block th:case="'student'">
+									<td th:text="#{careers.student}">Student</td>
+									<td th:text="${career.major}">Laura Triennale - Ingegneria Informatica</td>
+								</th:block>
+							</th:block>
+							<td><form action="../inside/student/exams.html" th:action="@{${#servletContext.getInitParameter('careerService')}}" method="GET">
+								<input type="hidden" name="careerId" th:value="${career.id}" value="1">
+								<input type="hidden" name="role" th:value="${career.role.toString()}" value="student">
+								<input class="link-button symbol" type="submit" value="➡">
+							</form></td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>Student</td>
+							<td>Laura Magistrale - Computer Science Engineering</td>
+							<td><form action="../inside/student/exams.html" method="GET">
+								<input type="hidden" name="careerId" th:value="${career.id}" value="2">
+								<input type="hidden" name="role" th:value="${career.role.toString()}" value="student">
+								<input class="link-button symbol" type="submit" value="➡">
+							</form></td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td colspan="2">Professor</td>
+							<td><form action="../inside/professor/exams.html" method="GET">
+								<input type="hidden" name="careerId" th:value="${career.id}" value="3">
+								<input type="hidden" name="role" th:value="${career.role.toString()}" value="professor">
+								<input class="link-button symbol" type="submit" value="➡">
+							</form></td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+		</div>
+		<footer th:replace="layout :: footer"></footer>
+	</body>
 </html>

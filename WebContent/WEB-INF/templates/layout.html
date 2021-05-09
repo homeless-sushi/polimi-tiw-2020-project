@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:fragment="headtags(title)">
+			<meta charset="UTF-8">
+			<title th:text="|${#servletContext.getInitParameter('app-name')} - ${title}|">PoliEsaMI - Layout</title>
+			<link href="../../css/base.css" th:href="@{/css/base.css}" rel="stylesheet">
+			<link href="../../css/form.css" th:href="@{/css/form.css}" rel="stylesheet">
+			<link href="../../css/table.css" th:href="@{/css/table.css}" rel="stylesheet">
+		</th:block>
+	</head>
+	<body>
+		<header th:fragment="header">
+			<div>
+				<h1 th:text="${#servletContext.getInitParameter('app-name')}">PoliEsaMI</h1>
+			</div>
+		</header>
+		<div>
+			Page content...
+		</div>
+		<footer th:fragment="footer">
+			
+		</footer>
+	</body>	
+</html>

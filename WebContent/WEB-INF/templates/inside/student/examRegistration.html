@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="layout :: headtags(#{registration.title})">
+			<meta charset="UTF-8">
+			<title>PoliEsaMI - Exam Registration</title>
+			<link href="../../../../css/base.css" rel="stylesheet">
+			<link href="../../../../css/table.css" rel="stylesheet">
+			<link href="../../../../css/form.css" rel="stylesheet">
+		</th:block>
+	</head>
+	<body>
+		<header th:replace="layout :: header">
+			<div><h1>PoliEsaMI</h1></div>
+		</header>
+		<div id="content">
+			<section>
+				<table class="list wide">
+					<thead>
+						<tr>
+							<th scope="col" th:text="#{examInfo.thCourseId}">Course ID</th>
+							<th scope="col" th:text="#{examInfo.thCourseName}">Course Name</th>
+							<th scope="col" th:text="#{examInfo.thExamId}">Exam ID</th>
+							<th scope="col" th:text="#{examInfo.thExamDate}">Exam Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td th:text="${course.getId()}">3</td>
+							<td th:text="${course.getName()}">Tecnologie Informatiche per il web</td>
+							<td th:text="${exam.getId()}">4</td>
+							<td th:text="${exam.getDate()}">15/02/2020</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+			<th:block th:switch="${isRegistered}">
+				<th:block th:case="true">
+					<section th:if="${examRegistration.getStatus().toString() != NINS && examRegistration.getStatus().toString() != INS}">
+						<table class="list">
+							<thead>
+								<tr>
+									<th scope="col" th:text="#{evaluationInfo.thStatus}">Evaluation Status</th>
+									<th scope="col" th:text="#{evaluationInfo.thRepresentation}">Evaluation Grade</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td th:text="${#messages.msg('evaluationInfo.'+examRegistration.getStatus().toString())}">PUBLISHED</td>
+									<td th:text="${examRegistration.getResultRepresentation()}">30L</td>
+								</tr>
+							</tbody>
+						</table>
+							<form th:if="${examRegistration.getResult().toString() == PASS}" th:action="@{${#servletContext.getInitParameter('studExamRejectService')}}" method="POST">
+								<input type="hidden" name="studentId" th:value="${examRegistration.getStudentId()}">
+								<input type="hidden" name="examId" th:value="${examRegistration.getExamId()}">
+								<div class="field">
+									<input type="submit" th:value="#{evaluationInfo.reject}" value="Reject">
+								</div>
+							</form>
+					</section>
+					<section th:fragment="registered" th:if="${!(examRegistration.getStatus().toString() != NINS && examRegistration.getStatus().toString() != INS)}">
+						<div th:text="#{evaluationInfo.notAvailable}">
+							Grade not yet available
+						</div>
+						<form th:action="@{${#servletContext.getInitParameter('studExamRegService')}}" method="POST">
+							<input type="hidden" name="examId" th:value="${examId}">
+							<input type="hidden" name="action" th:value="${DEREGISTER}">
+							<div class="field">
+								<input type="submit" th:value="#{registered.clickToDeregister}" value="Click to deregister">
+							</div>
+						</form>
+					</section>
+				</th:block>
+				<section th:case="false" th:fragment="notRegistered">
+					<div th:text="#{notRegistered.youAreNotRegistered}">
+						You are not registered
+					</div>
+					<form th:action="@{${#servletContext.getInitParameter('studExamRegService')}}" method="POST">
+						<input type="hidden" name="examId" th:value="${examId}">
+						<input type="hidden" name="action" th:value="${REGISTER}">
+						<div class="field">
+							<input type="submit" th:value="#{notRegistered.clickToRegister}" value="Click to register">
+						</div>
+					</form>
+				</section>
+			</th:block>
+		</div>
+		<footer th:replace="layout :: footer"></footer>
+	</body>
+</html>

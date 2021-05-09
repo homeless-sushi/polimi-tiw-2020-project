@@ -22,15 +22,11 @@ public class CareersPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private String templatePath;
-	private String careerService;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		templatePath = getInitParameter("templatePath");
-
-		ServletContext servletCtx = config.getServletContext();
-		careerService = servletCtx.getInitParameter("careerService");
 	}
 
 	@Override
@@ -45,7 +41,6 @@ public class CareersPage extends HttpServlet {
 		
 		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
 		ctx.setVariable("careers", careers);
-		ctx.setVariable("careerService", careerService);
 		
 		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");
 		templateEngine.process(templatePath, ctx, response.getWriter());

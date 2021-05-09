@@ -19,15 +19,16 @@ public class LoginPage extends HttpServlet {
 
 	private String templatePath;
 
-	public enum ERROR_TYPES {
+	public enum ERROR_TYPE {
 		WRONG_CREDENTIALS ("login.ERROR_WRONG_CREDENTIALS"),
 		MUST_LOG_IN ("login.ERROR_MUST_LOG_IN");
 		
 		private final String errorType;
 		
-		ERROR_TYPES(String errorType) { this.errorType = errorType; }
+		ERROR_TYPE(String errorType) { this.errorType = errorType; }
 		
-		public String getErrorType() { return this.errorType; }
+		@Override
+		public String toString() { return this.errorType; }
 	}
 	
 	@Override
@@ -39,6 +40,7 @@ public class LoginPage extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext servletCtx = getServletContext();
+		/* Create session */
 		HttpSession session = request.getSession();
 		
 		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
