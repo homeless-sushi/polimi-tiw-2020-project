@@ -4,9 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.MonthDay;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +20,7 @@ import it.polimi.db.business.CourseBean;
 public class CourseDAO {
 	private DataSource dataSrc;
 	private static final String DSRC_ERROR = "DataSource not present";
+	private static final MonthDay ACADEMIC_YEAR_BEGIN = MonthDay.of(Month.AUGUST, 1);
 	private static final Logger logger = Logger.getLogger(CourseDAO.class.getName());
 	
 	public CourseDAO(DataSource courseDataSource) {
@@ -150,43 +152,15 @@ public class CourseDAO {
 		return null;
 	}
 
-	public int getAcademicYear(Date date){
-		//the academic year begins on august first
-		int beginDay = 1;
-		int beginMonth = Calendar.AUGUST;
-		
-		Calendar calendarDate = Calendar.getInstance();
-		calendarDate.setTime(date);
-		int dateYear = calendarDate.get(Calendar.YEAR);
+	public static int getAcademicYear(LocalDate date){
+		int academicYear = date.getYear();
 
-		Calendar academicBeginning = Calendar.getInstance();
-		academicBeginning.set(dateYear, beginMonth, beginDay, 0, 0, 0);
-		Date beginDate = academicBeginning.getTime();
-
-		if(date.after(beginDate)){
-			return dateYear;
-		}else{
-			return dateYear-1;
-		}
+		if(MonthDay.from(date).isBefore(ACADEMIC_YEAR_BEGIN))
+			academicYear--;
+		return academicYear;
 	}
 
-	public int getAcademicYear() {
-		//the academic year begins on august first
-		int beginDay = 1;
-		int beginMonth = Calendar.AUGUST;
-
-		Calendar calendarNow = Calendar.getInstance();
-		int currentYear = calendarNow.get(Calendar.YEAR);
-		Date now = calendarNow.getTime();
-	
-		Calendar academicBeginning = Calendar.getInstance();
-		academicBeginning.set(currentYear, beginMonth, beginDay, 0, 0, 0);
-		Date beginDate = academicBeginning.getTime();
-
-		if(now.after(beginDate)){
-			return academicBeginning.get(Calendar.YEAR);
-		}else{
-			return academicBeginning.get(Calendar.YEAR)-1;
-		}
+	public static int getAcademicYear() {
+		return getAcademicYear(LocalDate.now());
 	}
 }

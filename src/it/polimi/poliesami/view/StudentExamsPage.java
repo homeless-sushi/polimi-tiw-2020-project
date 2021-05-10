@@ -46,7 +46,7 @@ public class StudentExamsPage extends HttpServlet {
 		try {
 			year = Integer.parseInt(yearString);
 		} catch (NumberFormatException e) {
-			year = courseDAO.getAcademicYear();
+			year = CourseDAO.getAcademicYear();
 		}
 		List<CourseBean> courses = courseDAO.getStudentCourses(identity.getCareerId(), year);
 		List<CourseExamsBean> courseExamsList = new ArrayList<>();

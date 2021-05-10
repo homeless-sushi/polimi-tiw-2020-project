@@ -47,7 +47,7 @@ public class ProfessorExamsPage extends HttpServlet {
 		try {
 			year = Integer.parseInt(yearString);
 		} catch (NumberFormatException e) {
-			year = courseDAO.getAcademicYear();
+			year = CourseDAO.getAcademicYear();
 		}
 
 		List<CourseBean> courses = courseDAO.getProfessorCourses(identity.getCareerId(), year);
