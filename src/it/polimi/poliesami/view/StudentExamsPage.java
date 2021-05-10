@@ -10,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -21,6 +20,7 @@ import it.polimi.db.dao.CourseDAO;
 import it.polimi.db.dao.ExamDAO;
 import it.polimi.poliesami.business.CourseExamsBean;
 import it.polimi.poliesami.business.IdentityBean;
+import it.polimi.poliesami.utils.AppAuthenticator;
 
 public class StudentExamsPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -37,8 +37,9 @@ public class StudentExamsPage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		ServletContext servletCtx = getServletContext();
 		
-		HttpSession session = request.getSession();
-		IdentityBean identity = (IdentityBean) session.getAttribute("identity");
+		AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
+		IdentityBean identity = clientAutheticator.getClientIdentity(request);
+		
 		CourseDAO courseDAO = (CourseDAO) servletCtx.getAttribute("courseDAO");
 		String yearString = request.getParameter("year");
 		int year;

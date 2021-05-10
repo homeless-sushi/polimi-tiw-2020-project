@@ -10,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import it.polimi.db.business.Role;
 import it.polimi.db.dao.CareerDAO;
@@ -36,8 +35,10 @@ public class CareerService extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ServletContext servletCtx = getServletContext();
 		String careerIdString = request.getParameter("careerId");
 		String roleString = request.getParameter("role");
+
 		fail: {
 			int careerId;
 			try {
@@ -47,13 +48,12 @@ public class CareerService extends HttpServlet {
 			}
 			Role careerRole = Role.fromString(roleString);
 
-			HttpSession session = request.getSession();
-			IdentityBean identity = (IdentityBean) session.getAttribute("identity");
+			AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
+			IdentityBean identity = clientAutheticator.getClientIdentity(request);
 			if(identity == null) {
 				break fail;
 			}
 
-			ServletContext servletCtx = getServletContext();
 			CareerDAO careerDAO = (CareerDAO) servletCtx.getAttribute("careerDAO");
 			if(!careerDAO.validCareer(identity.getPersonCode(), careerId, careerRole)) {
 				break fail;

@@ -8,7 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -23,6 +22,7 @@ import it.polimi.db.dao.ExamDAO;
 import it.polimi.db.dao.ExamRegistrationDAO;
 import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.controller.StudExamRegService;
+import it.polimi.poliesami.utils.AppAuthenticator;
 
 public class StudExamRegPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -42,8 +42,8 @@ public class StudExamRegPage extends HttpServlet {
 
 		final ServletContext servletCtx = getServletContext();
 		
-		final HttpSession session = request.getSession();
-		final IdentityBean identity = (IdentityBean) session.getAttribute("identity");
+		AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
+		IdentityBean identity = clientAutheticator.getClientIdentity(request);
 		final ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
 		final boolean isRegistered = examRegistrationDAO.isStudentRegistered(identity.getCareerId(), examId);
 		

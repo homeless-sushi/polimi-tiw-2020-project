@@ -11,10 +11,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import it.polimi.db.dao.ExamRegistrationDAO;
 import it.polimi.poliesami.business.IdentityBean;
+import it.polimi.poliesami.utils.AppAuthenticator;
 import it.polimi.poliesami.utils.HttpUtils;
 
 public class StudExamRejectService extends HttpServlet{
@@ -34,11 +34,12 @@ public class StudExamRejectService extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String examIdString = request.getParameter("examId");
 		int examId = Integer.parseInt(examIdString);
-		
-		HttpSession session = request.getSession();
-		IdentityBean identity = (IdentityBean) session.getAttribute("identity");
 
 		ServletContext servletCtx = getServletContext();
+		
+		AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
+		IdentityBean identity = clientAutheticator.getClientIdentity(request);
+
 		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
 		if(!examRegistrationDAO.rejectStudExam(identity.getCareerId(), examId)){
 			logger.log(Level.FINER, "{0}: Couldn''t reject evaluation of exam {1}", new Object[]{request.getRemoteHost(), examIdString});
