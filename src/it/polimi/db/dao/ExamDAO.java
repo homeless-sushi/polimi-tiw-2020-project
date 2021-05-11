@@ -110,6 +110,37 @@ public class ExamDAO {
 		return false;
 	}
 
+	public boolean isExamCourseProfessor(int professorId, int examId){
+		if(dataSrc == null) {
+			System.out.println(DSRC_ERROR);
+			return false;
+		}
+
+		String query = "SELECT * "
+		             + "FROM course_details "
+		             + "WHERE course_details.professor_id = ? "
+		             + "AND (course_details.course_id, course_details.year) = "
+		             + "(SELECT exam.course_id, exam.year "
+		             + "FROM exam "
+		             + "WHERE id = ? )";
+
+		try (Connection connection = dataSrc.getConnection();
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setInt(1, professorId);
+			statement.setInt(2, examId);
+			statement.executeQuery();
+			try (ResultSet result = statement.executeQuery()) {
+				if(result.next()) {
+					return true;
+				}
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+		
+		return false;
+	}
+
 	public static ExamBean createExamBean(ResultSet rs) throws SQLException {
 		ExamBean exam = new ExamBean();
 		exam.setId(rs.getInt("exam.id"));

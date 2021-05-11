@@ -80,6 +80,15 @@
 		<filter-name>StudentExamFilter</filter-name>
 		<url-pattern>/inside/student/examRegistration/*</url-pattern>
 	</filter-mapping>
+	
+	<filter>
+		<filter-name>ProfessorExamFilter</filter-name>
+		<filter-class>it.polimi.poliesami.filter.ProfessorExam</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ProfessorExamFilter</filter-name>
+		<url-pattern>/inside/professor/examRegistrations/*</url-pattern>
+	</filter-mapping>
 
 	<!-- SERVLETS -->
 	<servlet>
