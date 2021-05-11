@@ -156,6 +156,19 @@
 		<param-value>/inside/student/examRegistration/RejectService</param-value>
 	</context-param>
 
+	<servlet>
+		<servlet-name>ProfExamPublishService</servlet-name>
+		<servlet-class>it.polimi.poliesami.controller.ProfExamPublishService</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProfExamPublishService</servlet-name>
+		<url-pattern>/inside/professor/examRegistrations/PublishService</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>profExamPublishService</param-name>
+		<param-value>/inside/professor/examRegistrations/PublishService</param-value>
+	</context-param>
+
 	<!-- PAGES -->
 	<servlet>
 		<servlet-name>LoginPage</servlet-name>

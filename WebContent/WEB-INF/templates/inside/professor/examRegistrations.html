@@ -73,7 +73,7 @@
 			</section>
 			<section>
 				<div class="row">
-					<form method="POST">
+					<form th:action="@{${#servletContext.getInitParameter('profExamPublishService')}}" method="POST">
 						<input type="hidden" name="examId" th:value="${exam.id}">
 						<div class="field">
 							<input type="submit" th:value="#{publication.publish}" value="Publish">
