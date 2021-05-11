@@ -35,17 +35,7 @@ public class UserDAO {
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setString(1, personCode);
-			try (ResultSet result = statement.executeQuery()) {
-				if(!result.next())
-					return null;
-				UserBean user = new UserBean();
-				user.setPersonCode(result.getString("person_code"));
-				user.setEmail(result.getString("email"));
-				user.setHashedPassword(result.getBytes("password"));
-				user.setName(result.getString("name"));
-				user.setSurname(result.getString("surname"));
-				return user;
-			}
+			return getUser(statement);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -65,17 +55,7 @@ public class UserDAO {
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setString(1, email);
-			try (ResultSet result = statement.executeQuery()) {
-				if(!result.next())
-					return null;
-				UserBean user = new UserBean();
-				user.setPersonCode(result.getString("person_code"));
-				user.setEmail(result.getString("email"));
-				user.setHashedPassword(result.getBytes("password"));
-				user.setName(result.getString("name"));
-				user.setSurname(result.getString("surname"));
-				return user;
-			}
+			return getUser(statement);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -108,5 +88,23 @@ public class UserDAO {
 	
 	public boolean addUser(UserBean user) {
 		return this.addUser(user.getEmail(), user.getHashedPassword(), user.getName(), user.getSurname());
+	}
+
+	public static UserBean createUserBean(ResultSet rs) throws SQLException {
+		UserBean user = new UserBean();
+		user.setPersonCode(rs.getString("user.person_code"));
+		user.setEmail(rs.getString("user.email"));
+		user.setHashedPassword(rs.getBytes("user.password"));
+		user.setName(rs.getString("user.name"));
+		user.setSurname(rs.getString("user.surname"));
+		return user;
+	}
+
+	private UserBean getUser(PreparedStatement ps) throws SQLException {
+		try (ResultSet result = ps.executeQuery()) {
+			if(!result.next())
+				return null;
+			return createUserBean(result);
+		}
 	}
 }
