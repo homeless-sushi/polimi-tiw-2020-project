@@ -27,6 +27,7 @@ public class CareerBean implements Serializable {
 	public void setId(int id) { this.id = id; }
 	public Role getRole() { return this.role; }
 	public void setRole(Role role) { this.role = role; }
+	public void setRole(String role) { this.role = Role.fromString(role); }
 	public String getMajor() { return this.major; }
 	public void setMajor(String major) { this.major = major; }
 	

@@ -26,33 +26,20 @@ public class CareerDAO {
 			logger.log(Level.SEVERE, DSRC_ERROR);
 	}
 	
-	
 	public List<CareerBean> getUserCareers(String personCode){
 		if(dataSrc == null) {
 			logger.log(Level.WARNING, DSRC_ERROR);
 			return Collections.emptyList();
 		}
 		
-		String query = "SELECT person_code, id, role, major "
-		             + "FROM user_career "
+		String query = "SELECT * "
+		             + "FROM user_career as career "
 		             + "WHERE person_code = ?";
-			
-		List<CareerBean> careers = new ArrayList<>();
 		
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setString(1, personCode);
-			try (ResultSet result = statement.executeQuery()) {
-				while(result.next()) {
-					CareerBean career = new CareerBean();
-					career.setPersonCode(result.getString("person_code"));
-					career.setId(result.getInt("id"));
-					career.setRole(Role.fromString(result.getString("role")));
-					career.setMajor(result.getString("major"));
-					careers.add(career);
-				}
-				return careers;
-			}
+			return getCareers(statement);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -60,13 +47,13 @@ public class CareerDAO {
 		return Collections.emptyList();
 	}
 
-	public boolean validCareer(String personCode, int career, Role role){
+	public boolean isValidCareer(String personCode, int career, Role role){
 		if(dataSrc == null) {
 			logger.log(Level.WARNING, DSRC_ERROR);
 			return false;
 		}
 		
-		String query = "SELECT person_code, id, role "
+		String query = "SELECT 1 "
 		             + "FROM user_career "
 		             + "WHERE person_code = ? "
 		             + "AND id = ? "
@@ -85,5 +72,23 @@ public class CareerDAO {
 		}
 		
 		return false;
+	}
+
+	public static CareerBean createCareerBean(ResultSet rs) throws SQLException {
+		CareerBean career = new CareerBean();
+		career.setPersonCode(rs.getString("career.person_code"));
+		career.setId(rs.getInt("career.id"));
+		career.setRole(rs.getString("career.role"));
+		career.setMajor(rs.getString("career.major"));
+		return career;
+	}
+
+	private List<CareerBean> getCareers(PreparedStatement ps) throws SQLException {
+		try (ResultSet result = ps.executeQuery()) {
+			List<CareerBean> careers = new ArrayList<>();
+			while(result.next())
+				careers.add(createCareerBean(result));
+			return careers;
+		}
 	}
 }

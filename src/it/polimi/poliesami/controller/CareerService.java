@@ -55,7 +55,7 @@ public class CareerService extends HttpServlet {
 			}
 
 			CareerDAO careerDAO = (CareerDAO) servletCtx.getAttribute("careerDAO");
-			if(!careerDAO.validCareer(identity.getPersonCode(), careerId, careerRole)) {
+			if(!careerDAO.isValidCareer(identity.getPersonCode(), careerId, careerRole)) {
 				break fail;
 			}
 
