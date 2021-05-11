@@ -50,7 +50,7 @@ public class StudExamRegPage extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
 
 		final ExamDAO examDAO = (ExamDAO) servletCtx.getAttribute("examDAO");
-		final ExamBean exam = examDAO.getExam(examId);
+		final ExamBean exam = examDAO.getExamById(examId);
 		ctx.setVariable("exam", exam);
 		final CourseDAO courseDAO = (CourseDAO) servletCtx.getAttribute("courseDAO");
 		final CourseBean course = courseDAO.getCourseFromExam(examId);

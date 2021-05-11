@@ -1,6 +1,7 @@
 package it.polimi.db.business;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class CourseBean implements Serializable {
 	private int id;
@@ -9,6 +10,7 @@ public class CourseBean implements Serializable {
 	private int cfu;
 	private int year;
 	private int professorId;
+	private List<ExamBean> exams;
 	
 	public int getId() { return id;	}
 	public void setId(int id) { this.id = id; }
@@ -22,4 +24,6 @@ public class CourseBean implements Serializable {
 	public void setYear(int year) { this.year = year; }
 	public int getProfessorId() { return professorId; }
 	public void setProfessorId(int professorId) { this.professorId = professorId; }
+	public List<ExamBean> getExams() { return exams; }
+	public void setExams(List<ExamBean> exams) { this.exams= exams; }
 }

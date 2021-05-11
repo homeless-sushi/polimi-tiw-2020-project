@@ -35,34 +35,17 @@ public class CourseDAO {
 			return Collections.emptyList();
 		}
 		
-		String query = "SELECT course.id, course.name, course.semester, course.cfu, "
-		             + "course_details.year, course_details.professor_id "
-		             + "FROM course "
-		             + "INNER JOIN course_details "
-		             + "ON course.id = course_details.course_id "
-		             + "WHERE course_details.professor_id = ? "
-		             + "AND course_details.year = ? "
-		             + "ORDER BY course.name";
-			
-		List<CourseBean> courses = new ArrayList<>();
+		String query = "SELECT * "
+		             + "FROM course_full as course "
+		             + "WHERE professor_id = ? "
+		             + "AND year = ? "
+		             + "ORDER BY name";
 		
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setInt(1, careerId);
 			statement.setInt(2, year);
-			try (ResultSet result = statement.executeQuery()) {
-				while(result.next()) {
-					CourseBean course = new CourseBean();
-					course.setId(result.getInt("course.id"));
-					course.setName(result.getString("course.name"));
-					course.setCfu(result.getInt("course.cfu"));
-					course.setSemester(result.getString("course.semester"));
-					course.setYear(result.getInt("course_details.year"));
-					course.setProfessorId(result.getInt("course_details.professor_id"));
-					courses.add(course);
-				}
-				return courses;
-			}
+			return getCourses(statement);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -76,36 +59,17 @@ public class CourseDAO {
 			return Collections.emptyList();
 		}
 		
-		String query = "SELECT course.id, course.name, course.semester, course.cfu, "
-		             + "course_details.year, course_details.professor_id "
-		             + "FROM course "
-		             + "JOIN course_details "
-		             + "ON course.id = course_details.course_id "
-		             + "JOIN attend "
-		             + "ON (attend.course_id = course_details.course_id "
-		             + "AND attend.year = course_details.year) "
+		String query = "SELECT course.* "
+		             + "FROM course_full as course "
+		             + "JOIN attend on (course.id, course.year) = (attend.course_id, attend.year) "
 		             + "WHERE attend.student_id = ? "
-		             + "AND attend.year = ?";
-			
-		List<CourseBean> courses = new ArrayList<>();
+		             + "AND course.year = ?";
 		
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setInt(1, careerId);
 			statement.setInt(2, year);
-			try (ResultSet result = statement.executeQuery()) {
-				while(result.next()) {
-					CourseBean course = new CourseBean();
-					course.setId(result.getInt("course.id"));
-					course.setName(result.getString("course.name"));
-					course.setCfu(result.getInt("course.cfu"));
-					course.setSemester(result.getString("course.semester"));
-					course.setYear(result.getInt("course_details.year"));
-					course.setProfessorId(result.getInt("course_details.professor_id"));
-					courses.add(course);
-				}
-				return courses;
-			}
+			return getCourses(statement);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -119,32 +83,16 @@ public class CourseDAO {
 			return null;
 		}
 		
-		String query = "SELECT course.id, course.name, course.semester, course.cfu, "
-		             + "course_details.year, course_details.professor_id "
-		             + "FROM course "
-		             + "JOIN course_details "
-		             + "ON course.id = course_details.course_id "
-		             + "WHERE (course_details.course_id, course_details.year) IN "
-		             + "(SELECT exam.course_id, exam.year "
-		             + "FROM exam "
-		             + "WHERE exam.id = ?)";
-			
-		CourseBean course = new CourseBean();
+		String query = "SELECT course.* "
+		             + "FROM course_full as course "
+		             + "JOIN exam "
+		             + "ON (course.id, course.year) = (exam.course_id, exam.year) "
+		             + "WHERE exam.id = ?";
 		
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setInt(1, examId);
-			try (ResultSet result = statement.executeQuery()) {
-				while(result.next()) {
-					course.setId(result.getInt("course.id"));
-					course.setName(result.getString("course.name"));
-					course.setCfu(result.getInt("course.cfu"));
-					course.setSemester(result.getString("course.semester"));
-					course.setYear(result.getInt("course_details.year"));
-					course.setProfessorId(result.getInt("course_details.professor_id"));
-				}
-				return course;
-			}
+			return getCourse(statement);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -162,5 +110,33 @@ public class CourseDAO {
 
 	public static int getAcademicYear() {
 		return getAcademicYear(LocalDate.now());
+	}
+
+	public static CourseBean createCourseBean(ResultSet rs) throws SQLException {
+		CourseBean course = new CourseBean();
+		course.setId(rs.getInt("course.id"));
+		course.setName(rs.getString("course.name"));
+		course.setCfu(rs.getInt("course.cfu"));
+		course.setSemester(rs.getString("course.semester"));
+		course.setYear(rs.getInt("course.year"));
+		course.setProfessorId(rs.getInt("course.professor_id"));
+		return course;
+	}
+
+	private CourseBean getCourse(PreparedStatement ps) throws SQLException {
+		try (ResultSet result = ps.executeQuery()) {
+			if(!result.next())
+				return null;
+			return createCourseBean(result);
+		}
+	}
+
+	private List<CourseBean> getCourses(PreparedStatement ps) throws SQLException {
+		try (ResultSet result = ps.executeQuery()) {
+			List<CourseBean> courses = new ArrayList<>();
+			while(result.next())
+				courses.add(createCourseBean(result));
+			return courses;
+		}
 	}
 }

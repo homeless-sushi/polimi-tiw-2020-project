@@ -38,12 +38,12 @@
 						</tr>
 					</thead>
 					<tbody th:remove="all-but-first">
-						<th:block th:each="courseExams,outerIStat : ${courseExamsList}">
-							<tr th:each="exam,innerIStat : ${courseExams.getExams()}">
-								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${courseExams.getExams().size}" th:text="${courseExams.getCourse().getId()}">1</th>
-								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${courseExams.getExams().size}" th:text="${courseExams.getCourse().getName()}">DataBase 2</th>
-								<td th:text="${exam.getId()}">1</td>
-								<td th:text="${exam.getDate()}">02/02/2020</td>
+						<th:block th:each="course,outerIStat : ${courses}">
+							<tr th:each="exam,innerIStat : ${course.exams}">
+								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${course.exams.size}" th:text="${course.id}">1</th>
+								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${course.exams.size}" th:text="${course.name}">DataBase 2</th>
+								<td th:text="${exam.id}">1</td>
+								<td th:text="${exam.date}">02/02/2020</td>
 								<td><form action="examRegistration.html" th:action="@{${#servletContext.getInitParameter('studExamRegPage')}}" method="GET">
 									<input type="hidden" name="examId" th:value="${exam.id}" value="1">
 									<input class="link-button symbol" type="submit" value="➡">

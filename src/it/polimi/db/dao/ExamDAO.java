@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import it.polimi.db.business.CourseBean;
 import it.polimi.db.business.ExamBean;
 
 public class ExamDAO {
@@ -25,7 +26,7 @@ public class ExamDAO {
 			logger.log(Level.SEVERE, DSRC_ERROR);
 	}
 	
-	public ExamBean getExam(int examId){
+	public ExamBean getExamById(int examId){
 		if(dataSrc == null) {
 			logger.log(Level.WARNING, DSRC_ERROR);
 			return null;
@@ -35,20 +36,10 @@ public class ExamDAO {
 		             + "FROM exam "
 		             + "WHERE id = ? ";
 		
-		ExamBean exam = new ExamBean();
-		
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setInt(1, examId);
-			try (ResultSet result = statement.executeQuery()) {
-				if(result.next()){
-					exam.setId(result.getInt("id"));
-					exam.setCourseId(result.getInt("course_id"));
-					exam.setYear(result.getInt("year"));
-					exam.setDate(result.getDate("date"));
-				}
-				return exam;
-			}
+			return getExam(statement);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -56,40 +47,37 @@ public class ExamDAO {
 		return null;
 	}
 
-	public List<ExamBean> getCourseExams(int courseId, int year){
-		if(dataSrc == null) {
-			logger.log(Level.WARNING, DSRC_ERROR);
-			return Collections.emptyList();
-		}
-		
-		String query = "SELECT * "
-		             + "FROM exam "
-		             + "WHERE course_id = ? "
-		             + "AND year = ? "
-		             + "ORDER BY date DESC";
-			
-		List<ExamBean> exams = new ArrayList<>();
-		
-		try (Connection connection = dataSrc.getConnection();
-			PreparedStatement statement = connection.prepareStatement(query)) {
-			statement.setInt(1, courseId);
-			statement.setInt(2, year);
-			try (ResultSet result = statement.executeQuery()) {
-				while(result.next()) {
-					ExamBean exam = new ExamBean();
-					exam.setId(result.getInt("id"));
-					exam.setCourseId(result.getInt("course_id"));
-					exam.setYear(result.getInt("year"));
-					exam.setDate(result.getDate("date"));
-					exams.add(exam);
-				}
-				return exams;
+	public void fetchCourseExams(List<CourseBean> courses){
+		fail: {
+			if(dataSrc == null) {
+				logger.log(Level.WARNING, DSRC_ERROR);
+				break fail;
 			}
-		} catch (SQLException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
+			
+			String query = "SELECT * "
+			             + "FROM exam "
+			             + "WHERE course_id = ? "
+			             + "AND year = ? "
+			             + "ORDER BY date DESC";
+			
+			try (Connection connection = dataSrc.getConnection();
+				PreparedStatement statement = connection.prepareStatement(query)) {
+				for(CourseBean course : courses) {
+					statement.setInt(1, course.getId());
+					statement.setInt(2, course.getYear());
+					course.setExams(getExams(statement));
+				}
+			} catch (SQLException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				break fail;
+			}
+
+			return;
 		}
 
-		return Collections.emptyList();
+		/* FAIL */
+		for(CourseBean course : courses)
+			course.setExams(Collections.emptyList());
 	}
 
 	public boolean isExamCourseAttendee(int studentId, int examId) {
@@ -98,13 +86,12 @@ public class ExamDAO {
 			return false;
 		}
 
-		String query = "SELECT * "
-		             + "FROM attend "
-		             + "WHERE student_id = ? "
-		             + "AND (course_id, year) = "
-		             + "(SELECT course_id, year "
+		String query = "SELECT 1 "
 		             + "FROM exam "
-		             + "WHERE id = ?)";
+		             + "JOIN attend "
+		             + "ON (exam.course_id, exam.year) = (attend.course_id, attend.year) "
+		             + "WHERE attend.student_id = ? "
+		             + "AND exam.id = ?";
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
@@ -112,14 +99,38 @@ public class ExamDAO {
 			statement.setInt(2, examId);
 			statement.executeQuery();
 			try (ResultSet result = statement.executeQuery()) {
-				if(result.next()) {
-					return true;
-				}
+				return result.next();
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 		
 		return false;
+	}
+
+	public static ExamBean createExamBean(ResultSet rs) throws SQLException {
+		ExamBean exam = new ExamBean();
+		exam.setId(rs.getInt("exam.id"));
+		exam.setCourseId(rs.getInt("exam.course_id"));
+		exam.setYear(rs.getInt("exam.year"));
+		exam.setDate(rs.getDate("exam.date"));
+		return exam;
+	}
+
+	private ExamBean getExam(PreparedStatement ps) throws SQLException {
+		try (ResultSet result = ps.executeQuery()) {
+			if(!result.next())
+				return null;
+			return createExamBean(result);
+		}
+	}
+
+	private List<ExamBean> getExams(PreparedStatement ps) throws SQLException {
+		try (ResultSet result = ps.executeQuery()) {
+			List<ExamBean> exams = new ArrayList<>();
+			while(result.next())
+				exams.add(createExamBean(result));
+			return exams;
+		}
 	}
 }

@@ -1,13 +1,14 @@
 package it.polimi.db.business;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class ExamBean implements Serializable {
 	private int id;
 	private int courseId;
 	private int year;
-	private Date date;
+	private LocalDate date;
 
 	public void setId(int id) { this.id = id; }
 	public int getId() { return this.id; }
@@ -15,6 +16,7 @@ public class ExamBean implements Serializable {
 	public int getCourseId() { return this.courseId; }
 	public void setYear(int year) { this.year = year; }
 	public int getYear() { return this.year; }
-	public void setDate(Date date) { this.date = date; }
-	public Date getDate() { return this.date; }
+	public void setDate(Date date) { this.date = date.toLocalDate(); }
+	public void setDate(LocalDate date) { this.date = date; }
+	public LocalDate getDate() { return this.date; }
 }
