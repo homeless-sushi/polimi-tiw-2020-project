@@ -9,6 +9,7 @@ public class ExamBean implements Serializable {
 	private int courseId;
 	private int year;
 	private LocalDate date;
+	private CourseBean course;
 
 	public void setId(int id) { this.id = id; }
 	public int getId() { return this.id; }
@@ -19,4 +20,6 @@ public class ExamBean implements Serializable {
 	public void setDate(Date date) { this.date = date.toLocalDate(); }
 	public void setDate(LocalDate date) { this.date = date; }
 	public LocalDate getDate() { return this.date; }
+	public void setCourse(CourseBean course) { this.course = course; }
+	public CourseBean getCourse() { return this.course; }
 }

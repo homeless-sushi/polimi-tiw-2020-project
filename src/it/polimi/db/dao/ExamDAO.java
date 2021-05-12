@@ -34,7 +34,9 @@ public class ExamDAO {
 		
 		String query = "SELECT * "
 		             + "FROM exam "
-		             + "WHERE id = ? ";
+		             + "JOIN course_full AS course "
+		             + "ON (exam.course_id, exam.year) = (course.id, course.year) "
+		             + "WHERE exam.id = ? ";
 		
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
@@ -114,6 +116,9 @@ public class ExamDAO {
 		exam.setCourseId(rs.getInt("exam.course_id"));
 		exam.setYear(rs.getInt("exam.year"));
 		exam.setDate(rs.getDate("exam.date"));
+		try {
+			exam.setCourse(CourseDAO.createCourseBean(rs));
+		} catch (Exception ignore) { /* No recursive course */ }
 		return exam;
 	}
 

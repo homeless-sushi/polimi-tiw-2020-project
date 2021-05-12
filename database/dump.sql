@@ -161,6 +161,25 @@ CREATE TABLE `exam_registration` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Temporary view structure for view `exam_registration_student`
+--
+
+DROP TABLE IF EXISTS `exam_registration_student`;
+/*!50001 DROP VIEW IF EXISTS `exam_registration_student`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `exam_registration_student` AS SELECT 
+ 1 AS `exam_id`,
+ 1 AS `student_id`,
+ 1 AS `status`,
+ 1 AS `result`,
+ 1 AS `grade`,
+ 1 AS `laude`,
+ 1 AS `repr`,
+ 1 AS `record_id`*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary view structure for view `exam_unrecorded`
 --
 
@@ -286,6 +305,24 @@ USE `tiw-project`;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `exam_registration_student`
+--
+
+/*!50001 DROP VIEW IF EXISTS `exam_registration_student`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `exam_registration_student` AS select `exam_registration`.`exam_id` AS `exam_id`,`exam_registration`.`student_id` AS `student_id`,if((`exam_registration`.`status` in ('NINS','INS')),'NINS',`exam_registration`.`status`) AS `status`,if((`exam_registration`.`status` in ('NINS','INS')),'VUOTO',`exam_registration`.`result`) AS `result`,if((`exam_registration`.`status` in ('NINS','INS')),0,`exam_registration`.`grade`) AS `grade`,if((`exam_registration`.`status` in ('NINS','INS')),0,`exam_registration`.`laude`) AS `laude`,if((`exam_registration`.`status` in ('NINS','INS')),'VUOTO',`exam_registration`.`repr`) AS `repr`,if((`exam_registration`.`status` in ('NINS','INS')),NULL,`exam_registration`.`record_id`) AS `record_id` from `exam_registration` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `exam_unrecorded`
 --
 
@@ -330,4 +367,4 @@ USE `tiw-project`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-11 22:34:04
+-- Dump completed on 2021-05-13 10:33:49

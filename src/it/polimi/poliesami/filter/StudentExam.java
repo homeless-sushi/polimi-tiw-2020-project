@@ -33,6 +33,7 @@ public class StudentExam extends HttpFilter {
 	protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
 		throws IOException, ServletException{
 
+		ServletContext servletCtx = getServletContext();
 		String examIdString = req.getParameter("examId");
 		
 		fail : {
@@ -40,17 +41,18 @@ public class StudentExam extends HttpFilter {
 			try {
 				examId = Integer.parseInt(examIdString);
 			} catch (NumberFormatException e) {
-				logger.log(Level.FINER, "{0}: Bad request", req.getRemoteHost());
+				logger.log(Level.FINER, "{0}: Invalid exam Id {1}", new Object[]{req.getRemoteHost(), examIdString});
 				break fail;
 			}
-
-			ServletContext servletCtx = getServletContext();
+			req.setAttribute("examId", examId);
 
 			AppAuthenticator clientAuthenticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
 			IdentityBean identity = clientAuthenticator.getClientIdentity(req);
+			
 			ExamDAO examDAO = (ExamDAO) servletCtx.getAttribute("examDAO");
 			
 			if(!examDAO.isExamCourseAttendee(identity.getCareerId(), examId)) {
+				logger.log(Level.FINER, "{0}: Invalid exam Id {1} for user {2}", new Object[]{req.getRemoteHost(), examId, identity});
 				break fail;
 			}
 

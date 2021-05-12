@@ -28,68 +28,25 @@ public class ExamRegistrationDAO {
 			logger.log(Level.SEVERE, DSRC_ERROR);
 	}
 
-	public List<ExamRegistrationBean> getExamRegistrations(int examId){
+	public List<ExamRegistrationBean> getExamRegistrationsByExamId(int examId) {
 		if(dataSrc == null) {
 			logger.log(Level.WARNING, DSRC_ERROR);
 			return Collections.emptyList();
 		}
 
 		String query = "SELECT * "
-		             + "FROM exam_registration "
+		             + "FROM exam_registration as registration "
 		             + "WHERE exam_id = ?";
-
-		List<ExamRegistrationBean> registrations = new ArrayList<>();
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setInt(1, examId);
-			try (ResultSet result = statement.executeQuery()) {
-				while(result.next()) {
-					ExamRegistrationBean registration = new ExamRegistrationBean();
-					registration.setExamId(result.getInt("exam_id"));
-					registration.setStudentid(result.getInt("student_id"));
-					registration.setStatus(ExamStatus.fromString(result.getString("status")));
-					registration.setResult(ExamResult.fromString(result.getString("result")));
-					registration.setGrade(result.getInt("grade"));
-					registration.setLaude(result.getInt("laude") > 0);
-					registration.setResultRepresentation(result.getString("repr"));
-					int record_id = result.getInt("record_id");
-					if (record_id != 0)
-						registration.setRecordId(record_id);
-					registrations.add(registration);
-				}
-				return registrations;
-			}
+			return getExamRegistrations(statement);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 
 		return Collections.emptyList();
-	}
-
-	public boolean isStudentRegistered(int studentId, int examId) {
-		if(dataSrc == null) {
-			logger.log(Level.WARNING, DSRC_ERROR);
-			return false;
-		}
-
-		String query = "SELECT * "
-		             + "FROM exam_registration "
-		             + "WHERE exam_id = ? "
-		             + "AND student_id = ?";
-
-		try (Connection connection = dataSrc.getConnection();
-			PreparedStatement statement = connection.prepareStatement(query)) {
-			statement.setInt(1, examId);
-			statement.setInt(2, studentId);
-			try (ResultSet result = statement.executeQuery()) {
-				return result.next();
-			}
-		} catch (SQLException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-		}
-
-		return false;
 	}
 
 	public ExamRegistrationBean getStudentExamRegistration(int studentId, int examId) {
@@ -99,31 +56,15 @@ public class ExamRegistrationDAO {
 		}
 
 		String query = "SELECT * "
-		             + "FROM exam_registration "
+		             + "FROM exam_registration_student as registration "
 		             + "WHERE exam_id = ? "
 		             + "AND student_id = ?";
-
-		ExamRegistrationBean registration = new ExamRegistrationBean();
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setInt(1, examId);
 			statement.setInt(2, studentId);
-			try (ResultSet result = statement.executeQuery()) {
-				if(result.next()) {
-					registration.setExamId(result.getInt("exam_id"));
-					registration.setStudentid(result.getInt("student_id"));
-					registration.setStatus(ExamStatus.fromString(result.getString("status")));
-					registration.setResult(ExamResult.fromString(result.getString("result")));
-					registration.setGrade(result.getInt("grade"));
-					registration.setLaude(result.getInt("laude") > 0);
-					registration.setResultRepresentation(result.getString("repr"));
-					int record_id = result.getInt("record_id");
-					if (record_id != 0)
-						registration.setRecordId(record_id);
-					return registration;
-				}
-			}
+			return getExamRegistration(statement);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -138,14 +79,13 @@ public class ExamRegistrationDAO {
 		}
 
 		String query = "INSERT INTO exam_unrecorded "
-		             + "(exam_id, student_id, status) "
-		             + "VALUES (?, ?, ?)";
+		             + "(exam_id, student_id) "
+		             + "VALUES (?, ?)";
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setInt(1, examId);
 			statement.setInt(2, studentId);
-			statement.setString(3, ExamStatus.NINS.toString());
 			int rows = statement.executeUpdate();
 			if(rows > 0)
 				return true;
@@ -164,7 +104,8 @@ public class ExamRegistrationDAO {
 
 		String query = "DELETE FROM exam_unrecorded "
 		             + "WHERE exam_id = ? "
-		             + "AND student_id = ?";
+		             + "AND student_id = ? "
+		             + "AND status IN ('" + ExamStatus.NINS + "', '" + ExamStatus.INS + "')";
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
@@ -190,7 +131,8 @@ public class ExamRegistrationDAO {
 		             + "SET status = ?, "
 		             + "result = ? "
 		             + "WHERE exam_id = ? "
-		             + "AND student_id = ?";
+		             + "AND student_id = ? "
+		             + "AND status = ?";
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
@@ -198,6 +140,7 @@ public class ExamRegistrationDAO {
 			statement.setString(2, ExamResult.RM.toString());
 			statement.setInt(3, examId);
 			statement.setInt(4, studentId);
+			statement.setString(5, ExamStatus.PUB.toString());
 			int rows = statement.executeUpdate();
 			if(rows > 0)
 				return true;
@@ -206,5 +149,35 @@ public class ExamRegistrationDAO {
 		}
 		
 		return false;
+	}
+
+	public static ExamRegistrationBean createExamBean(ResultSet rs) throws SQLException {
+		ExamRegistrationBean registration = new ExamRegistrationBean();
+		registration.setExamId(rs.getInt("registration.exam_id"));
+		registration.setStudentId(rs.getInt("registration.student_id"));
+		registration.setStatus(rs.getString("registration.status"));
+		registration.setResult(rs.getString("registration.result"));
+		registration.setGrade(rs.getInt("registration.grade"));
+		registration.setLaude(rs.getBoolean("registration.laude"));
+		registration.setResultRepresentation(rs.getString("registration.repr"));
+		registration.setRecordId(rs.getInt("registration.record_id"));
+		return registration;
+	}
+
+	private ExamRegistrationBean getExamRegistration(PreparedStatement ps) throws SQLException {
+		try (ResultSet result = ps.executeQuery()) {
+			if(!result.next())
+				return null;
+			return createExamBean(result);
+		}
+	}
+
+	private List<ExamRegistrationBean> getExamRegistrations(PreparedStatement ps) throws SQLException {
+		try (ResultSet result = ps.executeQuery()) {
+			List<ExamRegistrationBean> exams = new ArrayList<>();
+			while(result.next())
+				exams.add(createExamBean(result));
+			return exams;
+		}
 	}
 }

@@ -11,13 +11,15 @@ public class ExamRegistrationBean {
 	private int recordId;
 
 	public int getStudentId() { return this.studentId; }
-	public void setStudentid(int studentId) { this.studentId = studentId; }
+	public void setStudentId(int studentId) { this.studentId = studentId; }
 	public int getExamId() { return this.examId; }
 	public void setExamId(int examId) { this.examId = examId; }
 	public ExamStatus getStatus() { return this.status; }
 	public void setStatus(ExamStatus status) { this.status = status; }
+	public void setStatus(String status) { this.status = ExamStatus.valueOf(status); }
 	public ExamResult getResult() { return this.result; }
 	public void setResult(ExamResult result) { this.result = result; }
+	public void setResult(String result) { this.result = ExamResult.valueOf(result); }
 	public int getGrade() { return this.grade; }
 	public void setGrade(int grade) { this.grade = grade; }
 	public boolean getLaude() { return this.laude; }
