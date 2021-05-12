@@ -79,7 +79,7 @@
 							<input type="submit" th:value="#{publication.publish}" value="Publish">
 						</div>
 					</form>
-					<form method="POST">
+					<form th:action="@{${#servletContext.getInitParameter('profExamVerbalizeService')}}" method="POST">
 						<input type="hidden" name="examId" th:value="${exam.id}">
 						<div class="field">
 							<input type="submit" th:value="#{verbalization.verbalize}" value="Verbalize">

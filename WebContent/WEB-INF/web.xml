@@ -169,6 +169,19 @@
 		<param-value>/inside/professor/examRegistrations/PublishService</param-value>
 	</context-param>
 
+	<servlet>
+		<servlet-name>ProfExamVerbalizeService</servlet-name>
+		<servlet-class>it.polimi.poliesami.controller.ProfExamVerbalizeService</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProfExamVerbalizeService</servlet-name>
+		<url-pattern>/inside/professor/examRegistrations/VerbalizeService</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>profExamVerbalizeService</param-name>
+		<param-value>/inside/professor/examRegistrations/VerbalizeService</param-value>
+	</context-param>
+
 	<!-- PAGES -->
 	<servlet>
 		<servlet-name>LoginPage</servlet-name>

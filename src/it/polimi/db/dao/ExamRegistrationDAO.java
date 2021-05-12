@@ -189,6 +189,50 @@ public class ExamRegistrationDAO {
 		return false;
 	}
 
+	public boolean verbalizeExamEval(int examId){
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return false;
+		}
+
+		String recordQuery = "INSERT INTO exam_record "
+		                   + "(exam_record.exam_id)"
+		                   + "VALUES ( ? )";
+
+		String verbQuery   = "UPDATE exam_unrecorded "
+		                   + "SET exam_unrecorded.record_id = ( "
+		                   + "SELECT last_insert_id() "
+		                   + "FROM exam_record "
+		                   + "LIMIT 1), "
+		                   + "exam_unrecorded.status = \"VERB\" "
+		                   + "WHERE exam_unrecorded.exam_id = ? "
+		                   + "AND ( exam_unrecorded.status = \"PUB\" "
+		                   + "OR exam_unrecorded.status = \"RIF\")";
+
+		try (Connection connection = dataSrc.getConnection()){
+			connection.setAutoCommit(false);
+			try (PreparedStatement statement = connection.prepareStatement(recordQuery)){
+				statement.setInt(1, examId);
+				if(statement.executeUpdate() == 0) {
+					connection.rollback();
+					throw new SQLException("Couldn't create record");
+				}
+			}
+			try (PreparedStatement statement = connection.prepareStatement(verbQuery)) {
+				statement.setInt(1, examId);
+				if(statement.executeUpdate() == 0) {
+					connection.rollback();
+					throw new SQLException("Couldn't verbalize exam");
+				}
+				connection.commit();
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+		
+		return false;
+	}
+
 	public static ExamRegistrationBean createExamBean(ResultSet rs) throws SQLException {
 		ExamRegistrationBean registration = new ExamRegistrationBean();
 		registration.setExamId(rs.getInt("registration.exam_id"));
