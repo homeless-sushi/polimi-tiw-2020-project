@@ -84,6 +84,29 @@ public class ExamRegistrationDAO {
 		return null;
 	}
 
+	public ExamRegistrationBean getProfessorExamRegistration(int studentId, int examId) {
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return null;
+		}
+
+		String query = "SELECT * "
+		             + "FROM exam_registration as registration "
+		             + "WHERE exam_id = ? "
+		             + "AND student_id = ?";
+
+		try (Connection connection = dataSrc.getConnection();
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setInt(1, examId);
+			statement.setInt(2, studentId);
+			return getExamRegistration(statement);
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+
+		return null;
+	}
+
 	public boolean registerToExam(int studentId, int examId){
 		if(dataSrc == null) {
 			logger.log(Level.WARNING, DSRC_ERROR);

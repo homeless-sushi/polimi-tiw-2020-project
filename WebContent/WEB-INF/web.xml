@@ -284,4 +284,22 @@
 		<param-name>profExamRegPage</param-name>
 		<param-value>/inside/professor/examRegistrations</param-value>
 	</context-param>
+
+	<servlet>
+		<servlet-name>ProfEditExamPage</servlet-name>
+		<servlet-class>it.polimi.poliesami.view.ProfEditExamPage</servlet-class>
+		
+		<init-param>
+			<param-name>templatePath</param-name>
+			<param-value>/inside/professor/examRegistrations/edit/index</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProfEditExamPage</servlet-name>
+		<url-pattern>/inside/professor/examRegistrations/edit</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>profEditExamPage</param-name>
+		<param-value>/inside/professor/examRegistrations/edit</param-value>
+	</context-param>
 </web-app>
