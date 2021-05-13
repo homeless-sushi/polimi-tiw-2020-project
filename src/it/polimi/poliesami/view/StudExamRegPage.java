@@ -17,6 +17,7 @@ import it.polimi.db.business.ExamRegistrationBean;
 import it.polimi.db.dao.ExamDAO;
 import it.polimi.db.dao.ExamRegistrationDAO;
 import it.polimi.poliesami.business.IdentityBean;
+import it.polimi.poliesami.controller.StudExamRegService;
 import it.polimi.poliesami.utils.AppAuthenticator;
 
 public class StudExamRegPage extends HttpServlet {
@@ -47,6 +48,8 @@ public class StudExamRegPage extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
 		ctx.setVariable("exam", exam);
 		ctx.setVariable("examRegistration", examRegistration);
+		ctx.setVariable("register", StudExamRegService.ACTION.REGISTER.toString());
+		ctx.setVariable("deregister", StudExamRegService.ACTION.DEREGISTER.toString());
 
 		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");
 		templateEngine.process(templatePath, ctx, response.getWriter());

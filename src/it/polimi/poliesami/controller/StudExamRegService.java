@@ -21,11 +21,20 @@ public class StudExamRegService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(StudExamRegService.class.getName());
 	private String studExamRegPage;
-	private String studentExamsPage;
 	
 	public enum ACTION {
-		REGISTER("register"),
-		DEREGISTER("deregister");
+		REGISTER("/register") {
+			@Override
+			public boolean execute(ExamRegistrationDAO dao, int careerId, int examId) {
+				return dao.registerToExam(careerId, examId);
+			}
+		},
+		DEREGISTER("/deregister") {
+			@Override
+			public boolean execute(ExamRegistrationDAO dao, int careerId, int examId) {
+				return dao.deregisterFromExam(careerId, examId);
+			}
+		};
 
 		private String string;
 
@@ -42,6 +51,8 @@ public class StudExamRegService extends HttpServlet {
 			}
 			return null;
 		}
+
+		public abstract boolean execute(ExamRegistrationDAO dao, int careerId, int examId);
 	}
 
 	@Override
@@ -49,56 +60,29 @@ public class StudExamRegService extends HttpServlet {
 		super.init(config);
 		ServletContext servletCtx = config.getServletContext();
 		studExamRegPage = servletCtx.getInitParameter("studExamRegPage");
-		studentExamsPage = servletCtx.getInitParameter("studentExamsPage");
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String actionString = request.getParameter("action");
-		String examIdString = request.getParameter("examId");
+		ServletContext servletCtx = getServletContext();
+		int examId = (int) request.getAttribute("examId");
 		
-		fail : {
-			int examId;
-			try {
-				examId = Integer.parseInt(examIdString);
-			} catch (NumberFormatException e) {
-				break fail;
-			}
-			
-			ACTION action = ACTION.fromString(actionString);
-			if(action == null){
-				break fail;
-			}
-
-			ServletContext servletCtx = getServletContext();
-			
-			AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-			IdentityBean identity = clientAutheticator.getClientIdentity(request);
-			int careerId = identity.getCareerId();
-			
-			ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
-
-			switch (action) {
-				case REGISTER:
-					if(!examRegistrationDAO.registerToExam(careerId, examId)){
-						break fail;
-					}
-					logger.log(Level.FINER, "{0}: Student {1} registered to {2}", new Object[]{request.getRemoteHost(), careerId, examId});
-					break;
-				case DEREGISTER:
-					if(!examRegistrationDAO.deregisterFromExam(careerId, examId)){
-						break fail;
-					}
-					logger.log(Level.FINER, "{0}: Student {1} deregistered from {2}", new Object[]{request.getRemoteHost(), careerId, examId});
-					break;
-				default:
-				break fail;
-			}
-			Map<String,Object> params = Map.of("examId", examId);
-			HttpUtils.redirectWithParams(request, response, studExamRegPage, params);
+		ACTION action = ACTION.fromString(request.getPathInfo());
+		if(action == null) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, request.getRequestURI());
 			return;
 		}
-		logger.log(Level.FINER, "{0}: Couldn''t {1} to/from exam {2}", new Object[]{request.getRemoteHost(), actionString, examIdString});
-		HttpUtils.redirect(request, response, studentExamsPage);
+
+		AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
+		IdentityBean identity = clientAutheticator.getClientIdentity(request);
+
+		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
+
+		int careerId = identity.getCareerId();
+		boolean res = action.execute(examRegistrationDAO, careerId, examId);
+		logger.log(Level.FINER, "{0}: Student {1}, exam {2}, {3}: {4}", new Object[]{request.getRemoteHost(), careerId, examId, action, res ? "SUCCESS" : "FAIL"});
+
+		Map<String,Object> params = Map.of("examId", examId);
+		HttpUtils.redirectWithParams(request, response, studExamRegPage, params);
 	}
 }

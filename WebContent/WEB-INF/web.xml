@@ -127,7 +127,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>StudExamRegService</servlet-name>
-		<url-pattern>/inside/student/examRegistration/RegistrationService</url-pattern>
+		<url-pattern>/inside/student/examRegistration/RegistrationService/*</url-pattern>
 	</servlet-mapping>
 	<context-param>
 		<param-name>studExamRegService</param-name>

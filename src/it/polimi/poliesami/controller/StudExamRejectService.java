@@ -32,21 +32,21 @@ public class StudExamRejectService extends HttpServlet{
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String examIdString = request.getParameter("examId");
-		int examId = Integer.parseInt(examIdString);
-
 		ServletContext servletCtx = getServletContext();
+		int examId = (int) request.getAttribute("examId");
 		
 		AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
 		IdentityBean identity = clientAutheticator.getClientIdentity(request);
 
 		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
-		if(!examRegistrationDAO.rejectStudExam(identity.getCareerId(), examId)){
-			logger.log(Level.FINER, "{0}: Couldn''t reject evaluation of exam {1}", new Object[]{request.getRemoteHost(), examIdString});
-		}
-		logger.log(Level.FINER, "{0}: Rejected evaluation of exam {1}", new Object[]{request.getRemoteHost(), examIdString});
 
-		Map<String,Object> params = Map.of("examId",examId);
+		if(!examRegistrationDAO.rejectStudExam(identity.getCareerId(), examId)) {
+			logger.log(Level.FINER, "{0}: Couldn''t reject evaluation of exam {1}", new Object[]{request.getRemoteHost(), examId});
+		} else {
+			logger.log(Level.FINER, "{0}: Rejected evaluation of exam {1}", new Object[]{request.getRemoteHost(), examId});
+		}
+
+		Map<String,Object> params = Map.of("examId", examId);
 		HttpUtils.redirectWithParams(request, response, studExamRegPage, params);
 	}
 }
