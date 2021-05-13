@@ -238,7 +238,7 @@
 		<servlet-class>it.polimi.poliesami.view.ProfExamRegPage</servlet-class>
 		<init-param>
 			<param-name>templatePath</param-name>
-			<param-value>/inside/professor/examRegistration/index</param-value>
+			<param-value>/inside/professor/examRegistration</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

@@ -34,6 +34,7 @@ section {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	overflow: auto;
 }
 
 table {
@@ -68,4 +69,14 @@ table {
 .symbol {
 	font-family: emoji;
 	font-size: 2em;
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.row > * {
+	margin: 0 40px;
 }
