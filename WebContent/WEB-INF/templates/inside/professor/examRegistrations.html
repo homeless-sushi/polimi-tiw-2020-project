@@ -61,7 +61,7 @@
 							<td th:each="column : ${columns}" th:text="${column.getField(registration)}">0</td>
 							<td th:switch="${registration.status.toString()}">
 								<th:block th:case="'VERB'" th:text="#{evaluationInfo.examResultFinalized}"></th:block>
-								<form action="examRegistrations/edit/index.html" th:action="@{${#servletContext.getInitParameter('profEditExamPage')}}" th:case="*" method="GET">
+								<form action="examRegistrations/edit.html" th:action="@{${#servletContext.getInitParameter('profEditExamPage')}}" th:case="*" method="GET">
 									<input type="hidden" name="examId" th:value="${registration.examId}">
 									<input type="hidden" name="studentId" th:value="${registration.studentId}">
 									<input class="link-button symbol" type="submit" value="➡">

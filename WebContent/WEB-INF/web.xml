@@ -291,7 +291,7 @@
 		
 		<init-param>
 			<param-name>templatePath</param-name>
-			<param-value>/inside/professor/examRegistrations/edit/index</param-value>
+			<param-value>/inside/professor/examRegistrations/edit</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

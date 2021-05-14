@@ -23,9 +23,8 @@ form textarea:focus {
 	border-color: #101010;
 }
 
-form input[type=checkbox],
-form input[type=radio] {
-	margin: 0 10px;
+.field input[type=checkbox] {
+	margin: 0;
 }
 
 .field {
@@ -35,13 +34,13 @@ form input[type=radio] {
 }
 
 .field label {
-	flex: 1 0 auto;
-	padding-right: 2em;
+	width: 150px;
+	padding-right: 1em;
+	text-align: end;
 }
 
-.field input[type=text],
-.field input[type=password] {
-	width: 200px;
+.field .expand {
+	flex: 1;
 }
 
 .field input[type=number] {
