@@ -253,6 +253,38 @@ public class ExamRegistrationDAO {
 		return false;
 	}
 
+	public boolean editExamEval(ExamRegistrationBean examRegistration){
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return false;
+		}
+
+		String query = "UPDATE exam_unrecorded "
+		             + "SET status = ?, "
+		             + "result = ?, "
+		             + "grade = ?, "
+		             + "laude = ? "
+		             + "WHERE exam_id = ? "
+		             + "AND student_id = ?";
+
+		try (Connection connection = dataSrc.getConnection();
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setString(1, examRegistration.getStatus().toString());
+			statement.setString(2, examRegistration.getResult().toString());
+			statement.setInt(3, examRegistration.getGrade());
+			statement.setInt(4, (examRegistration.getLaude()) ? 1 : 0);
+			statement.setInt(5, examRegistration.getExamId());
+			statement.setInt(6, examRegistration.getStudentId());
+			if(statement.executeUpdate() > 0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+
+		return false;
+	}
+
 	public static ExamRegistrationBean createExamBean(ResultSet rs) throws SQLException {
 		ExamRegistrationBean registration = new ExamRegistrationBean();
 		registration.setExamId(rs.getInt("registration.exam_id"));
