@@ -182,6 +182,19 @@
 		<param-value>/inside/professor/examRegistrations/VerbalizeService</param-value>
 	</context-param>
 
+	<servlet>
+		<servlet-name>ProfExamRegEditService</servlet-name>
+		<servlet-class>it.polimi.poliesami.controller.ProfExamRegEditService</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProfExamRegEditService</servlet-name>
+		<url-pattern>/inside/professor/examRegistrations/EditService</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>profExamRegEditService</param-name>
+		<param-value>/inside/professor/examRegistrations/EditService</param-value>
+	</context-param>
+
 	<!-- PAGES -->
 	<servlet>
 		<servlet-name>LoginPage</servlet-name>

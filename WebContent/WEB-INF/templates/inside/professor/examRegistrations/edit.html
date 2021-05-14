@@ -16,7 +16,7 @@
 		</header>
 		<div id="content">
 			<section>
-				<form class="boxed" method="POST">
+				<form class="boxed" th:action="@{${#servletContext.getInitParameter('profExamRegEditService')}}" method="POST">
 					<div class="field">
 						<label for="examId" th:text="#{label.examId}">Exam ID</label>
 						<input class="expand" type="text" readonly id="examId" name="examId" th:value="${examRegistration.getExamId()}" required>
