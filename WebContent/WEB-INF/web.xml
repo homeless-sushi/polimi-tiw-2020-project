@@ -238,15 +238,15 @@
 		<servlet-class>it.polimi.poliesami.view.ProfExamRegPage</servlet-class>
 		<init-param>
 			<param-name>templatePath</param-name>
-			<param-value>/inside/professor/examRegistration</param-value>
+			<param-value>/inside/professor/examRegistrations</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ProfExamRegPage</servlet-name>
-		<url-pattern>/inside/professor/examRegistration</url-pattern>
+		<url-pattern>/inside/professor/examRegistrations</url-pattern>
 	</servlet-mapping>
 	<context-param>
 		<param-name>profExamRegPage</param-name>
-		<param-value>/inside/professor/examRegistration</param-value>
+		<param-value>/inside/professor/examRegistrations</param-value>
 	</context-param>
 </web-app>
