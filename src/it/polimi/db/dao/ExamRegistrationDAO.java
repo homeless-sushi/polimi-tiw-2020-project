@@ -28,13 +28,15 @@ public class ExamRegistrationDAO {
 			logger.log(Level.SEVERE, DSRC_ERROR);
 	}
 
-	public List<ExamRegistrationBean> getExamRegistrationsByExamId(int examId, String orderBy, boolean descending){
+	public List<ExamRegistrationBean> getExamRegistrationsByExamId(int examId) {
+		return getExamRegistrationsByExamId(examId, null);
+	}
+
+	public List<ExamRegistrationBean> getExamRegistrationsByExamId(int examId, String orderByColumns){
 		if(dataSrc == null) {
 			logger.log(Level.WARNING, DSRC_ERROR);
 			return Collections.emptyList();
 		}
-
-		String order = (descending) ? "DESC" : "ASC" ;
 
 		String query = "SELECT * "
 		             + "FROM exam_registration as registration "
@@ -43,8 +45,10 @@ public class ExamRegistrationDAO {
 		             + "JOIN user "
 		             + "ON career.person_code = user.person_code "
 		             + "WHERE career.role = 'student' "
-		             + "AND registration.exam_id = ? "
-		             + "ORDER BY " + orderBy + " " + order;
+		             + "AND registration.exam_id = ?";
+		
+		if(orderByColumns != null)
+			query += " ORDER BY " + orderByColumns;
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {

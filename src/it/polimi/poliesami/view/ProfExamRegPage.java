@@ -17,66 +17,96 @@ import it.polimi.db.business.ExamBean;
 import it.polimi.db.business.ExamRegistrationBean;
 import it.polimi.db.dao.ExamDAO;
 import it.polimi.db.dao.ExamRegistrationDAO;
+import it.polimi.poliesami.utils.Direction;
 
 public class ProfExamRegPage extends HttpServlet {
 	private String templatePath;
 
 	public enum Column {
-		studentId("career.id") {
+		studentId {
 			@Override
 			public String getField(ExamRegistrationBean registration) {
 				return Integer.toString(registration.getCareer().getId());
 			}
+
+			@Override
+			public String getOrderBy(Direction dir) {
+				return "career.id " + dir;
+			}
 		},
-		surname("user.surname") {
+		surname {
 			@Override
 			public String getField(ExamRegistrationBean registration) {
 				return registration.getCareer().getUser().getSurname();
 			}
+
+			@Override
+			public String getOrderBy(Direction dir) {
+				return "user.surname " + dir;
+			}
 		},
-		name("user.name") {
+		name {
 			@Override
 			public String getField(ExamRegistrationBean registration) {
 				return registration.getCareer().getUser().getName();
 			}
+
+			@Override
+			public String getOrderBy(Direction dir) {
+				return "user.name " + dir;
+			}
 		},
-		email("user.email") {
+		email {
 			@Override
 			public String getField(ExamRegistrationBean registration) {
 				return registration.getCareer().getUser().getEmail();
 			}
+
+			@Override
+			public String getOrderBy(Direction dir) {
+				return "user.email " + dir;
+			}
 		},
-		major("career.major") {
+		major {
 			@Override
 			public String getField(ExamRegistrationBean registration) {
 				return registration.getCareer().getMajor();
 			}
+
+			@Override
+			public String getOrderBy(Direction dir) {
+				return "career.major " + dir;
+			}
 		},
-		status("registration.status") {
+		status {
 			@Override
 			public String getField(ExamRegistrationBean registration) {
 				return registration.getStatus().toString();
 			}
+
+			@Override
+			public String getOrderBy(Direction dir) {
+				return "registration.status " + dir;
+			}
 		},
-		grade("registration.repr") {
+		grade {
 			@Override
 			public String getField(ExamRegistrationBean registration) {
 				return registration.getResultRepresentation();
 			}
-		};
-		
-		private String sqlName;
-		
-		private Column(String sqlName) {
-			this.sqlName = sqlName;
-		}
 
-		public String getSqlName() {
-			return sqlName;
-		}
+			@Override
+			public String getOrderBy(Direction dir) {
+				return String.join(", ",
+					"registration.result " + dir,
+					"registration.grade " + dir,
+					"registration.laude " + dir);
+			}
+		};
+
+		public abstract String getOrderBy(Direction dir);
 
 		public abstract String getField(ExamRegistrationBean registration);
-
 	}
 
 	@Override
@@ -91,20 +121,22 @@ public class ProfExamRegPage extends HttpServlet {
 		String examIdString = request.getParameter("examId");
 		String orderBy = request.getParameter("orderBy");
 		boolean desc = Boolean.parseBoolean(request.getParameter("desc"));
+		Direction dir = desc ? Direction.DESC : Direction.ASC;
 
 		int examId = Integer.parseInt(examIdString);
 
 		ExamDAO examDAO = (ExamDAO) servletCtx.getAttribute("examDAO");
 		ExamBean exam = examDAO.getExamById(examId);
 
-		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
-		Column orderByCol;
-		try {
-			orderByCol = Column.valueOf(orderBy);
-		} catch(NullPointerException | IllegalArgumentException e) {
-			orderByCol = Column.studentId;
+		String orderBySql = null;
+		if(orderBy != null) try {
+			orderBySql = Column.valueOf(orderBy).getOrderBy(dir);
+		} catch(IllegalArgumentException e) {
+			orderBySql = null;
 		}
-		List<ExamRegistrationBean> registrations = examRegistrationDAO.getExamRegistrationsByExamId(examId, orderByCol.getSqlName(), desc);
+		
+		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
+		List<ExamRegistrationBean> registrations = examRegistrationDAO.getExamRegistrationsByExamId(examId, orderBySql);
 
 		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
 		ctx.setVariable("registrations", registrations);
