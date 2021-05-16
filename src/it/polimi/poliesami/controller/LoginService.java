@@ -43,7 +43,7 @@ public class LoginService extends HttpServlet {
 		ServletContext servletCtx = getServletContext();
 		String personCode = request.getParameter("person_code");
 		String plainPsw = request.getParameter("password");
-		boolean allDayLogin = request.getParameter("all_day") != null;
+		boolean allDayLogin = Boolean.parseBoolean(request.getParameter("all_day"));
 
 		fail: {
 			UserDAO userDAO = (UserDAO) servletCtx.getAttribute("userDAO");

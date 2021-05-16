@@ -90,7 +90,7 @@ public class ProfExamRegPage extends HttpServlet {
 		ServletContext servletCtx = getServletContext();
 		String examIdString = request.getParameter("examId");
 		String orderBy = request.getParameter("orderBy");
-		boolean desc = request.getParameter("desc") != null;
+		boolean desc = Boolean.parseBoolean(request.getParameter("desc"));
 
 		int examId = Integer.parseInt(examIdString);
 

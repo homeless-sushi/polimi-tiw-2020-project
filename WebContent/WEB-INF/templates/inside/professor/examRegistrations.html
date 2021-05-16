@@ -44,7 +44,7 @@
 									<input type="hidden" name="orderBy" th:value="${column}">
 									<th:block th:switch="${param.orderBy ? param.orderBy[0] : ''}" th:with="text=#{|evaluationInfo.th.${column}|}">
 										<th:block th:case="${column.toString()}">
-											<input th:if="${!desc}" type="hidden" name="desc">
+											<input th:if="${!desc}" type="hidden" name="desc" value="true">
 											<input class="link-button" type="submit" th:value="|${text} ${desc?'▲':'▼'}|" value="Student id">
 										</th:block>
 										<th:block th:case="*">
