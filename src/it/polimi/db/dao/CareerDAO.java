@@ -80,6 +80,9 @@ public class CareerDAO {
 		career.setId(rs.getInt("career.id"));
 		career.setRole(rs.getString("career.role"));
 		career.setMajor(rs.getString("career.major"));
+		try {
+			career.setUser(UserDAO.createUserBean(rs));
+		} catch (Exception ignore) { /* No recursive user */ }
 		return career;
 	}
 

@@ -38,87 +38,34 @@
 				<table class="list">
 					<thead>
 						<tr>
-							<th scope="col">
+							<th scope="col" th:each="column : ${columns}">
 								<form method="GET">
-									<input type="hidden" name="examId" th:value="${examId}">
-									<input type="hidden" name="orderBy" th:value="studentId">
-									<input type="hidden" name="descending" th:value="${(orderByString == 'studentId')? !descending : false}">
-									<input class="link-button" type="submit" th:value="#{evaluationInfo.thStudentId}" value="Student id">
-								</form>
-							</th>
-							<th scope="col">
-								<form method="GET">
-									<input type="hidden" name="examId" th:value="${examId}">
-									<input type="hidden" name="orderBy" th:value="surname">
-									<input type="hidden" name="descending" th:value="${(orderByString == 'surname')? !descending : false}">
-									<input class="link-button" type="submit" th:value="#{evaluationInfo.thSurname}" value="Surname">
-								</form>
-							</th>
-							<th scope="col">
-								<form method="GET">
-									<input type="hidden" name="examId" th:value="${examId}">
-									<input type="hidden" name="orderBy" th:value="name">
-									<input type="hidden" name="descending" th:value="${(orderByString == 'name')? !descending : false}">
-									<input class="link-button" type="submit" th:value="#{evaluationInfo.thName}" value="Name">
-								</form>
-							</th>
-							<th scope="col">
-								<form method="GET">
-									<input type="hidden" name="examId" th:value="${examId}">
-									<input type="hidden" name="orderBy" th:value="email">
-									<input type="hidden" name="descending" th:value="${(orderByString == 'email')? !descending : false}">
-									<input class="link-button" type="submit" th:value="#{evaluationInfo.thEmail}" value="Email">
-								</form>
-							</th>
-							<th scope="col">
-								<form method="GET">
-									<input type="hidden" name="examId" th:value="${examId}">
-									<input type="hidden" name="orderBy" th:value="major">
-									<input type="hidden" name="descending" th:value="${(orderByString == 'major')? !descending : false}">
-									<input class="link-button" type="submit" th:value="#{evaluationInfo.thMajor}" value="Major">
-								</form>
-							</th>
-							<th scope="col">
-								<form method="GET">
-									<input type="hidden" name="examId" th:value="${examId}">
-									<input type="hidden" name="orderBy" th:value="status">
-									<input type="hidden" name="descending" th:value="${(orderByString == 'status')? !descending : false}">
-									<input class="link-button" type="submit" th:value="#{evaluationInfo.thStatus}" value="Status">
-								</form>
-							</th>
-							<th scope="col">
-								<form method="GET">
-									<input type="hidden" name="examId" th:value="${examId}">
-									<input type="hidden" name="orderBy" th:value="grade">
-									<input type="hidden" name="descending" th:value="${(orderByString == 'grade')? !descending : false}">
-									<input class="link-button" type="submit" th:value="#{evaluationInfo.thRepresentation}" value="Grade">
+									<input type="hidden" name="examId" th:value="${exam.id}">
+									<input type="hidden" name="orderBy" th:value="${column}">
+									<th:block th:switch="${param.orderBy ? param.orderBy[0] : ''}" th:with="text=#{|evaluationInfo.th.${column}|}">
+										<th:block th:case="${column.toString()}">
+											<input th:if="${!desc}" type="hidden" name="desc">
+											<input class="link-button" type="submit" th:value="|${text} ${desc?'▲':'▼'}|" value="Student id">
+										</th:block>
+										<th:block th:case="*">
+											<input class="link-button" type="submit" th:value="${text}" value="Student id">
+										</th:block>
+									</th:block>
 								</form>
 							</th>
 							<th scope="col" th:text="#{evaluationInfo.editExamResult}">Edit result</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="studCareerExamRegistration,iterStat : ${studCareerExamRegistrations}" th:class="${iterStat.odd} ? 'odd' : 'even'">
-							<td th:text="${studCareerExamRegistration.getValue1().getId()}"></td>
-							<td th:text="${studCareerExamRegistration.getValue0().getSurname()}"></td>
-							<td th:text="${studCareerExamRegistration.getValue0().getName()}"></td>
-							<td th:text="${studCareerExamRegistration.getValue0().getEmail()}"></td>
-							<td th:text="${studCareerExamRegistration.getValue1().getMajor()}"></td>
-							<td th:text="${#messages.msg('evaluationInfo.'+studCareerExamRegistration.getValue2().getStatus().toString())}"></td>
-							<td th:text="${studCareerExamRegistration.getValue2().getResultRepresentation()}"></td>
-							<td>
-								<th:block th:if="${studCareerExamRegistration.getValue2().getStatus().equals(PUB) ||
-									studCareerExamRegistration.getValue2().getStatus().equals(RIF) ||
-									studCareerExamRegistration.getValue2().getStatus().equals(VERB)}"
-									th:text="#{evaluationInfo.examResultFinalized}"></th:block>
-								<a th:unless="${studCareerExamRegistration.getValue2().getStatus().equals(PUB) ||
-									studCareerExamRegistration.getValue2().getStatus().equals(RIF) ||
-									studCareerExamRegistration.getValue2().getStatus().equals(VERB)}"
-									th:href="@{.(
-										examId=${studCareerExamRegistration.getValue2().getExamId()},
-										studentId=${studCareerExamRegistration.getValue2().getStudentId()}
-										)}"
-									th:text="#{evaluationInfo.editExamResult}"></a>
+						<tr th:each="registration,iterStat : ${registrations}" th:class="${iterStat.odd} ? 'odd' : 'even'">
+							<td th:each="column : ${columns}" th:text="${column.getField(registration)}">0</td>
+							<td th:switch="${registration.status.toString()}">
+								<th:block th:case="'VERB'" th:text="#{evaluationInfo.examResultFinalized}"></th:block>
+								<form th:case="*" method="GET">
+									<input type="hidden" name="examId" th:value="${registration.examId}">
+									<input type="hidden" name="studentId" th:value="${registration.studentId}">
+									<input class="link-button symbol" type="submit" value="➡">
+								</form>
 							</td>
 						</tr>
 					</tbody>
@@ -127,13 +74,13 @@
 			<section>
 				<div class="row">
 					<form method="POST">
-						<input type="hidden" name="examId" th:value="${examId}">
+						<input type="hidden" name="examId" th:value="${exam.id}">
 						<div class="field">
 							<input type="submit" th:value="#{publication.publish}" value="Publish">
 						</div>
 					</form>
 					<form method="POST">
-						<input type="hidden" name="examId" th:value="${examId}">
+						<input type="hidden" name="examId" th:value="${exam.id}">
 						<div class="field">
 							<input type="submit" th:value="#{verbalization.verbalize}" value="Verbalize">
 						</div>

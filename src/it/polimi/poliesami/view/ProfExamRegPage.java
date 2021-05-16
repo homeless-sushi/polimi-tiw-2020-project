@@ -2,7 +2,6 @@ package it.polimi.poliesami.view;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -11,75 +10,107 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.javatuples.Triplet;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import it.polimi.db.business.CareerBean;
-import it.polimi.db.business.CourseBean;
 import it.polimi.db.business.ExamBean;
 import it.polimi.db.business.ExamRegistrationBean;
-import it.polimi.db.business.ExamStatus;
-import it.polimi.db.business.UserBean;
-import it.polimi.db.dao.CourseDAO;
 import it.polimi.db.dao.ExamDAO;
 import it.polimi.db.dao.ExamRegistrationDAO;
 
 public class ProfExamRegPage extends HttpServlet {
 	private String templatePath;
 
-	private Map<String,String> orderBy;
+	public enum Column {
+		studentId("career.id") {
+			@Override
+			public String getField(ExamRegistrationBean registration) {
+				return Integer.toString(registration.getCareer().getId());
+			}
+		},
+		surname("user.surname") {
+			@Override
+			public String getField(ExamRegistrationBean registration) {
+				return registration.getCareer().getUser().getSurname();
+			}
+		},
+		name("user.name") {
+			@Override
+			public String getField(ExamRegistrationBean registration) {
+				return registration.getCareer().getUser().getName();
+			}
+		},
+		email("user.email") {
+			@Override
+			public String getField(ExamRegistrationBean registration) {
+				return registration.getCareer().getUser().getEmail();
+			}
+		},
+		major("career.major") {
+			@Override
+			public String getField(ExamRegistrationBean registration) {
+				return registration.getCareer().getMajor();
+			}
+		},
+		status("registration.status") {
+			@Override
+			public String getField(ExamRegistrationBean registration) {
+				return registration.getStatus().toString();
+			}
+		},
+		grade("registration.repr") {
+			@Override
+			public String getField(ExamRegistrationBean registration) {
+				return registration.getResultRepresentation();
+			}
+		};
+		
+		private String sqlName;
+		
+		private Column(String sqlName) {
+			this.sqlName = sqlName;
+		}
+
+		public String getSqlName() {
+			return sqlName;
+		}
+
+		public abstract String getField(ExamRegistrationBean registration);
+
+	}
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		templatePath = getInitParameter("templatePath");
-		
-		orderBy = Map.of(
-			"studentId", "user_career.id",
-			"surname", "user.surname",
-			"name", "user.name",
-			"email", "user.email",
-			"major", "user_career.major",
-			"status", "exam_registration.status",
-			"grade", "exam_registration.repr"
-		);
 	}
-
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext servletCtx = getServletContext();
 		String examIdString = request.getParameter("examId");
-
-		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
+		String orderBy = request.getParameter("orderBy");
+		boolean desc = request.getParameter("desc") != null;
 
 		int examId = Integer.parseInt(examIdString);
-		ctx.setVariable("examId", examId);
-
-		String orderByString = request.getParameter("orderBy");
-		if(orderByString == null){ orderByString = "studentId";	}
-		ctx.setVariable("orderByString", orderByString);
-
-		String descendingString = request.getParameter("descending");
-		boolean descending = Boolean.parseBoolean(descendingString);
-		ctx.setVariable("descending", descending);
 
 		ExamDAO examDAO = (ExamDAO) servletCtx.getAttribute("examDAO");
 		ExamBean exam = examDAO.getExamById(examId);
-		ctx.setVariable("exam", exam);
-
-		CourseDAO courseDAO = (CourseDAO) servletCtx.getAttribute("courseDAO");
-		CourseBean course = courseDAO.getCourseFromExam(examId);
-		ctx.setVariable("course", course);
 
 		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
-		List<Triplet<UserBean, CareerBean, ExamRegistrationBean>> userCareerExamRegistrations = examRegistrationDAO.getStudentCareerExamRegistrations(examId, orderBy.get(orderByString), descending);
-		ctx.setVariable("studCareerExamRegistrations", userCareerExamRegistrations);
+		Column orderByCol;
+		try {
+			orderByCol = Column.valueOf(orderBy);
+		} catch(NullPointerException | IllegalArgumentException e) {
+			orderByCol = Column.studentId;
+		}
+		List<ExamRegistrationBean> registrations = examRegistrationDAO.getExamRegistrationsByExamId(examId, orderByCol.getSqlName(), desc);
 
-		ctx.setVariable("PUB", ExamStatus.PUB);
-		ctx.setVariable("RIF", ExamStatus.RIF);
-		ctx.setVariable("VERB", ExamStatus.VERB);
+		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
+		ctx.setVariable("registrations", registrations);
+		ctx.setVariable("exam", exam);
+		ctx.setVariable("columns", Column.values());
+		ctx.setVariable("desc", desc);
 		
 		TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");
 		templateEngine.process(templatePath, ctx, response.getWriter());

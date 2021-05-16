@@ -9,6 +9,7 @@ public class ExamRegistrationBean {
 	private boolean laude;
 	private String resultRepresentation;
 	private int recordId;
+	private CareerBean career;
 
 	public int getStudentId() { return this.studentId; }
 	public void setStudentId(int studentId) { this.studentId = studentId; }
@@ -28,5 +29,7 @@ public class ExamRegistrationBean {
 	public void setResultRepresentation(String resultRepresentation) { this.resultRepresentation = resultRepresentation; }
 	public int getRecordId() { return this.recordId; }
 	public void setRecordId(int recordId) { this.recordId = recordId; }
+	public CareerBean getCareer() { return this.career; }
+	public void setCareer(CareerBean career) { this.career = career; }
 
 }

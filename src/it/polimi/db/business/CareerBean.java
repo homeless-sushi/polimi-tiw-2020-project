@@ -7,6 +7,7 @@ public class CareerBean implements Serializable {
 	private int id;
 	private Role role;
 	private String major;
+	private UserBean user;
 	
 	public CareerBean() {}
 	public CareerBean(String personCode, int id, Role role, String major) {
@@ -30,6 +31,7 @@ public class CareerBean implements Serializable {
 	public void setRole(String role) { this.role = Role.fromString(role); }
 	public String getMajor() { return this.major; }
 	public void setMajor(String major) { this.major = major; }
-	
-	
+	public UserBean getUser() { return this.user; }
+	public void setUser(UserBean user) { this.user = user; }
+
 }
