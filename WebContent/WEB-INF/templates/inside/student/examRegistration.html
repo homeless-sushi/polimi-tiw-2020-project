@@ -48,7 +48,7 @@
 						<tbody>
 							<tr>
 								<td th:text="#{|evaluationInfo.${examRegistration.status.toString()}|}">PUBLISHED</td>
-								<td th:text="${#messages.msgOrNull('evaluationInfo.' + examRegistration.resultRepresentation.toString())} ?: ${examRegistration.resultRepresentation.toString()}">30L</td>
+								<td th:text="${#messages.msgOrNull('evaluationInfo.' + examRegistration.resultRepresentation)} ?: ${examRegistration.resultRepresentation}">30L</td>
 							</tr>
 						</tbody>
 					</table>
