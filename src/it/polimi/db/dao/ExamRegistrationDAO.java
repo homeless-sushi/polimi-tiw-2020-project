@@ -170,15 +170,13 @@ public class ExamRegistrationDAO {
 		}
 
 		String query = "UPDATE exam_unrecorded "
-		             + "SET status = ? "
+		             + "SET status = '" + ExamStatus.PUB + "' "
 		             + "WHERE exam_id = ? "
-		             + "AND status = ?";
+		             + "AND status = '" + ExamStatus.INS + "'";
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
-			statement.setString(1, ExamStatus.PUB.toString());
-			statement.setInt(2, examId);
-			statement.setString(3, ExamStatus.INS.toString());
+			statement.setInt(1, examId);
 			if(statement.executeUpdate() > 0) {
 				return true;
 			}
@@ -196,35 +194,34 @@ public class ExamRegistrationDAO {
 		}
 
 		String recordQuery = "INSERT INTO exam_record "
-		                   + "(exam_record.exam_id)"
+		                   + "(exam_id)"
 		                   + "VALUES ( ? )";
 
 		String verbQuery   = "UPDATE exam_unrecorded "
-		                   + "SET exam_unrecorded.record_id = ( "
-		                   + "SELECT last_insert_id() "
-		                   + "FROM exam_record "
-		                   + "LIMIT 1), "
-		                   + "exam_unrecorded.status = \"VERB\" "
-		                   + "WHERE exam_unrecorded.exam_id = ? "
-		                   + "AND ( exam_unrecorded.status = \"PUB\" "
-		                   + "OR exam_unrecorded.status = \"RIF\")";
+		                   + "SET record_id = last_insert_id(), "
+		                   + "status = '" + ExamStatus.VERB + "' "
+		                   + "WHERE exam_id = ? "
+		                   + "AND status IN ('" + ExamStatus.PUB + "', '" + ExamStatus.RIF + "')";
 
-		try (Connection connection = dataSrc.getConnection()){
+		try (Connection connection = dataSrc.getConnection();
+			PreparedStatement recordStmt = connection.prepareStatement(recordQuery);
+			PreparedStatement verbStmt = connection.prepareStatement(verbQuery)){
 			connection.setAutoCommit(false);
-			try (PreparedStatement statement = connection.prepareStatement(recordQuery)){
-				statement.setInt(1, examId);
-				if(statement.executeUpdate() == 0) {
-					connection.rollback();
+			try {
+				recordStmt.setInt(1, examId);
+				if(recordStmt.executeUpdate() < 1)
 					throw new SQLException("Couldn't create record");
-				}
-			}
-			try (PreparedStatement statement = connection.prepareStatement(verbQuery)) {
-				statement.setInt(1, examId);
-				if(statement.executeUpdate() == 0) {
-					connection.rollback();
-					throw new SQLException("Couldn't verbalize exam");
-				}
+				
+				verbStmt.setInt(1, examId);
+				int rows = verbStmt.executeUpdate();
+				if(rows < 1)
+					throw new SQLException("No published exam to verbalize");
+				
 				connection.commit();
+				return true;
+			} catch (SQLException e) {
+				connection.rollback();
+				throw e;
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
