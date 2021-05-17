@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>PoliEsaMI - Exam Table</title>
+		<link href="../../../css/base.css" rel="stylesheet">
+		<link href="../../../css/table.css" rel="stylesheet">
+		<link href="../../../css/form.css" rel="stylesheet">
+	</head>
+	<body>
+		<div id="content">
+			<section>
+				<table th:fragment="table" class="list wide">
+					<thead>
+						<tr>
+							<th scope="col" th:text="#{examInfo.thCourseId}">Course ID</th>
+							<th scope="col" th:text="#{examInfo.thCourseName}">Course Name</th>
+							<th scope="col" th:text="#{examInfo.thExamId}">Exam ID</th>
+							<th scope="col" th:text="#{examInfo.thExamDate}">Exam Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td th:text="${exam.course.id}">3</td>
+							<td th:text="${exam.course.name}">Tecnologie Informatiche per il web</td>
+							<td th:text="${exam.id}">4</td>
+							<td th:text="${exam.date}">15/02/2020</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+		</div>
+	</body>
+</html>

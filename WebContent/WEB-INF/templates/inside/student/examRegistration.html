@@ -15,26 +15,7 @@
 			<div><h1>PoliEsaMI</h1></div>
 		</header>
 		<div id="content">
-			<section>
-				<table class="list wide">
-					<thead>
-						<tr>
-							<th scope="col" th:text="#{examInfo.thCourseId}">Course ID</th>
-							<th scope="col" th:text="#{examInfo.thCourseName}">Course Name</th>
-							<th scope="col" th:text="#{examInfo.thExamId}">Exam ID</th>
-							<th scope="col" th:text="#{examInfo.thExamDate}">Exam Date</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td th:text="${exam.course.id}">3</td>
-							<td th:text="${exam.course.name}">Tecnologie Informatiche per il web</td>
-							<td th:text="${exam.id}">4</td>
-							<td th:text="${exam.date}">15/02/2020</td>
-						</tr>
-					</tbody>
-				</table>
-			</section>
+			<section th:insert="inside/exam_table :: table"></section>
 			<th:block th:replace="${examRegistration != null} ? (${examRegistration.result.toString() != 'VUOTO'} ? ~{:: reg} : ~{:: emptyReg}) : ~{:: noReg}"></th:block>
 			<th:block th:remove="all">
 				<section th:fragment="reg">
