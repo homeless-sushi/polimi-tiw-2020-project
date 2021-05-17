@@ -58,7 +58,7 @@
 					</thead>
 					<tbody>
 						<tr th:each="registration,iterStat : ${registrations}" th:class="${iterStat.odd} ? 'odd' : 'even'">
-							<td th:each="column : ${columns}" th:text="${column.getField(registration)}">0</td>
+							<td th:each="column : ${columns}" th:text="__${column.getField('registration')}__">0</td>
 							<td th:switch="${registration.status.toString()}">
 								<th:block th:case="'VERB'" th:text="#{evaluationInfo.examResultFinalized}"></th:block>
 								<form action="examRegistrations/edit.html" th:action="@{${#servletContext.getInitParameter('profEditExamPage')}}" th:case="*" method="GET">

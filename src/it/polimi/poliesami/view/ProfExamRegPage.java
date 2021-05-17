@@ -25,8 +25,8 @@ public class ProfExamRegPage extends HttpServlet {
 	public enum Column {
 		studentId {
 			@Override
-			public String getField(ExamRegistrationBean registration) {
-				return Integer.toString(registration.getCareer().getId());
+			public String getField(String beanName) {
+				return "${" + beanName + ".career.id}";
 			}
 
 			@Override
@@ -36,8 +36,8 @@ public class ProfExamRegPage extends HttpServlet {
 		},
 		surname {
 			@Override
-			public String getField(ExamRegistrationBean registration) {
-				return registration.getCareer().getUser().getSurname();
+			public String getField(String beanName) {
+				return "${" + beanName + ".career.user.surname}";
 			}
 
 			@Override
@@ -47,8 +47,8 @@ public class ProfExamRegPage extends HttpServlet {
 		},
 		name {
 			@Override
-			public String getField(ExamRegistrationBean registration) {
-				return registration.getCareer().getUser().getName();
+			public String getField(String beanName) {
+				return "${" + beanName + ".career.user.name}";
 			}
 
 			@Override
@@ -58,8 +58,8 @@ public class ProfExamRegPage extends HttpServlet {
 		},
 		email {
 			@Override
-			public String getField(ExamRegistrationBean registration) {
-				return registration.getCareer().getUser().getEmail();
+			public String getField(String beanName) {
+				return "${" + beanName + ".career.user.email}";
 			}
 
 			@Override
@@ -69,8 +69,8 @@ public class ProfExamRegPage extends HttpServlet {
 		},
 		major {
 			@Override
-			public String getField(ExamRegistrationBean registration) {
-				return registration.getCareer().getMajor();
+			public String getField(String beanName) {
+				return "${" + beanName + ".career.major}";
 			}
 
 			@Override
@@ -80,8 +80,8 @@ public class ProfExamRegPage extends HttpServlet {
 		},
 		status {
 			@Override
-			public String getField(ExamRegistrationBean registration) {
-				return registration.getStatus().toString();
+			public String getField(String beanName) {
+				return "#{|evaluationInfo.${" + beanName + ".status}|}";
 			}
 
 			@Override
@@ -91,8 +91,8 @@ public class ProfExamRegPage extends HttpServlet {
 		},
 		grade {
 			@Override
-			public String getField(ExamRegistrationBean registration) {
-				return registration.getResultRepresentation();
+			public String getField(String beanName) {
+				return "${#messages.msgOrNull('evaluationInfo.' + " + beanName + ".resultRepresentation)} ?: ${" + beanName + ".resultRepresentation}";
 			}
 
 			@Override
@@ -106,7 +106,7 @@ public class ProfExamRegPage extends HttpServlet {
 
 		public abstract String getOrderBy(Direction dir);
 
-		public abstract String getField(ExamRegistrationBean registration);
+		public abstract String getField(String beanName);
 	}
 
 	@Override
