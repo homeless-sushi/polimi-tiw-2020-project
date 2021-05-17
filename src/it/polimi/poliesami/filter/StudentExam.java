@@ -12,6 +12,7 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import it.polimi.db.business.ExamBean;
 import it.polimi.db.dao.ExamDAO;
 import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.utils.AppAuthenticator;
@@ -44,17 +45,19 @@ public class StudentExam extends HttpFilter {
 				logger.log(Level.FINER, "{0}: Invalid exam Id {1}", new Object[]{req.getRemoteHost(), examIdString});
 				break fail;
 			}
-			req.setAttribute("examId", examId);
 
 			AppAuthenticator clientAuthenticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
 			IdentityBean identity = clientAuthenticator.getClientIdentity(req);
 			
 			ExamDAO examDAO = (ExamDAO) servletCtx.getAttribute("examDAO");
 			
-			if(!examDAO.isExamCourseAttendee(identity.getCareerId(), examId)) {
+			ExamBean exam = examDAO.getStudentExamById(examId, identity.getCareerId());
+			if(exam == null) {
 				logger.log(Level.FINER, "{0}: Invalid exam Id {1} for user {2}", new Object[]{req.getRemoteHost(), examId, identity});
 				break fail;
 			}
+
+			req.setAttribute("exam", exam);
 
 			chain.doFilter(req, res);
 			return;

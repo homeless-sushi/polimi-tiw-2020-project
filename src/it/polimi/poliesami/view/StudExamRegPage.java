@@ -14,7 +14,6 @@ import org.thymeleaf.context.WebContext;
 
 import it.polimi.db.business.ExamBean;
 import it.polimi.db.business.ExamRegistrationBean;
-import it.polimi.db.dao.ExamDAO;
 import it.polimi.db.dao.ExamRegistrationDAO;
 import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.controller.StudExamRegService;
@@ -34,19 +33,15 @@ public class StudExamRegPage extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		final ServletContext servletCtx = getServletContext();
-		final int examId = (int) request.getAttribute("examId");
+		final ExamBean exam = (ExamBean) request.getAttribute("exam");
 		
 		final AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
 		final IdentityBean identity = clientAutheticator.getClientIdentity(request);
 
-		final ExamDAO examDAO = (ExamDAO) servletCtx.getAttribute("examDAO");
 		final ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
-		
-		final ExamBean exam = examDAO.getExamById(examId);
-		final ExamRegistrationBean examRegistration = examRegistrationDAO.getStudentExamRegistration(identity.getCareerId(), examId);
+		final ExamRegistrationBean examRegistration = examRegistrationDAO.getStudentExamRegistration(identity.getCareerId(), exam.getId());
 		
 		final WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
-		ctx.setVariable("exam", exam);
 		ctx.setVariable("examRegistration", examRegistration);
 		ctx.setVariable("register", StudExamRegService.ACTION.REGISTER.toString());
 		ctx.setVariable("deregister", StudExamRegService.ACTION.DEREGISTER.toString());

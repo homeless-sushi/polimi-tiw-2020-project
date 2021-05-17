@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import it.polimi.db.business.ExamBean;
 import it.polimi.db.dao.ExamRegistrationDAO;
 import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.utils.AppAuthenticator;
@@ -33,7 +34,8 @@ public class StudExamRejectService extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext servletCtx = getServletContext();
-		int examId = (int) request.getAttribute("examId");
+		ExamBean exam = (ExamBean) request.getAttribute("exam");
+		int examId = exam.getId();
 		
 		AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
 		IdentityBean identity = clientAutheticator.getClientIdentity(request);

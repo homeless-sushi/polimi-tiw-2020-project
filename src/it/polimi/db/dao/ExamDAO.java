@@ -74,6 +74,33 @@ public class ExamDAO {
 		return null;
 	}
 
+	public ExamBean getStudentExamById(int examId, int studentId){
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return null;
+		}
+		
+		String query = "SELECT * "
+		             + "FROM exam "
+		             + "JOIN course_full AS course "
+		             + "ON (exam.course_id, exam.year) = (course.id, course.year) "
+		             + "JOIN attend "
+		             + "ON (exam.course_id, exam.year) = (attend.course_id, attend.year) "
+		             + "WHERE exam.id = ? "
+		             + "AND attend.student_id = ?";
+		
+		try (Connection connection = dataSrc.getConnection();
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setInt(1, examId);
+			statement.setInt(2, studentId);
+			return getExam(statement);
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+
+		return null;
+	}
+
 	public void fetchCourseExams(List<CourseBean> courses){
 		fail: {
 			if(dataSrc == null) {
@@ -105,34 +132,6 @@ public class ExamDAO {
 		/* FAIL */
 		for(CourseBean course : courses)
 			course.setExams(Collections.emptyList());
-	}
-
-	public boolean isExamCourseAttendee(int studentId, int examId) {
-		if(dataSrc == null) {
-			logger.log(Level.WARNING, DSRC_ERROR);
-			return false;
-		}
-
-		String query = "SELECT 1 "
-		             + "FROM exam "
-		             + "JOIN attend "
-		             + "ON (exam.course_id, exam.year) = (attend.course_id, attend.year) "
-		             + "WHERE attend.student_id = ? "
-		             + "AND exam.id = ?";
-
-		try (Connection connection = dataSrc.getConnection();
-			PreparedStatement statement = connection.prepareStatement(query)) {
-			statement.setInt(1, studentId);
-			statement.setInt(2, examId);
-			statement.executeQuery();
-			try (ResultSet result = statement.executeQuery()) {
-				return result.next();
-			}
-		} catch (SQLException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-		}
-		
-		return false;
 	}
 
 	public static ExamBean createExamBean(ResultSet rs) throws SQLException {
