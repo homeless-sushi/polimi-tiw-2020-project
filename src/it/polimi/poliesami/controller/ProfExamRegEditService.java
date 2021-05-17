@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import it.polimi.db.business.ExamBean;
 import it.polimi.db.business.ExamRegistrationBean;
 import it.polimi.db.business.ExamResult;
 import it.polimi.db.business.ExamStatus;
@@ -36,11 +37,12 @@ public class ProfExamRegEditService extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		final ServletContext servletCtx = getServletContext();
-		final String examIdString = req.getParameter("examId");
 		final String studentIdString = req.getParameter("studentId");
+		final ExamBean exam = (ExamBean) req.getAttribute("exam");
+		final int examId = exam.getId();
 
 		final ExamRegistrationBean examRegistration = new ExamRegistrationBean();
-		examRegistration.setExamId(Integer.parseInt(examIdString));
+		examRegistration.setExamId(examId);
 		examRegistration.setStudentId(Integer.parseInt(studentIdString));
 
 		fail : {
@@ -72,14 +74,14 @@ public class ProfExamRegEditService extends HttpServlet{
 			if(!examRegistrationDAO.editExamEval(examRegistration))
 				break fail;
 			
-			logger.log(Level.FINER, "{0}: Edit evaluation of student {1} exam {2}", new Object[]{req.getRemoteHost(), studentIdString, examIdString});
+			logger.log(Level.FINER, "{0}: Edit evaluation of student {1} exam {2}", new Object[]{req.getRemoteHost(), studentIdString, examId});
 
-			Map<String,Object> params = Map.of("examId", examIdString);
+			Map<String,Object> params = Map.of("examId", examId);
 			HttpUtils.redirectWithParams(req, res, profExamRegPage, params);
 			return;
 		}
 
-		Map<String,Object> params = Map.of("examId", examIdString, "studentId", studentIdString);
+		Map<String,Object> params = Map.of("examId", examId, "studentId", studentIdString);
 		HttpUtils.redirectWithParams(req, res, profEditExamPage, params);
 	}
 }

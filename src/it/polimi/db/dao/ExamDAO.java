@@ -49,6 +49,31 @@ public class ExamDAO {
 		return null;
 	}
 
+	public ExamBean getProfessorExamById(int examId, int professorId){
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return null;
+		}
+		
+		String query = "SELECT * "
+		             + "FROM exam "
+		             + "JOIN course_full AS course "
+		             + "ON (exam.course_id, exam.year) = (course.id, course.year) "
+		             + "WHERE exam.id = ? "
+		             + "AND course.professor_id = ?";
+		
+		try (Connection connection = dataSrc.getConnection();
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setInt(1, examId);
+			statement.setInt(2, professorId);
+			return getExam(statement);
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+
+		return null;
+	}
+
 	public void fetchCourseExams(List<CourseBean> courses){
 		fail: {
 			if(dataSrc == null) {
@@ -102,37 +127,6 @@ public class ExamDAO {
 			statement.executeQuery();
 			try (ResultSet result = statement.executeQuery()) {
 				return result.next();
-			}
-		} catch (SQLException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-		}
-		
-		return false;
-	}
-
-	public boolean isExamCourseProfessor(int professorId, int examId){
-		if(dataSrc == null) {
-			System.out.println(DSRC_ERROR);
-			return false;
-		}
-
-		String query = "SELECT * "
-		             + "FROM course_details "
-		             + "WHERE course_details.professor_id = ? "
-		             + "AND (course_details.course_id, course_details.year) = "
-		             + "(SELECT exam.course_id, exam.year "
-		             + "FROM exam "
-		             + "WHERE id = ? )";
-
-		try (Connection connection = dataSrc.getConnection();
-			PreparedStatement statement = connection.prepareStatement(query)) {
-			statement.setInt(1, professorId);
-			statement.setInt(2, examId);
-			statement.executeQuery();
-			try (ResultSet result = statement.executeQuery()) {
-				if(result.next()) {
-					return true;
-				}
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

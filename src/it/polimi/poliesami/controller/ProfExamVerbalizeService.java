@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import it.polimi.db.business.ExamBean;
 import it.polimi.db.dao.ExamRegistrationDAO;
 import it.polimi.poliesami.utils.HttpUtils;
 
@@ -31,14 +32,14 @@ public class ProfExamVerbalizeService extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext servletCtx = getServletContext();
-		String examIdString = request.getParameter("examId");
-		int examId = Integer.parseInt(examIdString);
+		ExamBean exam = (ExamBean) request.getAttribute("exam");
+		int examId = exam.getId();
 
 		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
 		if(examRegistrationDAO.verbalizeExamEval(examId)){
-			logger.log(Level.FINER, "{0}: Verbalized grades of exam {1}", new Object[]{request.getRemoteHost(), examIdString});
+			logger.log(Level.FINER, "{0}: Verbalized grades of exam {1}", new Object[]{request.getRemoteHost(), examId});
 		}else{
-			logger.log(Level.FINER, "{0}: Couldn''t verbalize grades of exam {1}", new Object[]{request.getRemoteHost(), examIdString});
+			logger.log(Level.FINER, "{0}: Couldn''t verbalize grades of exam {1}", new Object[]{request.getRemoteHost(), examId});
 		}
 
 		Map<String,Object> params = Map.of("examId",examId);

@@ -15,7 +15,6 @@ import org.thymeleaf.context.WebContext;
 
 import it.polimi.db.business.ExamBean;
 import it.polimi.db.business.ExamRegistrationBean;
-import it.polimi.db.dao.ExamDAO;
 import it.polimi.db.dao.ExamRegistrationDAO;
 import it.polimi.poliesami.utils.Direction;
 
@@ -118,15 +117,11 @@ public class ProfExamRegPage extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext servletCtx = getServletContext();
-		String examIdString = request.getParameter("examId");
 		String orderBy = request.getParameter("orderBy");
 		boolean desc = Boolean.parseBoolean(request.getParameter("desc"));
+		ExamBean exam = (ExamBean) request.getAttribute("exam");
+
 		Direction dir = desc ? Direction.DESC : Direction.ASC;
-
-		int examId = Integer.parseInt(examIdString);
-
-		ExamDAO examDAO = (ExamDAO) servletCtx.getAttribute("examDAO");
-		ExamBean exam = examDAO.getExamById(examId);
 
 		String orderBySql = null;
 		if(orderBy != null) try {
@@ -136,11 +131,10 @@ public class ProfExamRegPage extends HttpServlet {
 		}
 		
 		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
-		List<ExamRegistrationBean> registrations = examRegistrationDAO.getExamRegistrationsByExamId(examId, orderBySql);
+		List<ExamRegistrationBean> registrations = examRegistrationDAO.getExamRegistrationsByExamId(exam.getId(), orderBySql);
 
 		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
 		ctx.setVariable("registrations", registrations);
-		ctx.setVariable("exam", exam);
 		ctx.setVariable("columns", Column.values());
 		ctx.setVariable("desc", desc);
 		
