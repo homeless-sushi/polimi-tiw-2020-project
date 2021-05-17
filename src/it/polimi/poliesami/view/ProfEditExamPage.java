@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
+import it.polimi.db.business.ExamBean;
 import it.polimi.db.business.ExamRegistrationBean;
 import it.polimi.db.business.ExamResult;
 import it.polimi.db.business.ExamStatus;
@@ -33,8 +34,8 @@ public class ProfEditExamPage extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		final ServletContext servletCtx = getServletContext();
-		final String examIdString = req.getParameter("examId");
-		final int examId = Integer.parseInt(examIdString);
+		final ExamBean exam = (ExamBean) req.getAttribute("exam");
+		final int examId = exam.getId();
 
 		final String studentIdString = req.getParameter("studentId");
 		final int studentId = Integer.parseInt(studentIdString);
