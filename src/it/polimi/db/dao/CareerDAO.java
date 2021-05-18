@@ -47,14 +47,14 @@ public class CareerDAO {
 		return Collections.emptyList();
 	}
 
-	public boolean isValidCareer(int personCode, int career, Role role){
+	public CareerBean getUserCareer(int personCode, int career, Role role){
 		if(dataSrc == null) {
 			logger.log(Level.WARNING, DSRC_ERROR);
-			return false;
+			return null;
 		}
 		
-		String query = "SELECT 1 "
-		             + "FROM user_career "
+		String query = "SELECT * "
+		             + "FROM user_career as career "
 		             + "WHERE person_code = ? "
 		             + "AND id = ? "
 		             + "AND role = ?";
@@ -64,14 +64,12 @@ public class CareerDAO {
 			statement.setInt(1, personCode);
 			statement.setInt(2, career);
 			statement.setString(3, role.toString());
-			try (ResultSet result = statement.executeQuery()) {
-				return result.next();
-			}
+			return getCareer(statement);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 		
-		return false;
+		return null;
 	}
 
 	public static CareerBean createCareerBean(ResultSet rs) throws SQLException {
@@ -92,6 +90,14 @@ public class CareerDAO {
 			while(result.next())
 				careers.add(createCareerBean(result));
 			return careers;
+		}
+	}
+
+	private CareerBean getCareer(PreparedStatement ps) throws SQLException {
+		try (ResultSet result = ps.executeQuery()) {
+			if(!result.next())
+				return null;
+			return createCareerBean(result);
 		}
 	}
 }
