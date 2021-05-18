@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import it.polimi.poliesami.business.IdentityBean;
-import it.polimi.poliesami.utils.AppAuthenticator;
 import it.polimi.poliesami.utils.HttpUtils;
 
 public class Role extends HttpFilter {
@@ -35,10 +34,7 @@ public class Role extends HttpFilter {
 	protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
 		throws IOException, ServletException{
 		
-		ServletContext servletCtx = getServletContext();
-		
-		AppAuthenticator clientAuthenticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-		IdentityBean identity = clientAuthenticator.getClientIdentity(req);
+		IdentityBean identity = (IdentityBean) req.getAttribute("identity");
 		
 		if(identity.getRole() != acceptRole) {
 			logger.log(Level.FINER, "{0}: A {1} cannot access this page", new Object[]{req.getRemoteHost(), identity.getRole()});

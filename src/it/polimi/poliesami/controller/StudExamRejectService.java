@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import it.polimi.db.business.ExamBean;
 import it.polimi.db.dao.ExamRegistrationDAO;
 import it.polimi.poliesami.business.IdentityBean;
-import it.polimi.poliesami.utils.AppAuthenticator;
 import it.polimi.poliesami.utils.HttpUtils;
 
 public class StudExamRejectService extends HttpServlet{
@@ -37,8 +36,7 @@ public class StudExamRejectService extends HttpServlet{
 		ExamBean exam = (ExamBean) request.getAttribute("exam");
 		int examId = exam.getId();
 		
-		AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-		IdentityBean identity = clientAutheticator.getClientIdentity(request);
+		IdentityBean identity = (IdentityBean) request.getAttribute("identity");
 
 		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
 

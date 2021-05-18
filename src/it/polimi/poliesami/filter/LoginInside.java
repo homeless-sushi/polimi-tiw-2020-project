@@ -43,6 +43,8 @@ public class LoginInside extends HttpFilter {
 			return;
 		}
 
+		req.setAttribute("identity", identity);
+
 		chain.doFilter(req, res);
 	}
 }

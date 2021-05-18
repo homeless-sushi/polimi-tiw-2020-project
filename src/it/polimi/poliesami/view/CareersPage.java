@@ -16,7 +16,6 @@ import org.thymeleaf.context.WebContext;
 import it.polimi.db.business.CareerBean;
 import it.polimi.db.dao.CareerDAO;
 import it.polimi.poliesami.business.IdentityBean;
-import it.polimi.poliesami.utils.AppAuthenticator;
 
 public class CareersPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -33,8 +32,7 @@ public class CareersPage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		ServletContext servletCtx = getServletContext();
 		
-		AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-		IdentityBean identity = clientAutheticator.getClientIdentity(request);
+		IdentityBean identity = (IdentityBean) request.getAttribute("identity");
 		
 		CareerDAO careerDAO = (CareerDAO) servletCtx.getAttribute("careerDAO");		
 		List<CareerBean> careers = careerDAO.getUserCareers(identity.getPersonCode());

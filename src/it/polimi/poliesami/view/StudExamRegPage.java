@@ -17,7 +17,6 @@ import it.polimi.db.business.ExamRegistrationBean;
 import it.polimi.db.dao.ExamRegistrationDAO;
 import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.controller.StudExamRegService;
-import it.polimi.poliesami.utils.AppAuthenticator;
 
 public class StudExamRegPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -35,8 +34,7 @@ public class StudExamRegPage extends HttpServlet {
 		final ServletContext servletCtx = getServletContext();
 		final ExamBean exam = (ExamBean) request.getAttribute("exam");
 		
-		final AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-		final IdentityBean identity = clientAutheticator.getClientIdentity(request);
+		IdentityBean identity = (IdentityBean) request.getAttribute("identity");
 
 		final ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
 		final ExamRegistrationBean examRegistration = examRegistrationDAO.getStudentExamRegistration(identity.getCareerId(), exam.getId());

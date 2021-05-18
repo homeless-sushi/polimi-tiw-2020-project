@@ -17,7 +17,6 @@ import it.polimi.db.business.CourseBean;
 import it.polimi.db.dao.CourseDAO;
 import it.polimi.db.dao.ExamDAO;
 import it.polimi.poliesami.business.IdentityBean;
-import it.polimi.poliesami.utils.AppAuthenticator;
 
 public class ProfessorExamsPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -35,8 +34,7 @@ public class ProfessorExamsPage extends HttpServlet {
 		ServletContext servletCtx = getServletContext();
 		String yearString = request.getParameter("year");
 		
-		AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-		IdentityBean identity = clientAutheticator.getClientIdentity(request);
+		IdentityBean identity = (IdentityBean) request.getAttribute("identity");
 		
 		CourseDAO courseDAO = (CourseDAO) servletCtx.getAttribute("courseDAO");
 		ExamDAO examDAO = (ExamDAO)	servletCtx.getAttribute("examDAO");

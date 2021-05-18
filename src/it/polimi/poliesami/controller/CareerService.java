@@ -48,11 +48,7 @@ public class CareerService extends HttpServlet {
 			}
 			Role careerRole = Role.fromString(roleString);
 
-			AppAuthenticator clientAutheticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-			IdentityBean identity = clientAutheticator.getClientIdentity(request);
-			if(identity == null) {
-				break fail;
-			}
+			IdentityBean identity = (IdentityBean) request.getAttribute("identity");
 
 			CareerDAO careerDAO = (CareerDAO) servletCtx.getAttribute("careerDAO");
 			if(!careerDAO.isValidCareer(identity.getPersonCode(), careerId, careerRole)) {
