@@ -19,38 +19,29 @@
 				<form class="boxed" th:action="@{${#servletContext.getInitParameter('profExamRegEditService')}}" method="POST">
 					<div class="field">
 						<label for="examId" th:text="#{label.examId}">Exam ID</label>
-						<input class="expand" type="text" readonly id="examId" name="examId" th:value="${examRegistration.getExamId()}" required>
+						<input class="expand" type="text" readonly id="examId" name="examId" th:value="${examRegistration.examId}" required>
 					</div>
 					<div class="field">
 						<label for="studentId" th:text="#{label.studentId}">Student ID</label>
-						<input class="expand" type="text" readonly id="studentId" name="studentId" th:value="${examRegistration.getStudentId()}" required>
-					</div>
-					<div class="field">
-						<label for="examStatus" th:text="#{label.examStatus}">Exam Status</label>
-						<select class="expand" id="examStatus" name="examStatus" size="1" required>
-							<option th:each="status : ${statuses}" th:value="${status.toString()}"
-								th:selected="${examRegistration.getStatus().equals(status)}"
-								th:text="${#messages.msg('evaluationInfo.'+status.toString())}">
-							</option>
-						</select>
+						<input class="expand" type="text" readonly id="studentId" name="studentId" th:value="${examRegistration.studentId}" required>
 					</div>
 					<div class="field">
 						<label for="examResult" th:text="#{label.examResult}">Exam Result</label>
 						<select class="expand" id="examResult" name="examResult" size="1" required>
 							<option th:each="result : ${results}" th:value="${result.toString()}"
-								th:selected="${examRegistration.getResult().equals(result)}"
-								th:text="${#messages.msg('evaluationInfo.'+result.toString())}">
+								th:selected="${examRegistration.result.equals(result)}"
+								th:text="#{|evaluationInfo.${result.toString()}|}">
 							</option>
 						</select>
 					</div>
 					<div class="field">
 						<label for="grade" th:text="#{label.grade}">Grade</label>
-						<input class="expand" type="number" min="0" max="30" id="grade" name="grade" th:value="${examRegistration.getGrade()}" required>
+						<input class="expand" type="number" min="0" max="30" id="grade" name="grade" th:value="${examRegistration.grade}" required>
 					</div>
 					<div class="field">
 						<label for="laude" th:text="#{label.laude}">Laude</label>
 						<div class="expand">
-							<input type="checkbox" id="laude" name="laude" value="true" th:checked="${examRegistration.getLaude()}">
+							<input type="checkbox" id="laude" name="laude" value="true" th:checked="${examRegistration.laude}">
 						</div>
 					</div>
 					<div class="field">

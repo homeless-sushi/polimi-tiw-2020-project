@@ -15,15 +15,12 @@ import org.thymeleaf.context.WebContext;
 import it.polimi.db.business.ExamBean;
 import it.polimi.db.business.ExamRegistrationBean;
 import it.polimi.db.business.ExamResult;
-import it.polimi.db.business.ExamStatus;
 import it.polimi.db.dao.ExamRegistrationDAO;
 
 public class ProfEditExamPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private String templatePath;
-
-	private static final ExamStatus[] statusOptions = new ExamStatus[]{ExamStatus.NINS, ExamStatus.INS};
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -45,7 +42,6 @@ public class ProfEditExamPage extends HttpServlet {
 
 		final WebContext ctx = new WebContext(req, res, servletCtx, req.getLocale());
 		ctx.setVariable("examRegistration", examRegistration);
-		ctx.setVariable("statuses", statusOptions);
 		ctx.setVariable("results", ExamResult.values());
 
 		final TemplateEngine templateEngine = (TemplateEngine) servletCtx.getAttribute("templateEngine");
