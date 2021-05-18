@@ -54,7 +54,7 @@ public class LoginService extends HttpServlet {
 			}
 			
 			Authenticator userAuthenticator = (Authenticator) servletCtx.getAttribute("userAuthenticator");
-			boolean success = userAuthenticator.verify(plainPsw.getBytes(), user.getHashedPassword());
+			boolean success = userAuthenticator.verify(plainPsw.getBytes(), userDAO.getUserHashedPsw(personCode));
 			if(!success) {
 				logger.log(Level.FINER, "{0}: Wrong password for user {1}", new Object[]{request.getRemoteHost(), personCode});
 				break fail;

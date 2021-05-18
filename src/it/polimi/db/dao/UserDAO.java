@@ -62,7 +62,31 @@ public class UserDAO {
 		return null;
 	}
 
-	public boolean addUser(String email, byte[] password, String name, String surname) {
+	public byte[] getUserHashedPsw(String personCode) {
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return new byte[0];
+		}
+		
+		String query = "SELECT password "
+		             + "FROM user "
+		             + "WHERE person_code = ?";
+
+		try (Connection connection = dataSrc.getConnection();
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setString(1, personCode);
+			try (ResultSet result = statement.executeQuery()){
+				if(result.next()){
+					return result.getBytes("user.password");
+				}
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+		return new byte[0];
+	}
+
+	public boolean addUser(String email, String name, String surname, byte[] password) {
 		if(dataSrc == null) {
 			logger.log(Level.WARNING, DSRC_ERROR);
 			return false;
@@ -86,15 +110,14 @@ public class UserDAO {
 		return false;
 	}
 	
-	public boolean addUser(UserBean user) {
-		return this.addUser(user.getEmail(), user.getHashedPassword(), user.getName(), user.getSurname());
+	public boolean addUser(UserBean user, byte[] password) {
+		return this.addUser(user.getEmail(), user.getName(), user.getSurname(), password);
 	}
 
 	public static UserBean createUserBean(ResultSet rs) throws SQLException {
 		UserBean user = new UserBean();
 		user.setPersonCode(rs.getString("user.person_code"));
 		user.setEmail(rs.getString("user.email"));
-		user.setHashedPassword(rs.getBytes("user.password"));
 		user.setName(rs.getString("user.name"));
 		user.setSurname(rs.getString("user.surname"));
 		return user;
