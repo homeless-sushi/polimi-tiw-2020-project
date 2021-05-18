@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import it.polimi.db.business.ExamBean;
 import it.polimi.db.business.ExamRegistrationBean;
 import it.polimi.db.business.ExamResult;
 import it.polimi.db.business.ExamStatus;
@@ -35,19 +34,13 @@ public class ProfExamRegEditService extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		final ServletContext servletCtx = getServletContext();
-		final String studentIdString = req.getParameter("studentId");
-		final ExamBean exam = (ExamBean) req.getAttribute("exam");
-		final int examId = exam.getId();
-
-		final ExamRegistrationBean examRegistration = new ExamRegistrationBean();
-		examRegistration.setExamId(examId);
-		examRegistration.setStudentId(Integer.parseInt(studentIdString));
+		final ExamRegistrationBean examRegistration = (ExamRegistrationBean) req.getAttribute("examRegistration");
 
 		fail : {
 			final ExamResult examResult;
 			try {
 				examResult = ExamResult.valueOf(req.getParameter("examResult"));
-			} catch (IllegalArgumentException e) {
+			} catch (NullPointerException | IllegalArgumentException e) {
 				break fail;
 			}
 
@@ -71,10 +64,10 @@ public class ProfExamRegEditService extends HttpServlet{
 			if(!examRegistrationDAO.editExamEval(examRegistration))
 				break fail;
 			
-			logger.log(Level.FINER, "{0}: Edit evaluation of student {1} exam {2}", new Object[]{req.getRemoteHost(), studentIdString, examId});
+			logger.log(Level.FINER, "{0}: Edit evaluation of student {1} exam {2}", new Object[]{req.getRemoteHost(), examRegistration.getStudentId(), examRegistration.getExamId()});
 		}
 
-		Map<String,Object> params = Map.of("examId", examId, "studentId", studentIdString);
+		Map<String,Object> params = Map.of("examId", examRegistration.getExamId(), "studentId", examRegistration.getStudentId());
 		HttpUtils.redirectWithParams(req, res, profEditExamPage, params);
 	}
 }
