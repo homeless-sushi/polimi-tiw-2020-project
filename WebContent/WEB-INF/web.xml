@@ -90,6 +90,15 @@
 		<url-pattern>/inside/professor/examRegistrations/*</url-pattern>
 	</filter-mapping>
 
+	<filter>
+		<filter-name>ExamEditFilter</filter-name>
+		<filter-class>it.polimi.poliesami.filter.ExamEdit</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ExamEditFilter</filter-name>
+		<url-pattern>/inside/professor/examRegistrations/edit/*</url-pattern>
+	</filter-mapping>
+
 	<!-- SERVLETS -->
 	<servlet>
 		<servlet-name>LoginService</servlet-name>
@@ -188,11 +197,11 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ProfExamRegEditService</servlet-name>
-		<url-pattern>/inside/professor/examRegistrations/EditService</url-pattern>
+		<url-pattern>/inside/professor/examRegistrations/edit/EditService</url-pattern>
 	</servlet-mapping>
 	<context-param>
 		<param-name>profExamRegEditService</param-name>
-		<param-value>/inside/professor/examRegistrations/EditService</param-value>
+		<param-value>/inside/professor/examRegistrations/edit/EditService</param-value>
 	</context-param>
 
 	<!-- PAGES -->
