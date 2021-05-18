@@ -41,11 +41,20 @@ public class LoginService extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext servletCtx = getServletContext();
-		String personCode = request.getParameter("person_code");
+		String personCodeString = request.getParameter("person_code");
 		String plainPsw = request.getParameter("password");
 		boolean allDayLogin = Boolean.parseBoolean(request.getParameter("all_day"));
 
 		fail: {
+			int personCode = 0;
+			if(personCodeString.length() == UserBean.PCODE_LEN){
+				try{
+					personCode = Integer.parseInt(personCodeString);
+				}catch(NumberFormatException e){
+					break fail;
+				}
+			}
+
 			UserDAO userDAO = (UserDAO) servletCtx.getAttribute("userDAO");
 			UserBean user = userDAO.getUserByPersonCode(personCode);
 			if(user == null) {

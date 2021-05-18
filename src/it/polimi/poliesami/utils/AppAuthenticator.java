@@ -73,7 +73,7 @@ public class AppAuthenticator {
 					Claim role = jwtDecoded.getClaim("role");
 					
 					IdentityBean identity = new IdentityBean();
-					identity.setPersonCode(personCode);
+					identity.setPersonCodeString(personCode);
 					identity.setAllDay(allDay.asBoolean());
 					if(!role.isNull()){
 						identity.setCareerId(careerId.asInt());
@@ -100,7 +100,7 @@ public class AppAuthenticator {
 		
 		JWTCreator.Builder builder = JWT.create()
 			.withIssuer("it.polimi.poliesami")
-			.withSubject(identity.getPersonCode())
+			.withSubject(identity.getPersonCodeString())
 			.withAudience("it.polimi.poliesami")
 			.withExpiresAt(Date.from(tomorrow))
 			.withIssuedAt(new Date())

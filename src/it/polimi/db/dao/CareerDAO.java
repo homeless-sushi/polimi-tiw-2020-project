@@ -26,7 +26,7 @@ public class CareerDAO {
 			logger.log(Level.SEVERE, DSRC_ERROR);
 	}
 	
-	public List<CareerBean> getUserCareers(String personCode){
+	public List<CareerBean> getUserCareers(int personCode){
 		if(dataSrc == null) {
 			logger.log(Level.WARNING, DSRC_ERROR);
 			return Collections.emptyList();
@@ -38,7 +38,7 @@ public class CareerDAO {
 		
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
-			statement.setString(1, personCode);
+			statement.setInt(1, personCode);
 			return getCareers(statement);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
@@ -47,7 +47,7 @@ public class CareerDAO {
 		return Collections.emptyList();
 	}
 
-	public boolean isValidCareer(String personCode, int career, Role role){
+	public boolean isValidCareer(int personCode, int career, Role role){
 		if(dataSrc == null) {
 			logger.log(Level.WARNING, DSRC_ERROR);
 			return false;
@@ -61,7 +61,7 @@ public class CareerDAO {
 		
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
-			statement.setString(1, personCode);
+			statement.setInt(1, personCode);
 			statement.setInt(2, career);
 			statement.setString(3, role.toString());
 			try (ResultSet result = statement.executeQuery()) {
@@ -76,7 +76,7 @@ public class CareerDAO {
 
 	public static CareerBean createCareerBean(ResultSet rs) throws SQLException {
 		CareerBean career = new CareerBean();
-		career.setPersonCode(rs.getString("career.person_code"));
+		career.setPersonCode(rs.getInt("career.person_code"));
 		career.setId(rs.getInt("career.id"));
 		career.setRole(rs.getString("career.role"));
 		career.setMajor(rs.getString("career.major"));
