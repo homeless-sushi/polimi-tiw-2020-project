@@ -44,27 +44,26 @@ public class ProfExamRegEditService extends HttpServlet{
 		examRegistration.setStudentId(Integer.parseInt(studentIdString));
 
 		fail : {
-			final ExamStatus examStatus = ExamStatus.valueOf(req.getParameter("examStatus"));
-			final ExamResult examResult = ExamResult.valueOf(req.getParameter("examResult"));
-
-			if(examStatus == null ||
-				examStatus.equals(ExamStatus.PUB) ||
-				examStatus.equals(ExamStatus.RIF) ||
-				examStatus.equals(ExamStatus.VERB))
+			final ExamResult examResult;
+			try {
+				examResult = ExamResult.valueOf(req.getParameter("examResult"));
+			} catch (IllegalArgumentException e) {
 				break fail;
-			if(examResult == null)
-				break fail;
+			}
 
-			int grade;
+			final ExamStatus examStatus = examResult == ExamResult.VUOTO ? ExamStatus.NINS : ExamStatus.INS;
+
+			final int grade;
 			try {
 				grade = Integer.parseInt(req.getParameter("grade"));
 			} catch (NumberFormatException e) {
 				break fail;
 			}
-			final boolean laude = req.getParameter("laude") != null;
+
+			final boolean laude = Boolean.parseBoolean(req.getParameter("laude"));
 			
-			examRegistration.setStatus(examStatus);
 			examRegistration.setResult(examResult);
+			examRegistration.setStatus(examStatus);
 			examRegistration.setGrade(grade);
 			examRegistration.setLaude(laude);
 
