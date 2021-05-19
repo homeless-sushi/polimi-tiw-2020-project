@@ -22,7 +22,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import it.polimi.db.business.Role;
+import it.polimi.db.business.CareerBean;
+import it.polimi.db.business.UserBean;
 import it.polimi.poliesami.business.IdentityBean;
 
 public class AppAuthenticator {
@@ -68,20 +69,23 @@ public class AppAuthenticator {
 				try {
 					DecodedJWT jwtDecoded = verifier.verify(jwtEncoded);
 					String personCode = jwtDecoded.getSubject();
-					Claim allDay = jwtDecoded.getClaim("allDay");
 					Claim careerId = jwtDecoded.getClaim("careerId");
 					Claim role = jwtDecoded.getClaim("role");
 					
 					IdentityBean identity = new IdentityBean();
-					identity.setPersonCodeString(personCode);
-					identity.setAllDay(allDay.asBoolean());
+					UserBean user = new UserBean();
+					user.setPersonCodeString(personCode);
+					identity.setUser(user);
 					if(!role.isNull()){
-						identity.setCareerId(careerId.asInt());
-						identity.setRole(Role.fromString(role.asString()));
+						CareerBean career = new CareerBean();
+						career.setId(careerId.asInt());
+						career.setRole(role.asString());
+						identity.setCareer(career);
 					}
+					identity.setAllDay(true);
 
 					request.getSession().setAttribute(IDBEAN_ATTRNAME, identity);
-					logger.log(Level.FINER, "{0}: Get jwt identity {1}", new Object[]{request.getRemoteHost(), personCode});
+					logger.log(Level.FINER, "{0}: Get jwt identity {1}", new Object[]{request.getRemoteHost(), identity.getPersonCodeString()});
 					return identity;
 				} catch (JWTVerificationException invalidToken) {
 						logger.log(Level.FINER, "{0}: Invalid jwt", request.getRemoteHost());
@@ -103,11 +107,11 @@ public class AppAuthenticator {
 			.withSubject(identity.getPersonCodeString())
 			.withAudience("it.polimi.poliesami")
 			.withExpiresAt(Date.from(tomorrow))
-			.withIssuedAt(new Date())
-			.withClaim("allDay", identity.isAllDay());
-		if(identity.getRole() != null){
-			builder.withClaim("careerId", identity.getCareerId());
-			builder.withClaim("role", identity.getRole().toString());
+			.withIssuedAt(new Date());
+		CareerBean career = identity.getCareer();
+		if(career != null){
+			builder.withClaim("careerId", career.getId());
+			builder.withClaim("role", career.getRole().toString());
 		}
 		String jwtEncoded = builder.sign(this.signingAlg);			
 

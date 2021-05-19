@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import it.polimi.db.business.CareerBean;
 import it.polimi.db.business.Role;
 import it.polimi.db.dao.CareerDAO;
 import it.polimi.poliesami.business.IdentityBean;
@@ -46,17 +47,21 @@ public class CareerService extends HttpServlet {
 			} catch (NumberFormatException e) {
 				break fail;
 			}
+
 			Role careerRole = Role.fromString(roleString);
+			if(careerRole == null) {
+				break fail;
+			}
 
 			IdentityBean identity = (IdentityBean) request.getAttribute("identity");
 
 			CareerDAO careerDAO = (CareerDAO) servletCtx.getAttribute("careerDAO");
-			if(careerDAO.getUserCareer(identity.getPersonCode(), careerId, careerRole) == null) {
+			CareerBean career = careerDAO.getUserCareer(identity.getPersonCode(), careerId, careerRole);
+			if(career == null) {
 				break fail;
 			}
 
-			identity.setCareerId(careerId);
-			identity.setRole(careerRole);
+			identity.setCareer(career);
 			
 			logger.log(Level.FINER, "{0}: Selected career {1} {2}", new Object[]{request.getRemoteHost(), careerId, careerRole});
 

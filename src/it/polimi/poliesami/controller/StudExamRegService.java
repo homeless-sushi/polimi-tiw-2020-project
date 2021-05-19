@@ -78,7 +78,7 @@ public class StudExamRegService extends HttpServlet {
 
 		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
 
-		int careerId = identity.getCareerId();
+		int careerId = identity.getCareer().getId();
 		boolean res = action.execute(examRegistrationDAO, careerId, examId);
 		logger.log(Level.FINER, "{0}: Student {1}, exam {2}, {3}: {4}", new Object[]{request.getRemoteHost(), careerId, examId, action, res ? "SUCCESS" : "FAIL"});
 

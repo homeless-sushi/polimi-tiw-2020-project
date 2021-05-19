@@ -12,6 +12,7 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import it.polimi.db.business.CareerBean;
 import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.utils.HttpUtils;
 
@@ -35,9 +36,15 @@ public class Role extends HttpFilter {
 		throws IOException, ServletException{
 		
 		IdentityBean identity = (IdentityBean) req.getAttribute("identity");
-		
-		if(identity.getRole() != acceptRole) {
-			logger.log(Level.FINER, "{0}: A {1} cannot access this page", new Object[]{req.getRemoteHost(), identity.getRole()});
+		CareerBean career = identity.getCareer();
+
+		if(career == null) {
+			logger.log(Level.FINER, "{0}: No career selected", req.getRemoteHost());
+			HttpUtils.redirect(req, res, careersPage);
+			return;
+		}
+		if(career.getRole() != acceptRole) {
+			logger.log(Level.FINER, "{0}: A {1} cannot access this page", new Object[]{req.getRemoteHost(), career.getRole()});
 			HttpUtils.redirect(req, res, careersPage);
 			return;
 		}

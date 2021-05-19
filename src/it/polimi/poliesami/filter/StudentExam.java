@@ -49,7 +49,7 @@ public class StudentExam extends HttpFilter {
 			
 			ExamDAO examDAO = (ExamDAO) servletCtx.getAttribute("examDAO");
 			
-			ExamBean exam = examDAO.getStudentExamById(examId, identity.getCareerId());
+			ExamBean exam = examDAO.getStudentExamById(examId, identity.getCareer().getId());
 			if(exam == null) {
 				logger.log(Level.FINER, "{0}: Invalid exam Id {1} for user {2}", new Object[]{req.getRemoteHost(), examId, identity});
 				break fail;

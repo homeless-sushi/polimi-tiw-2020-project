@@ -46,7 +46,7 @@ public class ProfessorExamsPage extends HttpServlet {
 			year = CourseDAO.getAcademicYear();
 		}
 
-		List<CourseBean> courses = courseDAO.getProfessorCourses(identity.getCareerId(), year);
+		List<CourseBean> courses = courseDAO.getProfessorCourses(identity.getCareer().getId(), year);
 		examDAO.fetchCourseExams(courses);
 		
 		WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());

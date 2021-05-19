@@ -69,8 +69,11 @@ public class LoginService extends HttpServlet {
 				break fail;
 			}
 			
+			IdentityBean identity = new IdentityBean();
+			identity.setUser(user);
+			identity.setAllDay(allDayLogin);
+
 			AppAuthenticator clientAuthenticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-			IdentityBean identity = new IdentityBean(personCode, allDayLogin);
 			clientAuthenticator.setClientIdentity(request, response, identity);
 			logger.log(Level.FINER, "{0}: authenticated as user {1}", new Object[]{request.getRemoteHost(), personCode});
 

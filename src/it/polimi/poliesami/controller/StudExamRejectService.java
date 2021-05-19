@@ -40,7 +40,7 @@ public class StudExamRejectService extends HttpServlet{
 
 		ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
 
-		if(!examRegistrationDAO.rejectStudExam(identity.getCareerId(), examId)) {
+		if(!examRegistrationDAO.rejectStudExam(identity.getCareer().getId(), examId)) {
 			logger.log(Level.FINER, "{0}: Couldn''t reject evaluation of exam {1}", new Object[]{request.getRemoteHost(), examId});
 		} else {
 			logger.log(Level.FINER, "{0}: Rejected evaluation of exam {1}", new Object[]{request.getRemoteHost(), examId});

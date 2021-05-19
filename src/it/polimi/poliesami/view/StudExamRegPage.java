@@ -37,7 +37,7 @@ public class StudExamRegPage extends HttpServlet {
 		IdentityBean identity = (IdentityBean) request.getAttribute("identity");
 
 		final ExamRegistrationDAO examRegistrationDAO = (ExamRegistrationDAO) servletCtx.getAttribute("examRegistrationDAO");
-		final ExamRegistrationBean examRegistration = examRegistrationDAO.getStudentExamRegistration(identity.getCareerId(), exam.getId());
+		final ExamRegistrationBean examRegistration = examRegistrationDAO.getStudentExamRegistration(identity.getCareer().getId(), exam.getId());
 		
 		final WebContext ctx = new WebContext(request, response, servletCtx, request.getLocale());
 		ctx.setVariable("examRegistration", examRegistration);
