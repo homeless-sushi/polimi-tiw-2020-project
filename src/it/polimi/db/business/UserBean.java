@@ -33,13 +33,21 @@ public class UserBean implements Serializable {
 	public void setSurname (String surname) { this.surname = surname; }
 
 	public String getPersonCodeString(){
-		return String.format("%08d", this.personCode);
+		return personCodeToString(personCode);
 	}
 	
 	public void setPersonCodeString(String personCode){
+		this.personCode = personCodeToInt(personCode);
+	}
+
+	public static int personCodeToInt(String personCode) {
 		if(personCode.length() != UserBean.PCODE_LEN){
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid person code length");
 		}
-		this.personCode = Integer.parseInt(personCode);
+		return Integer.parseInt(personCode);
+	}
+
+	public static String personCodeToString(int code) {
+		return String.format("%08d", code);
 	}
 }

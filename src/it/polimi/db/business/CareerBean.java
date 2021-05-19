@@ -35,13 +35,10 @@ public class CareerBean implements Serializable {
 	public void setUser(UserBean user) { this.user = user; }
 
 	public String getPersonCodeString(){
-		return String.format("%08d", this.personCode);
+		return UserBean.personCodeToString(personCode);
 	}
 	
 	public void setPersonCodeString(String personCode){
-		if(personCode.length() != UserBean.PCODE_LEN){
-			throw new IllegalArgumentException();
-		}
-		this.personCode = Integer.parseInt(personCode);
+		this.personCode = UserBean.personCodeToInt(personCode);
 	}
 }
