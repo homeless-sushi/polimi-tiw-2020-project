@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import it.polimi.db.business.UserBean;
-import it.polimi.db.dao.UserDAO;
-import it.polimi.db.utils.Authenticator;
-import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.utils.AppAuthenticator;
 import it.polimi.poliesami.utils.HttpUtils;
 import it.polimi.poliesami.view.LoginPage;
@@ -46,36 +43,21 @@ public class LoginService extends HttpServlet {
 		boolean allDayLogin = Boolean.parseBoolean(request.getParameter("all_day"));
 
 		fail: {
-			int personCode = 0;
-			if(personCodeString.length() == UserBean.PCODE_LEN){
-				try{
-					personCode = Integer.parseInt(personCodeString);
-				}catch(NumberFormatException e){
-					break fail;
-				}
-			}
+			if(personCodeString == null || plainPsw == null)
+				break fail;
 
-			UserDAO userDAO = (UserDAO) servletCtx.getAttribute("userDAO");
-			UserBean user = userDAO.getUserByPersonCode(personCode);
-			if(user == null) {
-				logger.log(Level.FINER, "{0}: No such user {1}", new Object[]{request.getRemoteHost(), personCode});
+			int personCode;
+			try {
+				personCode = UserBean.personCodeToInt(personCodeString);
+			} catch (IllegalArgumentException e) {
+				logger.log(Level.FINER, "{0}: {1}", new Object[]{request.getRemoteHost(), e});
 				break fail;
 			}
-			
-			Authenticator userAuthenticator = (Authenticator) servletCtx.getAttribute("userAuthenticator");
-			boolean success = userAuthenticator.verify(plainPsw.getBytes(), userDAO.getUserHashedPsw(personCode));
-			if(!success) {
-				logger.log(Level.FINER, "{0}: Wrong password for user {1}", new Object[]{request.getRemoteHost(), personCode});
-				break fail;
-			}
-			
-			IdentityBean identity = new IdentityBean();
-			identity.setUser(user);
-			identity.setAllDay(allDayLogin);
 
 			AppAuthenticator clientAuthenticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-			clientAuthenticator.setClientIdentity(request, response, identity);
-			logger.log(Level.FINER, "{0}: authenticated as user {1}", new Object[]{request.getRemoteHost(), personCode});
+			boolean valid = clientAuthenticator.setClientIdentity(request, response, personCode, plainPsw.getBytes(), allDayLogin);
+			if(!valid)
+				break fail;
 
 			HttpUtils.redirect(request, response, careersPage);
 			return;

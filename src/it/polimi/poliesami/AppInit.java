@@ -18,6 +18,8 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 import com.auth0.jwt.algorithms.Algorithm;
 
 import it.polimi.db.dao.CareerDAO;
@@ -68,13 +70,15 @@ public class AppInit implements ServletContextListener {
  		servletContext.setAttribute("examRegistrationDAO", examRegistrationDAO);
 		
 		/* ********** Authenticators ********** */
-		Authenticator userAuthenticator = new Authenticator();
-		servletContext.setAttribute("userAuthenticator", userAuthenticator);
+		Authenticator userAuthenticator = new Authenticator(BCrypt.withDefaults(), BCrypt.verifyer());
 		
 		AppAuthenticator clientAuthenticator = new AppAuthenticator(
-				Algorithm.HMAC256("\"The Garden Of Earthly Delights\" By Hieronymus Bosch"));
+			userDAO,
+			careerDAO,
+			userAuthenticator,
+			Algorithm.HMAC256("\"The Garden Of Earthly Delights\" By Hieronymus Bosch"));
 		servletContext.setAttribute("clientAuthenticator", clientAuthenticator);
-		
+
 		/* ********** Thymeleaf Template Engine ********** */
 		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
 

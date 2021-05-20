@@ -11,10 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import it.polimi.db.business.CareerBean;
 import it.polimi.db.business.Role;
-import it.polimi.db.dao.CareerDAO;
-import it.polimi.poliesami.business.IdentityBean;
 import it.polimi.poliesami.utils.AppAuthenticator;
 import it.polimi.poliesami.utils.HttpUtils;
 
@@ -53,20 +50,11 @@ public class CareerService extends HttpServlet {
 				break fail;
 			}
 
-			IdentityBean identity = (IdentityBean) request.getAttribute("identity");
-
-			CareerDAO careerDAO = (CareerDAO) servletCtx.getAttribute("careerDAO");
-			CareerBean career = careerDAO.getUserCareer(identity.getPersonCode(), careerId, careerRole);
-			if(career == null) {
-				break fail;
-			}
-
-			identity.setCareer(career);
-			
-			logger.log(Level.FINER, "{0}: Selected career {1} {2}", new Object[]{request.getRemoteHost(), careerId, careerRole});
-
 			AppAuthenticator clientAuthenticator = (AppAuthenticator) servletCtx.getAttribute("clientAuthenticator");
-			clientAuthenticator.setClientIdentity(request, response, identity);
+			boolean valid = clientAuthenticator.setClientCareer(request, response, careerId, careerRole);
+
+			if(!valid)
+				break fail;
 
 			switch (careerRole) {
 				case PROFESSOR:

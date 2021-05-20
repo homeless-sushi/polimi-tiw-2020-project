@@ -23,7 +23,11 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import it.polimi.db.business.CareerBean;
+import it.polimi.db.business.Role;
 import it.polimi.db.business.UserBean;
+import it.polimi.db.dao.CareerDAO;
+import it.polimi.db.dao.UserDAO;
+import it.polimi.db.utils.Authenticator;
 import it.polimi.poliesami.business.IdentityBean;
 
 public class AppAuthenticator {
@@ -31,72 +35,119 @@ public class AppAuthenticator {
 	private static final String AUTHTOKEN_COOKIENAME = "authToken";
 	private static final Logger logger = Logger.getLogger(AppAuthenticator.class.getName());
 
+	private UserDAO userDAO;
+	private CareerDAO careerDAO;
+	private Authenticator userAuthenticator;
 	private Algorithm signingAlg;
 	private JWTVerifier verifier;
-	
-	public AppAuthenticator(Algorithm signingAlg) {
+
+	public AppAuthenticator(UserDAO userDAO, CareerDAO careerDAO, Authenticator authenticator, Algorithm signingAlg) {
+		this.userDAO = userDAO;
+		this.careerDAO = careerDAO;
+		this.userAuthenticator = authenticator;
 		this.signingAlg = signingAlg;
 		this.verifier = JWT.require(this.signingAlg)
 			.acceptLeeway(5)
 			.build();
 	}
-	
-	public void setClientIdentity(HttpServletRequest request, HttpServletResponse response, IdentityBean identity){
-		if(identity.isAllDay()) {
-			setJWTCookie(request, response, identity);
+
+	public boolean setClientIdentity(HttpServletRequest request, HttpServletResponse response, int personCode, byte[] password, boolean allDayLogin) {
+		try {
+			IdentityBean identity = createIdentity(personCode);
+			identity.setAllDay(allDayLogin);
+			authenticate(identity, password);
+
+			if(identity.isAllDay())
+				setJWTCookie(request, response, identity);
+			request.getSession().setAttribute(IDBEAN_ATTRNAME, identity);
+
+			logger.log(Level.FINE, "{0}: Set identity {1}", new Object[]{request.getRemoteHost(), identity});
+			return true;
+		} catch (AuthenticationException e) {
+			logger.log(Level.FINE, "{0}: {1}", new Object[]{request.getRemoteHost(), e.getMessage()});
 		}
-		request.getSession().setAttribute(IDBEAN_ATTRNAME, identity);
-		logger.log(Level.FINE, "{0}: Set identity {1}", new Object[]{request.getRemoteHost(), identity});
+		return false;
 	}
-	
-	public IdentityBean getClientIdentity(HttpServletRequest request) {
-		// Get current session identity
-		{
-			HttpSession session = request.getSession(false);
-			if(session != null) {
-				IdentityBean identity = (IdentityBean) session.getAttribute(IDBEAN_ATTRNAME);
-				if(identity != null) {
-					logger.log(Level.FINER, "{0}: Get session identity {1}", new Object[]{request.getRemoteHost(), identity});
-					return identity;
-				}
-			}
+
+	public boolean setClientCareer(HttpServletRequest request, HttpServletResponse response, int careerId, Role role) {
+		try {
+			IdentityBean identity = getClientIdentity(request);
+			setCareer(identity, careerId, role);
+
+			if(identity.isAllDay())
+				setJWTCookie(request, response, identity);
+
+			logger.log(Level.FINE, "{0}: Set identity {1}", new Object[]{request.getRemoteHost(), identity});
+			return true;
+		} catch (AuthenticationException e) {
+			logger.log(Level.FINE, "{0}: {1}", new Object[]{request.getRemoteHost(), e.getMessage()});
 		}
+		return false;
+	}
+
+	public IdentityBean getClientIdentity(HttpServletRequest request) {
+		IdentityBean identity;
+		
+		// Get current session identity
+		identity = getSessionIdentity(request);
+		if(identity != null)
+			return identity;
 		
 		// Get and restore jwt session identity
-		{
-			String jwtEncoded = new CookieMap(request.getCookies()).get(AUTHTOKEN_COOKIENAME);
-			if(jwtEncoded != null) {
-				try {
-					DecodedJWT jwtDecoded = verifier.verify(jwtEncoded);
-					String personCode = jwtDecoded.getSubject();
-					Claim careerId = jwtDecoded.getClaim("careerId");
-					Claim role = jwtDecoded.getClaim("role");
-					
-					IdentityBean identity = new IdentityBean();
-					UserBean user = new UserBean();
-					user.setPersonCodeString(personCode);
-					identity.setUser(user);
-					if(!role.isNull()){
-						CareerBean career = new CareerBean();
-						career.setId(careerId.asInt());
-						career.setRole(role.asString());
-						identity.setCareer(career);
-					}
-					identity.setAllDay(true);
-
-					request.getSession().setAttribute(IDBEAN_ATTRNAME, identity);
-					logger.log(Level.FINER, "{0}: Get jwt identity {1}", new Object[]{request.getRemoteHost(), identity.getPersonCodeString()});
-					return identity;
-				} catch (JWTVerificationException invalidToken) {
-						logger.log(Level.FINER, "{0}: Invalid jwt", request.getRemoteHost());
-				}
-			}
-		}
+		identity = getJWTIdentity(request);
+		if(identity != null)
+			return identity;
 		
 		// Not authenticated
 		return null;
 	}
-	
+
+	public void deleteClientIdentity(HttpServletRequest request, HttpServletResponse response) {
+		// Session logout
+		HttpSession session = request.getSession(false);
+		if(session != null) {
+			session.removeAttribute(IDBEAN_ATTRNAME);
+			logger.log(Level.FINE, "{0}: Delete session identity", request.getRemoteHost());
+		}
+
+		// jwt logout
+		String jwtEncoded = new CookieMap(request.getCookies()).get(AUTHTOKEN_COOKIENAME);
+		if(jwtEncoded != null) {
+			Cookie jwtCookie = new Cookie(AUTHTOKEN_COOKIENAME, "");
+			jwtCookie.setPath(request.getContextPath());
+			jwtCookie.setMaxAge(0);
+			response.addCookie(jwtCookie);
+			logger.log(Level.FINE, "{0}: Delete jwt identity", request.getRemoteHost());
+		}
+	}
+
+	private IdentityBean createIdentity(int personCode) throws AuthenticationException {
+		UserBean user = userDAO.getUserByPersonCode(personCode);
+		if(user == null)
+			throw new AuthenticationException("No such user " + personCode);
+		
+		IdentityBean identity = new IdentityBean();
+		identity.setUser(user);
+		return identity;
+	}
+
+	private void authenticate(IdentityBean identity, byte[] password) throws AuthenticationException {
+		int personCode = identity.getPersonCode();
+		byte[] hashedPsw = userDAO.getUserHashedPsw(personCode);
+		
+		if(!userAuthenticator.verify(password, hashedPsw))
+			throw new AuthenticationException("Wrong password for user " + personCode);
+	}
+
+	private void setCareer(IdentityBean identity, int careerId, Role role) throws AuthenticationException {
+		int personCode = identity.getPersonCode();
+		CareerBean career = careerDAO.getUserCareer(personCode, careerId, role);
+		if(career == null)
+			throw new AuthenticationException("Invalid career (" + careerId + ", " + role + ") for user " + personCode);
+		
+		identity.setCareer(career);
+	}
+
 	private void setJWTCookie(HttpServletRequest request, HttpServletResponse response, IdentityBean identity) {
 		Instant tomorrow = Instant.now()
 			.plus(1, ChronoUnit.DAYS)
@@ -124,22 +175,50 @@ public class AppAuthenticator {
 		logger.log(Level.FINE, "{0}: Set jwt identity {1}", new Object[]{request.getRemoteHost(), identity});
 	}
 
-	public void deleteClientIdentity(HttpServletRequest request, HttpServletResponse response) {
-		// Session logout
+	private IdentityBean getSessionIdentity(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if(session != null) {
-			session.removeAttribute(IDBEAN_ATTRNAME);
-			logger.log(Level.FINE, "{0}: Delete session identity", request.getRemoteHost());
+			IdentityBean identity = (IdentityBean) session.getAttribute(IDBEAN_ATTRNAME);
+			if(identity != null) {
+				logger.log(Level.FINER, "{0}: Get session identity {1}", new Object[]{request.getRemoteHost(), identity});
+				return identity;
+			}
 		}
+		return null;
+	}
 
-		// jwt logout
+	private IdentityBean getJWTIdentity(HttpServletRequest request) {
 		String jwtEncoded = new CookieMap(request.getCookies()).get(AUTHTOKEN_COOKIENAME);
 		if(jwtEncoded != null) {
-			Cookie jwtCookie = new Cookie(AUTHTOKEN_COOKIENAME, "");
-			jwtCookie.setPath(request.getContextPath());
-			jwtCookie.setMaxAge(0);
-			response.addCookie(jwtCookie);
-			logger.log(Level.FINE, "{0}: Delete jwt identity", request.getRemoteHost());
+			try {
+				DecodedJWT jwtDecoded = verifier.verify(jwtEncoded);
+				String personCode = jwtDecoded.getSubject();
+				Claim careerId = jwtDecoded.getClaim("careerId");
+				Claim role = jwtDecoded.getClaim("role");
+				
+				IdentityBean identity = createIdentity(UserBean.personCodeToInt(personCode));
+				identity.setAllDay(true);
+
+				if(!role.isNull())
+					setCareer(identity, careerId.asInt(), Role.fromString(role.asString()));
+
+				request.getSession().setAttribute(IDBEAN_ATTRNAME, identity);
+				logger.log(Level.FINER, "{0}: Get jwt identity {1}", new Object[]{request.getRemoteHost(), identity});
+				return identity;
+			} catch (JWTVerificationException | AuthenticationException invalidToken) {
+				logger.log(Level.FINER, "{0}: Invalid jwt {1}", new Object[]{request.getRemoteHost(), invalidToken.getMessage()});
+			}
 		}
+		return null;
+	}
+}
+
+class AuthenticationException extends Exception {
+	public AuthenticationException () {
+		super();
+	}
+
+	public AuthenticationException (String message) {
+		super(message);
 	}
 }
