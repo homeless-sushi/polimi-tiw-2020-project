@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import it.polimi.db.business.ExamRecordBean;
 import it.polimi.db.business.ExamRegistrationBean;
 import it.polimi.db.business.ExamResult;
 import it.polimi.db.business.ExamStatus;
@@ -59,6 +60,41 @@ public class ExamRegistrationDAO {
 			}
 
 		return Collections.emptyList();
+	}
+
+	public void fetchRecordRegistrations(List<ExamRecordBean> examRecords){
+		fail: {
+			if(dataSrc == null) {
+				logger.log(Level.WARNING, DSRC_ERROR);
+				break fail;
+			}
+			
+			String query = "SELECT * "
+			             + "FROM exam_registration as registration "
+			             + "JOIN user_career as career "
+			             + "ON registration.student_id = career.id "
+			             + "JOIN user "
+			             + "ON career.person_code = user.person_code "
+			             + "WHERE career.role = 'student' "
+			             + "AND registration.record_id = ?";
+			
+			try (Connection connection = dataSrc.getConnection();
+				PreparedStatement statement = connection.prepareStatement(query)) {
+				for(ExamRecordBean examRecord : examRecords) {
+					statement.setInt(1, examRecord.getId());
+					examRecord.setExamRegistrations(getExamRegistrations(statement));
+				}
+			} catch (SQLException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				break fail;
+			}
+
+			return;
+		}
+
+		/* FAIL */
+		for(ExamRecordBean examRecord : examRecords)
+			examRecord.setExamRegistrations(Collections.emptyList());
 	}
 
 	public ExamRegistrationBean getStudentExamRegistration(int studentId, int examId) {
