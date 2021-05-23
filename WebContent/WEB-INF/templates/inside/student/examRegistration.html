@@ -11,8 +11,13 @@
 		</th:block>
 	</head>
 	<body>
-		<header th:replace="layout :: header">
-			<div><h1>PoliEsaMI</h1></div>
+		<header th:replace="layout :: header(~{ :: #back})">
+			<div>
+				<h1>PoliEsaMI</h1>
+				<div id="back">
+					<a href="exams.html" th:href="@{${#servletContext.getInitParameter('studentExamsPage')}}" th:text="#{header.back}">Exams</a>
+				</div>
+			</div>
 		</header>
 		<div id="content">
 			<section th:insert="inside/exam_table :: table"></section>

@@ -15,11 +15,56 @@ header {
 }
 
 header > div {
-	text-align: center;
-	color: #FFFFFF;
+	color: #fafafa;
 	background: #728FA5;
 	border-radius: 1em;
-	padding: 60px 0;
+	padding: 1em 2em;
+}
+
+header h1 {
+	text-align: center;
+	margin: 1.5em 0;
+}
+
+header a {
+	display: inline-block;
+	font-weight: 500;
+}
+
+header a:link, header a:visited {
+	color: inherit;
+	text-decoration: none;
+}
+
+header a:hover, header a:active {
+	text-decoration: underline;
+}
+
+#menu {
+	display: flex;
+	justify-content: space-between;
+	font-weight: 300;
+	align-items: flex-end;
+}
+
+#back {
+	margin-right: 1.5em;
+}
+
+#identity {
+	display: flex;
+	flex-direction: column;
+	text-align: right;
+	align-items: flex-end;
+	flex: 1;
+}
+
+#identity a {
+	padding-left: 1.5em;
+}
+
+#identity > div:not(:first-child) {
+	margin-top: .5em;
 }
 
 /* COMMON */

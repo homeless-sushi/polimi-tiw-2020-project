@@ -11,9 +11,26 @@
 		</th:block>
 	</head>
 	<body>
-		<header th:fragment="header">
+		<header th:fragment="header(back)">
 			<div>
 				<h1 th:text="${#servletContext.getInitParameter('app-name')}">PoliEsaMI</h1>
+				<div id="menu">
+					<div id="back" th:replace="${back}">
+						<a href="#">Back</a>
+					</div>
+					<div id="identity" th:if="${identity} != null" th:with="user=${identity.user},career=${identity.career}" th:inline="text">
+						<div>
+							[[|${user.name} ${user.surname}, ${user.personCodeString}|]]
+							<a href="#" th:href="@{${#servletContext.getInitParameter('logoutService')}}" th:text="#{header.logout}">Logout</a>
+						</div>
+						<div th:if="${career} != null">
+							[[#{|careers.${career.role}|}]],
+							[[${career.major} != null ? |${career.major},|]]
+							[[|#{careers.id} ${career.id}|]]
+							<a href="#" th:href="@{${#servletContext.getInitParameter('careersPage')}}" th:text="#{header.changeID}">Change current ID</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</header>
 		<div>
