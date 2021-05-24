@@ -73,6 +73,14 @@
 					</form>
 				</div>
 			</section>
+			<section>
+				<form th:action="@{${#servletContext.getInitParameter('profRecordsPage')}}" method="GET">
+					<input type="hidden" name="examId" th:value="${exam.id}">
+					<div class="field">
+						<input type="submit" th:value="#{verbalization.records}" value="Records">
+					</div>
+				</form>
+			</section>
 			<footer th:replace="layout :: footer"></footer>
 		</div>
 	</body>	

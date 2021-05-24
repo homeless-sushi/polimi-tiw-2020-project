@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="layout :: headtags(#{records.title})">
+			<meta charset="UTF-8">
+			<title>PoliEsaMI - Exams</title>
+			<link href="../../../../css/base.css" rel="stylesheet">
+			<link href="../../../../css/table.css" rel="stylesheet">
+			<link href="../../../../css/form.css" rel="stylesheet">
+		</th:block>
+	</head>
+	<body>
+		<header th:replace="layout :: header(~{ :: #back})">
+			<div>
+				<h1>PoliEsaMI</h1>
+				<div id="back">
+					<a href="exams.html" th:href="@{${#servletContext.getInitParameter('profExamRegPage')}(examId=${exam.id})}" th:text="#{header.back}">Exams</a>
+				</div>
+			</div>
+		</header>
+		<div id="content">
+			<section>
+				<table class="list wide">
+					<thead>
+						<tr>
+							<th scope="col" th:text="#{record.id}">Record ID</th>
+							<th scope="col" th:text="#{record.time}">Time</th>
+							<th scope="col" th:text="#{student.id}">Student ID</th>
+							<th scope="col" th:text="#{student.name}">Name</th>
+							<th scope="col" th:text="#{student.surname}">Surname</th>
+							<th scope="col" th:text="#{student.grade}">Grade</th>
+						</tr>
+					</thead>
+					<tbody>
+						<th:block th:each="record,outerIStat : ${records}">
+							<tr th:each="registration,innerIStat : ${record.examRegistrations}">
+								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${record.examRegistrations.size}" th:text="${record.id}">1</th>
+								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${record.examRegistrations.size}" th:text="${record.time}">Data ora</th>
+								<td th:text="${registration.studentId}">1</td>
+								<td th:text="${registration.career.user.name}">Mezio</td>
+								<td th:text="${registration.career.user.surname}">Fufezio</td>
+								<td th:text="${#messages.msgOrNull('evaluationInfo.' + registration.resultRepresentation)} ?: ${registration.resultRepresentation}">30L</td>
+							</tr>
+						</th:block>
+					</tbody>
+				</table>
+			</section>
+		</div>
+		<footer th:replace="layout :: footer"></footer>
+	</body>	
+</html>
