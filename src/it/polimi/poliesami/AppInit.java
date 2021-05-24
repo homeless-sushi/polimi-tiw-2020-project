@@ -15,6 +15,7 @@ import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -92,6 +93,7 @@ public class AppInit implements ServletContextListener {
 		templateResolver.setSuffix(".html");
 
 		TemplateEngine templateEngine = new TemplateEngine();
+		templateEngine.addDialect(new Java8TimeDialect());
 		templateEngine.setTemplateResolver(templateResolver);
 		servletContext.setAttribute("templateEngine", templateEngine);
 	}

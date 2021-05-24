@@ -36,7 +36,7 @@
 						<th:block th:each="record,outerIStat : ${records}">
 							<tr th:each="registration,innerIStat : ${record.examRegistrations}">
 								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${record.examRegistrations.size}" th:text="${record.id}">1</th>
-								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${record.examRegistrations.size}" th:text="${record.time}">Data ora</th>
+								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${record.examRegistrations.size}" th:text="${#temporals.format(record.time)}">Data ora</th>
 								<td th:text="${registration.studentId}">1</td>
 								<td th:text="${registration.career.user.name}">Mezio</td>
 								<td th:text="${registration.career.user.surname}">Fufezio</td>
