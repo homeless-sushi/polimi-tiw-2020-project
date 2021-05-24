@@ -10,7 +10,7 @@ table.list {
 
 table.list td, th {
 	border: 1px solid rgb(190, 190, 190);
-	padding: 10px 20px;
+	padding: 10px 5px;
 }
 
 table.list thead th {
@@ -29,4 +29,12 @@ table.list .odd {
 
 table.list tr:hover td:not(th:hover ~ *) {
 	background-color: rgb(225, 225, 225);
+}
+
+table.fixed {
+	table-layout: fixed;
+}
+
+table.fixed td, table.fixed th {
+	overflow: hidden;
 }

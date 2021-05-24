@@ -20,16 +20,31 @@
 			</div>
 		</header>
 		<div id="content">
+			<section th:insert="inside/exam_table :: table"></section>
+			<section>
+				<table class="list wide fixed">
+					<thead>
+						<tr>
+							<th scope="col" th:text="#{student.id}">Student ID</th>
+							<th scope="col" th:text="#{student.personcode}">Person Code</th>
+							<th scope="col" th:text="#{student.name}">Name</th>
+							<th scope="col" th:text="#{student.surname}">Surname</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:with="career=${examRegistration.career}">
+							<td th:text="${career.id}">1</td>
+							<td th:text="${career.personCodeString}">00000000</td>
+							<td th:text="${career.user.name}">Mezio</td>
+							<td th:text="${career.user.surname}">Fufezio</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
 			<section>
 				<form class="boxed" th:action="@{${#servletContext.getInitParameter('profExamRegEditService')}}" method="POST">
-					<div class="field">
-						<label for="examId" th:text="#{label.examId}">Exam ID</label>
-						<input class="expand" type="text" readonly id="examId" name="examId" th:value="${examRegistration.examId}" required>
-					</div>
-					<div class="field">
-						<label for="studentId" th:text="#{label.studentId}">Student ID</label>
-						<input class="expand" type="text" readonly id="studentId" name="studentId" th:value="${examRegistration.studentId}" required>
-					</div>
+					<input type="hidden" id="examId" name="examId" th:value="${examRegistration.examId}">
+					<input type="hidden" id="studentId" name="studentId" th:value="${examRegistration.studentId}">
 					<div class="field">
 						<label for="examResult" th:text="#{label.examResult}">Exam Result</label>
 						<select class="expand" id="examResult" name="examResult" size="1" required>

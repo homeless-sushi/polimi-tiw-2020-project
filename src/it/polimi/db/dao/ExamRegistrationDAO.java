@@ -92,8 +92,13 @@ public class ExamRegistrationDAO {
 
 		String query = "SELECT * "
 		             + "FROM exam_registration as registration "
-		             + "WHERE exam_id = ? "
-		             + "AND student_id = ?";
+		             + "JOIN user_career as career "
+		             + "ON registration.student_id = career.id "
+		             + "JOIN user "
+		             + "ON career.person_code = user.person_code "
+		             + "WHERE career.role = 'student' "
+		             + "AND registration.exam_id = ? "
+		             + "AND registration.student_id = ?";
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
