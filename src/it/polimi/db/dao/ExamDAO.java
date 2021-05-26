@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 
 import it.polimi.db.business.CourseBean;
 import it.polimi.db.business.ExamBean;
+import it.polimi.db.utils.Direction;
 
 public class ExamDAO {
 	private DataSource dataSrc;
@@ -112,7 +113,7 @@ public class ExamDAO {
 			             + "FROM exam "
 			             + "WHERE course_id = ? "
 			             + "AND year = ? "
-			             + "ORDER BY date DESC";
+			             + "ORDER BY date " + Direction.DESC;
 			
 			try (Connection connection = dataSrc.getConnection();
 				PreparedStatement statement = connection.prepareStatement(query)) {

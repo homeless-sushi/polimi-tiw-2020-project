@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import it.polimi.db.business.ExamRecordBean;
+import it.polimi.db.utils.Direction;
 
 public class ExamRecordDAO {
 	private final DataSource dataSrc;
@@ -34,7 +35,7 @@ public class ExamRecordDAO {
 		String query = "SELECT * "
 		             + "FROM exam_record as record "
 		             + "WHERE record.exam_id = ? "
-		             + "ORDER BY record.time DESC";
+		             + "ORDER BY record.time " + Direction.DESC;
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {

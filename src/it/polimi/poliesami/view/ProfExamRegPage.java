@@ -16,7 +16,7 @@ import org.thymeleaf.context.WebContext;
 import it.polimi.db.business.ExamBean;
 import it.polimi.db.business.ExamRegistrationBean;
 import it.polimi.db.dao.ExamRegistrationDAO;
-import it.polimi.poliesami.utils.Direction;
+import it.polimi.db.utils.Direction;
 
 public class ProfExamRegPage extends HttpServlet {
 	private String templatePath;
