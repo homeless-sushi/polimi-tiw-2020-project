@@ -30,7 +30,7 @@
 	<!-- FILTERS -->
 	<filter>
 		<filter-name>LoginInsideFilter</filter-name>
-		<filter-class>it.polimi.poliesami.filter.LoginInside</filter-class>
+		<filter-class>it.polimi.poliesami.website.filter.LoginInside</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>LoginInsideFilter</filter-name>
@@ -39,7 +39,7 @@
 
 	<filter>
 		<filter-name>LoginOutsideFilter</filter-name>
-		<filter-class>it.polimi.poliesami.filter.LoginOutside</filter-class>
+		<filter-class>it.polimi.poliesami.website.filter.LoginOutside</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>LoginOutsideFilter</filter-name>
@@ -48,7 +48,7 @@
 
 	<filter>
 		<filter-name>ProfessorFilter</filter-name>
-		<filter-class>it.polimi.poliesami.filter.Role</filter-class>
+		<filter-class>it.polimi.poliesami.website.filter.Role</filter-class>
 		<init-param>
 			<param-name>acceptRole</param-name>
 			<param-value>professor</param-value>
@@ -61,7 +61,7 @@
 
 	<filter>
 		<filter-name>StudentFilter</filter-name>
-		<filter-class>it.polimi.poliesami.filter.Role</filter-class>
+		<filter-class>it.polimi.poliesami.website.filter.Role</filter-class>
 		<init-param>
 			<param-name>acceptRole</param-name>
 			<param-value>student</param-value>
@@ -74,7 +74,7 @@
 
 	<filter>
 		<filter-name>StudentExamFilter</filter-name>
-		<filter-class>it.polimi.poliesami.filter.StudentExam</filter-class>
+		<filter-class>it.polimi.poliesami.website.filter.StudentExam</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>StudentExamFilter</filter-name>
@@ -83,7 +83,7 @@
 	
 	<filter>
 		<filter-name>ProfessorExamFilter</filter-name>
-		<filter-class>it.polimi.poliesami.filter.ProfessorExam</filter-class>
+		<filter-class>it.polimi.poliesami.website.filter.ProfessorExam</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>ProfessorExamFilter</filter-name>
@@ -92,7 +92,7 @@
 
 	<filter>
 		<filter-name>ExamEditFilter</filter-name>
-		<filter-class>it.polimi.poliesami.filter.ExamEdit</filter-class>
+		<filter-class>it.polimi.poliesami.website.filter.ExamEdit</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>ExamEditFilter</filter-name>
@@ -102,7 +102,7 @@
 	<!-- SERVLETS -->
 	<servlet>
 		<servlet-name>LoginService</servlet-name>
-		<servlet-class>it.polimi.poliesami.controller.LoginService</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.controller.LoginService</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>LoginService</servlet-name>
@@ -115,7 +115,7 @@
 
 	<servlet>
 		<servlet-name>LogoutService</servlet-name>
-		<servlet-class>it.polimi.poliesami.controller.LogoutService</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.controller.LogoutService</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>LogoutService</servlet-name>
@@ -128,7 +128,7 @@
 
 	<servlet>
 		<servlet-name>CareerService</servlet-name>
-		<servlet-class>it.polimi.poliesami.controller.CareerService</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.controller.CareerService</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>CareerService</servlet-name>
@@ -141,7 +141,7 @@
 
 	<servlet>
 		<servlet-name>StudExamRegService</servlet-name>
-		<servlet-class>it.polimi.poliesami.controller.StudExamRegService</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.controller.StudExamRegService</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>StudExamRegService</servlet-name>
@@ -154,7 +154,7 @@
 	
 	<servlet>
 		<servlet-name>StudExamRejectService</servlet-name>
-		<servlet-class>it.polimi.poliesami.controller.StudExamRejectService</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.controller.StudExamRejectService</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>StudExamRejectService</servlet-name>
@@ -167,7 +167,7 @@
 
 	<servlet>
 		<servlet-name>ProfExamPublishService</servlet-name>
-		<servlet-class>it.polimi.poliesami.controller.ProfExamPublishService</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.controller.ProfExamPublishService</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ProfExamPublishService</servlet-name>
@@ -180,7 +180,7 @@
 
 	<servlet>
 		<servlet-name>ProfExamVerbalizeService</servlet-name>
-		<servlet-class>it.polimi.poliesami.controller.ProfExamVerbalizeService</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.controller.ProfExamVerbalizeService</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ProfExamVerbalizeService</servlet-name>
@@ -193,7 +193,7 @@
 
 	<servlet>
 		<servlet-name>ProfExamRegEditService</servlet-name>
-		<servlet-class>it.polimi.poliesami.controller.ProfExamRegEditService</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.controller.ProfExamRegEditService</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ProfExamRegEditService</servlet-name>
@@ -207,7 +207,7 @@
 	<!-- PAGES -->
 	<servlet>
 		<servlet-name>LoginPage</servlet-name>
-		<servlet-class>it.polimi.poliesami.view.LoginPage</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.view.LoginPage</servlet-class>
 		<init-param>
 			<param-name>templatePath</param-name>
 			<param-value>/login</param-value>
@@ -224,7 +224,7 @@
 	
 	<servlet>
 		<servlet-name>CareersPage</servlet-name>
-		<servlet-class>it.polimi.poliesami.view.CareersPage</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.view.CareersPage</servlet-class>
 		<init-param>
 			<param-name>templatePath</param-name>
 			<param-value>/inside/careers</param-value>
@@ -241,7 +241,7 @@
 
 	<servlet>
 		<servlet-name>ProfessorExamsPage</servlet-name>
-		<servlet-class>it.polimi.poliesami.view.ProfessorExamsPage</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.view.ProfessorExamsPage</servlet-class>
 		<init-param>
 			<param-name>templatePath</param-name>
 			<param-value>/inside/professor/exams</param-value>
@@ -258,7 +258,7 @@
 
 	<servlet>
 		<servlet-name>StudentExamsPage</servlet-name>
-		<servlet-class>it.polimi.poliesami.view.StudentExamsPage</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.view.StudentExamsPage</servlet-class>
 		<init-param>
 			<param-name>templatePath</param-name>
 			<param-value>/inside/student/exams</param-value>
@@ -275,7 +275,7 @@
 
 	<servlet>
 		<servlet-name>StudExamRegPage</servlet-name>
-		<servlet-class>it.polimi.poliesami.view.StudExamRegPage</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.view.StudExamRegPage</servlet-class>
 		<init-param>
 			<param-name>templatePath</param-name>
 			<param-value>/inside/student/examRegistration</param-value>
@@ -292,7 +292,7 @@
 
 	<servlet>
 		<servlet-name>ProfExamRegPage</servlet-name>
-		<servlet-class>it.polimi.poliesami.view.ProfExamRegPage</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.view.ProfExamRegPage</servlet-class>
 		<init-param>
 			<param-name>templatePath</param-name>
 			<param-value>/inside/professor/examRegistrations</param-value>
@@ -309,7 +309,7 @@
 
 	<servlet>
 		<servlet-name>ProfEditExamPage</servlet-name>
-		<servlet-class>it.polimi.poliesami.view.ProfEditExamPage</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.view.ProfEditExamPage</servlet-class>
 		
 		<init-param>
 			<param-name>templatePath</param-name>
@@ -327,7 +327,7 @@
 
 	<servlet>
 		<servlet-name>ProfRecordsPage</servlet-name>
-		<servlet-class>it.polimi.poliesami.view.ProfRecordsPage</servlet-class>
+		<servlet-class>it.polimi.poliesami.website.view.ProfRecordsPage</servlet-class>
 		
 		<init-param>
 			<param-name>templatePath</param-name>

@@ -23,15 +23,14 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import com.auth0.jwt.algorithms.Algorithm;
 
-import it.polimi.db.dao.CareerDAO;
-import it.polimi.db.dao.CourseDAO;
-import it.polimi.db.dao.ExamDAO;
-import it.polimi.db.dao.ExamRecordDAO;
-import it.polimi.db.dao.ExamRegistrationDAO;
-import it.polimi.db.dao.UserDAO;
-import it.polimi.db.utils.Authenticator;
-
-import it.polimi.poliesami.utils.AppAuthenticator;
+import it.polimi.poliesami.db.dao.CareerDAO;
+import it.polimi.poliesami.db.dao.CourseDAO;
+import it.polimi.poliesami.db.dao.ExamDAO;
+import it.polimi.poliesami.db.dao.ExamRecordDAO;
+import it.polimi.poliesami.db.dao.ExamRegistrationDAO;
+import it.polimi.poliesami.db.dao.UserDAO;
+import it.polimi.poliesami.db.utils.Authenticator;
+import it.polimi.poliesami.website.utils.AppAuthenticator;
 
 @WebListener
 public class AppInit implements ServletContextListener {
