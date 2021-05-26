@@ -86,6 +86,10 @@ table {
 	border-collapse: collapse;
 }
 
+a:link, a:visited {
+	color: inherit;
+}
+
 .wide {
 	width: 100%;
 	max-width: 800px;
@@ -114,6 +118,10 @@ table {
 .symbol {
 	font-family: emoji;
 	font-size: 2em;
+}
+
+a.symbol {
+	text-decoration: none;
 }
 
 .row {

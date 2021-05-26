@@ -21,6 +21,9 @@
 		<div id="content">
 			<section th:insert="inside/exam_table :: table"></section>
 			<section>
+				<a th:href="@{${#servletContext.getInitParameter('profRecordsPage')}(examId=${exam.id})}" href="student/exams.html" th:text="#{verbalization.records}">Verbali</a>
+			</section>
+			<section>
 				<table class="list">
 					<thead>
 						<tr>
@@ -47,11 +50,7 @@
 							<td th:each="column : ${columns}" th:text="__${column.getField('registration')}__">0</td>
 							<td th:switch="${registration.status.toString()}">
 								<th:block th:case="'VERB'" th:text="#{evaluationInfo.examResultFinalized}"></th:block>
-								<form action="examRegistrations/edit.html" th:action="@{${#servletContext.getInitParameter('profEditExamPage')}}" th:case="*" method="GET">
-									<input type="hidden" name="examId" th:value="${registration.examId}">
-									<input type="hidden" name="studentId" th:value="${registration.studentId}">
-									<input class="link-button symbol" type="submit" value="➡">
-								</form>
+								<a class="symbol" href="examRegistrations/edit.html" th:href="@{${#servletContext.getInitParameter('profEditExamPage')}(examId=${registration.examId},studentId=${registration.studentId})}" th:case="*">➡</a>
 							</td>
 						</tr>
 					</tbody>
@@ -72,14 +71,6 @@
 						</div>
 					</form>
 				</div>
-			</section>
-			<section>
-				<form th:action="@{${#servletContext.getInitParameter('profRecordsPage')}}" method="GET">
-					<input type="hidden" name="examId" th:value="${exam.id}">
-					<div class="field">
-						<input type="submit" th:value="#{verbalization.records}" value="Records">
-					</div>
-				</form>
 			</section>
 			<footer th:replace="layout :: footer"></footer>
 		</div>

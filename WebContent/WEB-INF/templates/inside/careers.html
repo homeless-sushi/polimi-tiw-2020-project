@@ -34,30 +34,18 @@
 									<td th:text="${career.major}">Laura Triennale - Ingegneria Informatica</td>
 								</th:block>
 							</th:block>
-							<td><form action="../inside/student/exams.html" th:action="@{${#servletContext.getInitParameter('careerService')}}" method="GET">
-								<input type="hidden" name="careerId" th:value="${career.id}" value="1">
-								<input type="hidden" name="role" th:value="${career.role.toString()}" value="student">
-								<input class="link-button symbol" type="submit" value="➡">
-							</form></td>
+							<td><a class="symbol" th:href="@{${#servletContext.getInitParameter('careerService')}(careerId=${career.id},role=${career.role.toString()})}" href="student/exams.html">➡</a></td>
 						</tr>
 						<tr>
 							<td>2</td>
 							<td>Student</td>
 							<td>Laura Magistrale - Computer Science Engineering</td>
-							<td><form action="../inside/student/exams.html" method="GET">
-								<input type="hidden" name="careerId" th:value="${career.id}" value="2">
-								<input type="hidden" name="role" th:value="${career.role.toString()}" value="student">
-								<input class="link-button symbol" type="submit" value="➡">
-							</form></td>
+							<td><a class="symbol" href="student/exams.html">➡</a></td>
 						</tr>
 						<tr>
 							<td>3</td>
 							<td colspan="2">Professor</td>
-							<td><form action="../inside/professor/exams.html" method="GET">
-								<input type="hidden" name="careerId" th:value="${career.id}" value="3">
-								<input type="hidden" name="role" th:value="${career.role.toString()}" value="professor">
-								<input class="link-button symbol" type="submit" value="➡">
-							</form></td>
+							<td><a class="symbol" href="professor/exams.html">➡</a></td>
 						</tr>
 					</tbody>
 				</table>

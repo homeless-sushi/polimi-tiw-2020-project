@@ -44,10 +44,7 @@
 								<th scope="rowgroup" th:if="${innerIStat.first}" th:class="${outerIStat.odd} ? 'odd' : 'even'" class="odd" th:rowspan="${course.exams.size}" th:text="${course.name}">DataBase 2</th>
 								<td th:text="${exam.id}">1</td>
 								<td th:text="${#temporals.format(exam.date)}">02/02/2020</td>
-								<td><form action="examRegistration.html" th:action="@{${#servletContext.getInitParameter('studExamRegPage')}}" method="GET">
-									<input type="hidden" name="examId" th:value="${exam.id}" value="1">
-									<input class="link-button symbol" type="submit" value="➡">
-								</form></td>
+								<td><a class="symbol" th:href="@{${#servletContext.getInitParameter('studExamRegPage')}(examId=${exam.id})}" href="examRegistration.html">➡</a></td>
 							</tr>
 						</th:block>
 						<tr>
@@ -55,44 +52,29 @@
 							<th scope="rowgroup" class="even" rowspan="2">Computer Graphics</th>
 							<td>2</td>
 							<td>03/02/2020</td>
-							<td><form action="examRegistration.html" method="GET">
-								<input type="hidden" name="examId" value="2">
-								<input class="link-button symbol" type="submit" value="➡">
-							</form></td>
+							<td><a class="symbol" href="examRegistration.html">➡</a></td>
 						</tr>
 						<tr>
 							<td>3</td>
 							<td>10/02/2020</td>
-							<td><form action="examRegistration.html" method="GET">
-								<input type="hidden" name="examId" value="3">
-								<input class="link-button symbol" type="submit" value="➡">
-							</form></td>
+							<td><a class="symbol" href="examRegistration.html">➡</a></td>
 						</tr>
 						<tr>
 							<th scope="rowgroup" class="odd" rowspan="3">3</th>
 							<th scope="rowgroup" class="odd" rowspan="3">Tecnologie Informatiche per il web</th>
 							<td>4</td>
 							<td>15/02/2020</td>
-							<td><form action="examRegistration.html" method="GET">
-								<input type="hidden" name="examId" value="4">
-								<input class="link-button symbol" type="submit" value="➡">
-							</form></td>
+							<td><a class="symbol" href="examRegistration.html">➡</a></td>
 						</tr>
 						<tr>
 							<td>5</td>
 							<td>04/02/2020</td>
-							<td><form action="examRegistration.html" method="GET">
-								<input type="hidden" name="examId" value="5">
-								<input class="link-button symbol" type="submit" value="➡">
-							</form></td>
+							<td><a class="symbol" href="examRegistration.html">➡</a></td>
 						</tr>
 						<tr>
 							<td>6</td>
 							<td>09/02/2020</td>
-							<td><form action="examRegistration.html" method="GET">
-								<input type="hidden" name="examId" value="6">
-								<input class="link-button symbol" type="submit" value="➡">
-							</form></td>
+							<td><a class="symbol" href="examRegistration.html">➡</a></td>
 						</tr>
 					</tbody>
 				</table>
