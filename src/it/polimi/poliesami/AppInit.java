@@ -95,5 +95,16 @@ public class AppInit implements ServletContextListener {
 		templateEngine.addDialect(new Java8TimeDialect());
 		templateEngine.setTemplateResolver(templateResolver);
 		servletContext.setAttribute("templateEngine", templateEngine);
+
+		ServletContextTemplateResolver jsTemplateResolver = new ServletContextTemplateResolver(servletContext);
+
+		jsTemplateResolver.setTemplateMode(TemplateMode.JAVASCRIPT);
+		jsTemplateResolver.setCharacterEncoding("UTF-8");
+		jsTemplateResolver.setPrefix("/WEB-INF/api/");
+		jsTemplateResolver.setSuffix(".js");
+
+		TemplateEngine jsTemplateEngine = new TemplateEngine();
+		jsTemplateEngine.setTemplateResolver(jsTemplateResolver);
+		servletContext.setAttribute("jsTemplateEngine", jsTemplateEngine);
 	}
 }
