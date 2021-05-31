@@ -2,11 +2,18 @@ package it.polimi.poliesami.db.business;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class CareerBean implements Serializable {
+	@JsonIgnore
 	private int personCode;
 	private int id;
 	private Role role;
+	@JsonInclude(Include.NON_NULL)
 	private String major;
+	@JsonInclude(Include.NON_NULL)
 	private UserBean user;
 	
 	public CareerBean() {}
@@ -34,6 +41,7 @@ public class CareerBean implements Serializable {
 	public UserBean getUser() { return this.user; }
 	public void setUser(UserBean user) { this.user = user; }
 
+	@JsonIgnore
 	public String getPersonCodeString(){
 		return UserBean.personCodeToString(personCode);
 	}

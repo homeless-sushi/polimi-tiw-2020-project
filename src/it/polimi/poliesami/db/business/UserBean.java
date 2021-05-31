@@ -2,6 +2,8 @@ package it.polimi.poliesami.db.business;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+
 public class UserBean implements Serializable {
 	public static final int PCODE_LEN = 8;
 
@@ -32,6 +34,7 @@ public class UserBean implements Serializable {
 	public String getSurname () { return this.surname; }
 	public void setSurname (String surname) { this.surname = surname; }
 
+	@JsonGetter("personCode")
 	public String getPersonCodeString(){
 		return personCodeToString(personCode);
 	}

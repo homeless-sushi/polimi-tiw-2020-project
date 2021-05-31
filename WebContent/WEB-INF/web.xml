@@ -374,6 +374,20 @@
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 
+	<filter>
+		<filter-name>ApiLoginFilter</filter-name>
+		<filter-class>it.polimi.poliesami.api.identity.LoginFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ApiLoginFilter</filter-name>
+		<url-pattern>/api/inside/*</url-pattern>
+	</filter-mapping>
+
+	<servlet>
+		<servlet-name>JsonMapper</servlet-name>
+		<servlet-class>it.polimi.poliesami.api.JsonMapper</servlet-class>
+	</servlet>
+
 	<servlet>
 		<servlet-name>PoliesamiJS</servlet-name>
 		<servlet-class>it.polimi.poliesami.api.JavascriptAPI</servlet-class>
@@ -386,5 +400,14 @@
 	<servlet-mapping>
 		<servlet-name>PoliesamiJS</servlet-name>
 		<url-pattern>/api/poliesami.js</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ApiLogin</servlet-name>
+		<servlet-class>it.polimi.poliesami.api.identity.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ApiLogin</servlet-name>
+		<url-pattern>/api/login</url-pattern>
 	</servlet-mapping>
 </web-app>

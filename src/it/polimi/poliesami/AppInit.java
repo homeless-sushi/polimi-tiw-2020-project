@@ -23,6 +23,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import com.auth0.jwt.algorithms.Algorithm;
 
+import it.polimi.poliesami.api.identity.ApiAuthenticator;
 import it.polimi.poliesami.db.dao.CareerDAO;
 import it.polimi.poliesami.db.dao.CourseDAO;
 import it.polimi.poliesami.db.dao.ExamDAO;
@@ -75,13 +76,21 @@ public class AppInit implements ServletContextListener {
 		
 		/* ********** Authenticators ********** */
 		Authenticator userAuthenticator = new Authenticator(BCrypt.withDefaults(), BCrypt.verifyer());
-		
+		Algorithm jwtAlgorithm = Algorithm.HMAC256("\"The Garden Of Earthly Delights\" By Hieronymus Bosch");
+
 		AppAuthenticator clientAuthenticator = new AppAuthenticator(
 			userDAO,
 			careerDAO,
 			userAuthenticator,
-			Algorithm.HMAC256("\"The Garden Of Earthly Delights\" By Hieronymus Bosch"));
+			jwtAlgorithm);
 		servletContext.setAttribute("clientAuthenticator", clientAuthenticator);
+
+		ApiAuthenticator apiAuthenticator = new ApiAuthenticator(
+			userDAO,
+			careerDAO,
+			userAuthenticator,
+			jwtAlgorithm);
+		servletContext.setAttribute("apiAuthenticator", apiAuthenticator);
 
 		/* ********** Thymeleaf Template Engine ********** */
 		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);

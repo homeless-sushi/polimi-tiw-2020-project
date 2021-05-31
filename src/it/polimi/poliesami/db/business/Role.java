@@ -1,5 +1,7 @@
 package it.polimi.poliesami.db.business;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Role {
 
 	PROFESSOR ("professor"),
@@ -12,6 +14,7 @@ public enum Role {
 	}
 
 	@Override
+	@JsonValue
 	public String toString(){ return this.role; }
 
 	public static Role fromString(String role){
