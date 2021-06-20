@@ -24,14 +24,10 @@ window.PoliEsaMi.Model = class {
 	}
 
 	async login(user, password, keep = false) {
-		const headers = new Headers();
 		const credential = btoa(user + ":" + password);
-		headers.set("Authorization", "Basic " + credential);
+		this._headers.set("Authorization", "Basic " + credential);
 
-		const response = await this._request("/login", {
-			"headers" : headers
-		});
-		const obj = await response.json();
+		const obj = await this._request("/login");
 		if(obj.error == null) {
 			this.identity = obj.data;
 			PoliEsaMi.storage.setItemJSON("identity", obj.data, keep);
@@ -45,34 +41,35 @@ window.PoliEsaMi.Model = class {
 	}
 
 	async test() {
-		return this._get("/test");
+		return this._request("/test");
 	}
 
 	async testInside() {
-		return this._get("/inside/test");
+		return this._request("/inside/test");
 	}
 
-	async _get(path) {
-		const init = {
-			headers: this._headers
-		};
-		const response = await this._request(path, init);
-		return response.json();
-	}
+	async _request(path, init = {}) {
+		init.headers = this._headers;
 
-	async _post(path, body) {
-		const init = {
-			method: "POST",
-			headers: this._headers,
-			body: body
-		};
-		const response = await this._request(path, init);
-		return response.json();
+		const response = await fetch(this._baseURL + path, init);
+		if(response.status == 401)
+			this.logout();
+		try {
+			return response.json();
+		} catch(e) {
+			return {error: {
+				message: "The server returned an invalid response",
+				cause: e.message
+			}};
+		}
 	}
+}
 
-	async _request(path, init) {
-		return fetch(this._baseURL + path, init);
-	}
+function _POST(body) {
+	return {
+		method: "POST",
+		body: body
+	};
 }
 
 window.PoliEsaMi.storage = {
