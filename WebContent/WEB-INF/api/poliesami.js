@@ -5,15 +5,25 @@ window.PoliEsaMi = {};
 window.PoliEsaMi.Model = class {
 	constructor() {
 		this._baseURL = /*[[${baseURL}]]*/ "";
-		this._identity = null;
 		this._headers = new Headers();
+
+		this.identity = PoliEsaMi.storage.getItemJSON("identity");
 	}
 
 	get identity() {
 		return this._identity;
 	}
 
-	async login(user, password) {
+	set identity(identity) {
+		if(identity == null) {
+			this._headers.delete("Authorization");
+		} else {
+			this._headers.set("Authorization", "Bearer " + identity.jwt);
+		}
+		this._identity = identity;
+	}
+
+	async login(user, password, keep = false) {
 		const headers = new Headers();
 		const credential = btoa(user + ":" + password);
 		headers.set("Authorization", "Basic " + credential);
@@ -21,18 +31,17 @@ window.PoliEsaMi.Model = class {
 		const response = await this._request("/login", {
 			"headers" : headers
 		});
-		const text = await response.text();
-		const obj = JSON.parse(text);
+		const obj = await response.json();
 		if(obj.error == null) {
-			this._identity = obj.data;
-			this._headers.set("Authorization", "Bearer " + this.identity.jwt);
+			this.identity = obj.data;
+			PoliEsaMi.storage.setItemJSON("identity", obj.data, keep);
 		}
 		return obj;
 	}
 
 	logout() {
-		this._identity = null;
-		this._headers.delete("Authorization");
+		this.identity = null;
+		PoliEsaMi.storage.removeItem("identity");
 	}
 
 	async test() {
@@ -63,5 +72,61 @@ window.PoliEsaMi.Model = class {
 
 	async _request(path, init) {
 		return fetch(this._baseURL + path, init);
+	}
+}
+
+window.PoliEsaMi.storage = {
+	setItem(name, value, permanent) {
+		try {
+			const storage = permanent ? localStorage : sessionStorage;
+			storage.setItem(name, value);
+			return true;
+		} catch(e) {
+			console.warn(e.message);
+		}
+		return false;
+	},
+
+	setItemJSON(name, value, permanent) {
+		try {
+			const json = JSON.stringify(value);
+			return this.setItem(name, json, permanent);
+		} catch(e) {
+			console.warn(e.message);
+		}
+		return false;
+	},
+
+	getItem(name) {
+		try {
+			let obj;
+			obj = sessionStorage.getItem(name);
+			if(obj != null)
+				return obj;
+			obj = localStorage.getItem(name);
+			if(obj != null)
+				return obj;
+		} catch(e) {
+			console.warn(e.message);
+		}
+		return null;
+	},
+
+	getItemJSON(name) {
+		try {
+			return JSON.parse(this.getItem(name));
+		} catch(e) {
+			console.warn(e);
+		}
+		return null;
+	},
+
+	removeItem(name) {
+		try  {
+			sessionStorage.removeItem(name);
+			localStorage.removeItem(name);
+		} catch(e) {
+			console.warn(e.message);
+		}
 	}
 }
