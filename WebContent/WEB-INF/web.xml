@@ -396,6 +396,15 @@
 		<url-pattern>/api/inside/student/*</url-pattern>
 	</filter-mapping>
 
+	<filter>
+		<filter-name>ApiStudentExamFilter</filter-name>
+		<filter-class>it.polimi.poliesami.api.filter.StudentExam</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ApiStudentExamFilter</filter-name>
+		<url-pattern>/api/inside/student/exams/*</url-pattern>
+	</filter-mapping>
+
 	<servlet>
 		<servlet-name>JsonMapper</servlet-name>
 		<servlet-class>it.polimi.poliesami.api.JsonMapper</servlet-class>
