@@ -4,11 +4,17 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class ExamBean implements Serializable {
 	private int id;
+	@JsonIgnore
 	private int courseId;
 	private int year;
 	private LocalDate date;
+	@JsonInclude(Include.NON_NULL)
 	private CourseBean course;
 
 	public void setId(int id) { this.id = id; }
