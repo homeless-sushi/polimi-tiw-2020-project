@@ -3,6 +3,9 @@ package it.polimi.poliesami.db.business;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class CourseBean implements Serializable {
 	private int id;
 	private String name;
@@ -10,6 +13,7 @@ public class CourseBean implements Serializable {
 	private int cfu;
 	private int year;
 	private int professorId;
+	@JsonInclude(Include.NON_NULL)
 	private List<ExamBean> exams;
 	
 	public int getId() { return id;	}

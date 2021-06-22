@@ -402,7 +402,7 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>ApiStudentExamFilter</filter-name>
-		<url-pattern>/api/inside/student/exams/*</url-pattern>
+		<url-pattern>/api/inside/student/exams/exam/*</url-pattern>
 	</filter-mapping>
 
 	<servlet>
@@ -440,5 +440,14 @@
 	<servlet-mapping>
 		<servlet-name>ApiStudCoursesExams</servlet-name>
 		<url-pattern>/api/inside/student/exams</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ApiStudExam</servlet-name>
+		<servlet-class>it.polimi.poliesami.api.resources.StudExam</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ApiStudExam</servlet-name>
+		<url-pattern>/api/inside/student/exams/exam</url-pattern>
 	</servlet-mapping>
 </web-app>
