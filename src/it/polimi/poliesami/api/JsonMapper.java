@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class JsonMapper extends HttpServlet {
 	private ObjectMapper jsonObjectMapper;
@@ -24,7 +25,9 @@ public class JsonMapper extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		jsonObjectMapper = new ObjectMapper()
-			.addMixIn(Throwable.class, ThrowableMixIn.class);
+			.addMixIn(Throwable.class, ThrowableMixIn.class)
+			.findAndRegisterModules()
+			.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	}
 
 	@Override
