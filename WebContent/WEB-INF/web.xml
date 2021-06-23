@@ -450,4 +450,13 @@
 		<servlet-name>ApiStudExam</servlet-name>
 		<url-pattern>/api/inside/student/exams/exam</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ApiStudExamReg</servlet-name>
+		<servlet-class>it.polimi.poliesami.api.resources.StudExamReg</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ApiStudExamReg</servlet-name>
+		<url-pattern>/api/inside/student/exams/exam/reg</url-pattern>
+	</servlet-mapping>
 </web-app>

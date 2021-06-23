@@ -1,5 +1,8 @@
 package it.polimi.poliesami.db.business;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class ExamRegistrationBean {
 	private int studentId;
 	private int examId;
@@ -9,6 +12,7 @@ public class ExamRegistrationBean {
 	private boolean laude;
 	private String resultRepresentation;
 	private int recordId;
+	@JsonInclude(Include.NON_NULL)
 	private CareerBean career;
 
 	public int getStudentId() { return this.studentId; }
