@@ -490,4 +490,13 @@
 		<servlet-name>ApiProfCoursesExams</servlet-name>
 		<url-pattern>/api/inside/professor/exams</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ApiProfExam</servlet-name>
+		<servlet-class>it.polimi.poliesami.api.resources.ProfExam</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ApiProfExam</servlet-name>
+		<url-pattern>/api/inside/professor/exams/exam</url-pattern>
+	</servlet-mapping>
 </web-app>
