@@ -405,6 +405,19 @@
 		<url-pattern>/api/inside/student/exams/exam/*</url-pattern>
 	</filter-mapping>
 
+	<filter>
+		<filter-name>ApiProfessorFilter</filter-name>
+		<filter-class>it.polimi.poliesami.api.filter.Role</filter-class>
+		<init-param>
+			<param-name>acceptRole</param-name>
+			<param-value>professor</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>ApiProfessorFilter</filter-name>
+		<url-pattern>/api/inside/professor/*</url-pattern>
+	</filter-mapping>
+
 	<servlet>
 		<servlet-name>JsonMapper</servlet-name>
 		<servlet-class>it.polimi.poliesami.api.JsonMapper</servlet-class>
@@ -458,5 +471,14 @@
 	<servlet-mapping>
 		<servlet-name>ApiStudExamReg</servlet-name>
 		<url-pattern>/api/inside/student/exams/exam/reg</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ApiProfCoursesExams</servlet-name>
+		<servlet-class>it.polimi.poliesami.api.resources.ProfCoursesExams</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ApiProfCoursesExams</servlet-name>
+		<url-pattern>/api/inside/professor/exams</url-pattern>
 	</servlet-mapping>
 </web-app>
