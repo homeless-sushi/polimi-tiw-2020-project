@@ -508,4 +508,13 @@
 		<servlet-name>ApiProfExamRegistrations</servlet-name>
 		<url-pattern>/api/inside/professor/exams/exam/regs</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ApiProfExamRegEditService</servlet-name>
+		<servlet-class>it.polimi.poliesami.api.service.ProfExamRegEditService</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ApiProfExamRegEditService</servlet-name>
+		<url-pattern>/api/inside/professor/exams/exam/regs/edit</url-pattern>
+	</servlet-mapping>
 </web-app>

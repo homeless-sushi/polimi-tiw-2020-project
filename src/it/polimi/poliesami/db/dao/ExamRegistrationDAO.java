@@ -327,6 +327,61 @@ public class ExamRegistrationDAO {
 		return false;
 	}
 
+	public boolean editExamEvals(int[] studentIds, ExamRegistrationBean examRegistration){
+		if(dataSrc == null) {
+			logger.log(Level.WARNING, DSRC_ERROR);
+			return false;
+		}
+
+		String query = "UPDATE exam_unrecorded "
+		             + "SET status = ?, "
+		             + "result = ?, "
+		             + "grade = ?, "
+		             + "laude = ? "
+		             + "WHERE exam_id = ? "
+		             + "AND student_id = ? "
+		             + "AND status <> " + ExamStatus.PUB;
+
+		try (Connection connection = dataSrc.getConnection();
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			connection.setAutoCommit(false);
+			try {
+				for(int studentId : studentIds){
+					statement.setString(1, examRegistration.getStatus().toString());
+					statement.setString(2, examRegistration.getResult().toString());
+					statement.setInt(3, examRegistration.getGrade());
+					statement.setInt(4, (examRegistration.getLaude()) ? 1 : 0);
+					statement.setInt(5, examRegistration.getExamId());
+					statement.setInt(6, studentId);
+					statement.addBatch();
+				}
+
+				boolean success = true;
+				int[] results = statement.executeBatch();
+				for(int result : results){
+					if(result <= 0) {
+						success = false;
+						break;
+					}
+				}
+				if(!success){
+					throw new SQLException("Could'nt edit exam registration");
+				}
+
+				connection.commit();
+				return true;
+
+			}catch(SQLException e){
+				connection.rollback();
+				throw e;
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+
+		return false;
+	}
+
 	public static ExamRegistrationBean createExamBean(ResultSet rs) throws SQLException {
 		ExamRegistrationBean registration = new ExamRegistrationBean();
 		registration.setExamId(rs.getInt("registration.exam_id"));
