@@ -306,7 +306,8 @@ public class ExamRegistrationDAO {
 		             + "grade = ?, "
 		             + "laude = ? "
 		             + "WHERE exam_id = ? "
-		             + "AND student_id = ?";
+		             + "AND student_id = ? "
+		             + "AND status NOT IN ('" + ExamStatus.PUB + "', '" + ExamStatus.RIF + "')";;
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {

@@ -49,6 +49,7 @@
 						<tr th:each="registration,iterStat : ${registrations}" th:class="${iterStat.odd} ? 'odd' : 'even'">
 							<td th:each="column : ${columns}" th:text="__${column.getField('registration')}__">0</td>
 							<td th:switch="${registration.status.toString()}">
+								<th:block th:case="'PUB'" th:text="#{evaluationInfo.examResultPublished}"></th:block>
 								<th:block th:case="'VERB'" th:text="#{evaluationInfo.examResultFinalized}"></th:block>
 								<a class="symbol" href="examRegistrations/edit.html" th:href="@{${#servletContext.getInitParameter('profEditExamPage')}(examId=${registration.examId},studentId=${registration.studentId})}" th:case="*">➡</a>
 							</td>
