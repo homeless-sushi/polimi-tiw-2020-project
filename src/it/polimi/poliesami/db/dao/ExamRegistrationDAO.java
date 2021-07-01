@@ -327,7 +327,7 @@ public class ExamRegistrationDAO {
 		return false;
 	}
 
-	public boolean editExamEvals(int[] studentIds, ExamRegistrationBean examRegistration){
+	public boolean editExamEvals(List<ExamRegistrationBean> examRegistrations){
 		if(dataSrc == null) {
 			logger.log(Level.WARNING, DSRC_ERROR);
 			return false;
@@ -340,19 +340,19 @@ public class ExamRegistrationDAO {
 		             + "laude = ? "
 		             + "WHERE exam_id = ? "
 		             + "AND student_id = ? "
-		             + "AND status <> " + ExamStatus.PUB;
+		             + "AND status NOT IN ('" + ExamStatus.PUB + "', '" + ExamStatus.RIF + "')";
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
 			connection.setAutoCommit(false);
 			try {
-				for(int studentId : studentIds){
+				for(final ExamRegistrationBean examRegistration : examRegistrations){
 					statement.setString(1, examRegistration.getStatus().toString());
 					statement.setString(2, examRegistration.getResult().toString());
 					statement.setInt(3, examRegistration.getGrade());
 					statement.setInt(4, (examRegistration.getLaude()) ? 1 : 0);
 					statement.setInt(5, examRegistration.getExamId());
-					statement.setInt(6, studentId);
+					statement.setInt(6, examRegistration.getStudentId());
 					statement.addBatch();
 				}
 
@@ -365,7 +365,7 @@ public class ExamRegistrationDAO {
 					}
 				}
 				if(!success){
-					throw new SQLException("Could'nt edit exam registration");
+					throw new SQLException("Couldn't edit exam registration");
 				}
 
 				connection.commit();
