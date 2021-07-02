@@ -48,6 +48,75 @@ window.PoliEsaMi.Model = class {
 		return this._request("/inside/test");
 	}
 
+	async getStudCoursesExams(studentId, year){
+		return this._request(`/inside/student/exams?careerId=${studentId}` + (year != null ? `&year=${year}` : ""));
+	}
+
+	async getStudExam(studentId, examId){
+		return this._request(`/inside/student/exams/exam?careerId=${studentId}&examId=${examId}`);
+	}
+
+	async getStudExamReg(studentId, examId){
+		return this._request(`/inside/student/exams/exam/reg?careerId=${studentId}&examId=${examId}`);
+	}
+
+	async registerStudToExamReg(studentId, examId){
+		const params = new URLSearchParams();
+		params.set("action", "register");
+		return this._request(`/inside/student/exams/exam/reg?careerId=${studentId}&examId=${examId}`, _POST(params));
+	}
+
+	async deregisterStudFromExamReg(studentId, examId){
+		const params = new URLSearchParams();
+		params.set("action", "deregister");
+		return this._request(`/inside/student/exams/exam/reg?careerId=${studentId}&examId=${examId}`, _POST(params));
+	}
+
+	async rejectStudExamReg(studentId, examId){
+		const params = new URLSearchParams();
+		params.set("action", "reject");
+		return this._request(`/inside/student/exams/exam/reg?careerId=${studentId}&examId=${examId}`, _POST(params));
+	}
+
+	async getProfCoursesExams(professorId, year){
+		return this._request(`/inside/professor/exams?careerId=${professorId}` + (year != null ? `&year=${year}` : ""));
+	}
+
+	async getProfExam(professorId, examId){
+		return this._request(`/inside/professor/exams/exam?careerId=${professorId}&examId=${examId}`);
+	}
+
+	async getProfExamRegistrations(professorId, examId){
+		return this._request(`/inside/professor/exams/exam/regs?careerId=${professorId}&examId=${examId}`);
+	}
+
+	async getProfExamRegistration(professorId, examId, studentId){
+		return this._request(`/inside/professor/exams/exam/regs/reg?careerId=${professorId}&examId=${examId}&studentId=${studentId}`);
+	}
+
+	async getProfExamRecords(professorId, examId){
+		return this._request(`/inside/professor/exams/exam/records?careerId=${professorId}&examId=${examId}`);
+	}
+
+	async publishProfExamRegistrations(professorId, examId){
+		const params = new URLSearchParams();
+		params.set("action", "publish");
+		return this._request(`/inside/professor/exams/exam/regs?careerId=${professorId}&examId=${examId}`, _POST(params));
+	}
+
+	async verbalizeProfExamRegistrations(professorId, examId){
+		const params = new URLSearchParams();
+		params.set("action", "verbalize");
+		return this._request(`/inside/professor/exams/exam/regs?careerId=${professorId}&examId=${examId}`, _POST(params));
+	}
+
+	async editProfExamRegistrations(professorId, examId, examEvaluations){
+		const params = new URLSearchParams();
+		for(const examEvaluation of examEvaluations)
+			params.append("evaluations", examEvaluation.join(","));
+		return this._request(`/inside/professor/exams/exam/regs/edit?careerId=${professorId}&examId=${examId}`, _POST(params));
+	}
+
 	async _request(path, init = {}) {
 		init.headers = this._headers;
 
