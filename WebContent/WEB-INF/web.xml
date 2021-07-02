@@ -519,6 +519,15 @@
 	</servlet-mapping>
 
 	<servlet>
+		<servlet-name>ApiProfExamRecords</servlet-name>
+		<servlet-class>it.polimi.poliesami.api.resources.ProfExamRecords</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ApiProfExamRecords</servlet-name>
+		<url-pattern>/api/inside/professor/exams/exam/records</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>ApiProfExamRegEditService</servlet-name>
 		<servlet-class>it.polimi.poliesami.api.service.ProfExamRegEditService</servlet-class>
 	</servlet>
