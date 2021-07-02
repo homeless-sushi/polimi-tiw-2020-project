@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import it.polimi.poliesami.api.NullableData;
 import it.polimi.poliesami.db.business.ExamBean;
 import it.polimi.poliesami.db.business.ExamRegistrationBean;
 import it.polimi.poliesami.db.dao.ExamRegistrationDAO;
@@ -58,7 +57,7 @@ public class ProfExamRegistrations extends HttpServlet {
 		final List<ExamRegistrationBean> registrations = examRegistrationDAO.getExamRegistrationsByExamId(exam.getId(), null);
 		request.setAttribute("jsonBody", registrations);
 		
-		request.setAttribute("jsonBody", new NullableData(registrations));
+		request.setAttribute("jsonBody", registrations);
 		final RequestDispatcher jsonDispatcher = getServletContext().getNamedDispatcher("JsonMapper");
 		jsonDispatcher.forward(request, response);
 	}
