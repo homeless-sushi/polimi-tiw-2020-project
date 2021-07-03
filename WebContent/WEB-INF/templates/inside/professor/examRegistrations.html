@@ -14,7 +14,7 @@
 			<div>
 				<h1>PoliEsaMI</h1>
 				<div id="back">
-					<a href="exams.html" th:href="@{${#servletContext.getInitParameter('professorExamsPage')}}" th:text="#{header.back}">Exams</a>
+					<a href="exams.html" th:href="@{${#servletContext.getInitParameter('professorExamsPage')}(year=${exam.year})}" th:text="#{header.back}">Exams</a>
 				</div>
 			</div>
 		</header>
