@@ -38,7 +38,7 @@
 							</tr>
 						</tbody>
 					</table>
-						<form th:if="${examRegistration.result.toString() == 'PASS'}" th:action="@{${#servletContext.getInitParameter('studExamRejectService')}}" method="POST">
+						<form th:if="${examRegistration.status.toString() == 'PUB' && examRegistration.result.toString() == 'PASS'}" th:action="@{${#servletContext.getInitParameter('studExamRejectService')}}" method="POST">
 							<input type="hidden" name="studentId" th:value="${examRegistration.studentId}">
 							<input type="hidden" name="examId" th:value="${examRegistration.examId}">
 							<div class="field">
