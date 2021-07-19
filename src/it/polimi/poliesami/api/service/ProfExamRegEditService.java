@@ -2,7 +2,6 @@ package it.polimi.poliesami.api.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -27,6 +26,10 @@ public class ProfExamRegEditService extends HttpServlet {
 		final List<ExamRegistrationBean> examEvaluations = new ArrayList<>();
 		fail : {
 			final String[] evaluationStrings = request.getParameterValues("evaluations");
+
+			if(evaluationStrings == null){
+				break fail;
+			}
 
 			for(final String evaluationString : evaluationStrings){
 
