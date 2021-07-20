@@ -208,7 +208,8 @@ public class ExamRegistrationDAO {
 		             + "result = ? "
 		             + "WHERE exam_id = ? "
 		             + "AND student_id = ? "
-		             + "AND status = ?";
+		             + "AND status = '" + ExamStatus.PUB.toString() + "' "
+					 + "AND result = '" + ExamResult.PASS.toString() + "'";
 
 		try (Connection connection = dataSrc.getConnection();
 			PreparedStatement statement = connection.prepareStatement(query)) {
@@ -216,7 +217,6 @@ public class ExamRegistrationDAO {
 			statement.setString(2, ExamResult.RM.toString());
 			statement.setInt(3, examId);
 			statement.setInt(4, studentId);
-			statement.setString(5, ExamStatus.PUB.toString());
 			int rows = statement.executeUpdate();
 			if(rows > 0)
 				return true;
